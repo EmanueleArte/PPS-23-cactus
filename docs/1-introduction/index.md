@@ -18,7 +18,7 @@ Le carte il cui effetto si attiva nel momento in cui vengono scartate sono:
 Tutti gli effetti precedentemente elencati non sono cumulabili (esempio: se vengono scartati due Jack, cosa permessa dal regolamento, non sarà possibile guardare due delle proprie carte coperte) e sono attivabili solo se l'azione di scartare la carta coincide con la fine del proprio turno.
 
 Le carte il cui effetto si attiva nel momento del calcolo dei punti sono:
-- i **Re rossi**: al momento del calcolo dei punti i Re apparteneti a semi di colore rosso valgono 0 punti.
+- i **Re rossi**: al momento del calcolo dei punti i Re appartenenti a semi di colore rosso (_Quadri_ e _Cuori_) valgono 0 punti.
 
 [Back to index](../index.md) | 
 [Next Chapter](../2-development-process/index.md)
