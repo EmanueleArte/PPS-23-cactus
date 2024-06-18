@@ -7,7 +7,7 @@
 - [Design architetturale](4-architectural-design/index.md)
 - [Design di dettaglio](5-detailed-design/index.md)
 - [Implementazione](6-implementation/index.md)
-- [Testing](7-testing/indesx.md)
+- [Testing](7-testing/index.md)
 - [Conclusioni](8-conclusion/index.md)
 
 La documentazione relativa alla metodologia di sviluppo è disponibile [qui](process/index.md).
