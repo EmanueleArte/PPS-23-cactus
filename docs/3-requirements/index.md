@@ -59,3 +59,5 @@ All’inizio della partita, ad ogni giocatore devono venire assegnate 4 carte ca
 - Sviluppo di un sistema di leaderboard con il numero di vittorie dei giocatori.
 - Possibilità di fare partite lunghe sommando i punteggi parziali fino ad un valore scelto.
 
+[Back to index](../index.md) | 
+[Next Chapter](../4-architectural-design/index.md)
