@@ -2,6 +2,7 @@
 ## Dominio
 - Il sistema dovrà permettere all’utente di selezionare a quale gioco giocare, in cui si usano le carte da poker, da una lista (inizialmente ne sarà implementato solo 1, ovvero Cactus).
 - Il giocatore dovrà giocare contro dei bot specifici per il gioco selezionato.
+- 
 ## Funzionali
 ### Utente
 - Gli utenti dovranno interagire con il sistema tramite un’interfaccia grafica (GUI).
@@ -18,6 +19,7 @@
   - guardare le proprie carte
   - mandare avanti i turni (sia il proprio sia quello dei bot)
   - effettuare una mossa in base alla situazione corrente
+  - 
 ### Sistema
 #### Generali
 - La partita deve essere avviata con una certa configurazione che comprende:
@@ -25,7 +27,6 @@
   - i bot con il relativo comportamento
   - la visualizzazione facoltativa di un tutorial
 - Il passaggio del turno (sia dell’utente, sia dei bot) è lasciato all’utente tramite un pulsante visualizzato nella GUI, indipendentemente dal gioco.
-
 
 #### Specifici per Cactus
 - Il campo da gioco deve essere rappresentato dal mazzo di pesca, dalla pila degli scarti e dalle mani dei giocatori. Il mazzo di pesca e le mani dei giocatori sono composti da carte coperte, mentre la pila degli scarti no.
@@ -46,13 +47,16 @@ All’inizio della partita, ad ogni giocatore devono venire assegnate 4 carte ca
   - Quando viene chiamato “cactus”, il giocatore che l’ha chiamato mostra le carte ed è immune agli effetti. Viene effettuato un ultimo giro, fino al giocatore precedente a colui che ha chiamato la fine della partita (quando il giocatore prima finisce il turno, termina anche il gioco).
 - Alla fine del gioco verranno mostrate tutte le carte e verrà calcolato in automatico il punteggio di ogni giocatore, mostrando il vincitore (o i vincitori in caso di parimerito).
 - Alla fine della partita verranno mostrati i tasti per iniziare un’altra partita o uscire dal gioco.
+- 
 ## Non funzionali
 - Realizzazione di un’interfaccia grafica che aiuti l’utente a realizzare le mosse in maniera intuitiva e rapida, ad esempio avvisando il giocatore se sta effettuando una mossa non permessa e suggerendo quella corretta.
 - Sviluppo di una notazione standard per le carte.
 - Il sistema deve essere progettato in maniera tale che sia facile implementare altri giochi (con i relativi bot).
+- 
 ## Implementazione
 - Utilizzo di Scala 3.x
 - Utilizzo di JDK 21+
+- 
 ## Opzionali
 - Impostazioni aggiuntive relative alla GUI.
 - Sviluppo di altri giochi (esempio: blackjack, poker).
