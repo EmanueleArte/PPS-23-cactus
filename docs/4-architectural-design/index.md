@@ -15,3 +15,6 @@ Come illustrato nella figura precedente, i componenti sono completamente autonom
 - Il **model** rappresenta il comportamento dell'applicazione in termini del dominio del problema, rimanendo completamente separato dall'interfaccia utente. Esso si occupa della gestione dei dati, della logica e delle regole dell'applicazione.
 - Il **controller** è responsabile principalmente dell'implementazione e dell'applicazione della logica di gioco, oltre a gestire l'interazione tra il model e la view.
 - La **view** presenta i dati contenuti nel model attraverso una rappresentazione testuale o grafica e gestisce l'interazione tra la logica e gli utenti.
+
+[Back to index](../index.md) | 
+[Next Chapter](../5-detailed-design/index.md)
