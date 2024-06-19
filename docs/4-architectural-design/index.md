@@ -4,7 +4,9 @@
 
 Per garantire una corretta separazione delle responsabilità tra i componenti, il progetto adotta il pattern architetturale _MVC_. Questo approccio permette di mantenere l'architettura il più possibile modulare e flessibile. La separazione dei compiti e dei componenti proposta da _MVC_ favorisce il riuso del codice, un aumento della produttività, facilita la manutenzione del software e ne agevola la scalabilità.
 
-![](http://url/to/img.png**](https://github.com/EmanueleArte/PPS-23-cactus/edit/docs/docs/4-architectural-design/mvc-diagram.svg))
+<p align="center">
+  <img src="./mvc-diagram.svg" height="600">
+</p>
 
 ## Pattern MVC
 
