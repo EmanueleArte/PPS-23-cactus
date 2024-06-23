@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+  packages: read
+  statuses: write
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Super-linter
+        uses: super-linter/super-linter/slim@v6.6.0  # x-release-please-version
+        env:
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SCALAFMT_CONFIG_FILE: .scalafmt.conf
+          VALIDATE_SCALA: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_JAVA: true
+          VALIDATE_YAML: true
+
+  test:
+    name: Test
+    strategy:
+      matrix:
+        os: [windows-2022, macos-12, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Import scala
+        uses: olafurpg/setup-scala@v11
+        with:
+          java-version: adopt@1.11
+
+      - name: Run scalatest (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: sbt test
+
+      - name: Run scalatest (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: sbt  test
