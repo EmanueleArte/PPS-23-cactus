@@ -64,4 +64,5 @@ All’inizio della partita, ad ogni giocatore devono venire assegnate 4 carte ca
 - Possibilità di fare partite lunghe sommando i punteggi parziali fino ad un valore scelto.
 
 [Back to index](../index.md) | 
+[Previous Chapter](../2-development-process/index.md) | 
 [Next Chapter](../4-architectural-design/index.md)
