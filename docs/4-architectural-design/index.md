@@ -17,4 +17,5 @@ Come illustrato nella figura precedente, i componenti sono completamente autonom
 - La **view** presenta i dati contenuti nel model attraverso una rappresentazione testuale o grafica e gestisce l'interazione tra la logica e gli utenti.
 
 [Back to index](../index.md) | 
+[Previous Chapter](../3-requirements/index.md) | 
 [Next Chapter](../5-detailed-design/index.md)
