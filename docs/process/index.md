@@ -17,4 +17,4 @@ queste soddisfacessero quanto desiderato dal _Product Owner_ e se il testing non
 
 Di seguito vengono elencati il _Product Backlog_ e le documentazioni relative ai vari Sprint:
 - [Product Backlog](product-backlog.xlsx)
-- [First Sprint](first-sprint.md)
+- [First Sprint](sprint-1.md)
