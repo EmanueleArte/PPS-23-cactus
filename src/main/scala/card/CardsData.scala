@@ -7,5 +7,10 @@ object CardsData:
   /**
    * Represents the suit of a card.
    */
-  enum Suit:
+  trait Suit
+  
+  /**
+   * Represents the suit of a poker card.
+   */
+  enum PokerSuit extends Suit:
     case Hearts, Diamonds, Clubs, Spades
