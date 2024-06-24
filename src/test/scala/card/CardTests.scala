@@ -16,5 +16,11 @@ class CardTests extends AnyFlatSpec:
   "A Card" should "have a suit" in:
     card.suit shouldBe a [Suit]
 
+  def twoOfClubs: Card = Card(2, Clubs)
+
+  "The card two of clubs" should "have a value of 2 and Clubs as suit" in:
+    twoOfClubs.value should be (2)
+    twoOfClubs.suit should be (Clubs)
+
 
 
