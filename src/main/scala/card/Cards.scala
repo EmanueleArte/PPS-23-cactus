@@ -19,10 +19,12 @@ object Cards:
      * The suit of the card.
      */
     def suit: Suit
+    def copy: Card = this
 
   /**
    * Represents generic a card with a value and a suit.
    *
+   * @tparam A the type of the value of the card
    * @param value the value of the card
    * @param suit the suit of the card
    */
@@ -39,3 +41,24 @@ object Cards:
     override type Value = Int
     require(value >= 1, "Card value cannot be less than 1")
     require(value <= 13, "Card value cannot be greater than 13")
+
+  /**
+   * Represents a card that can be covered and uncovered.
+   */
+  @SuppressWarnings(Array("org.wartremover.warts.All"))
+  trait Coverable:
+    private var covered = true
+    /**
+     * Checks if the card is covered.
+     *
+     * @return true if the card is covered, false otherwise
+     */
+    def isCovered: Boolean = covered
+    /**
+     * Covers the card.
+     */
+    def cover(): Unit = covered = true
+    /**
+     * Uncovers the card.
+     */
+    def uncover(): Unit = covered = false
