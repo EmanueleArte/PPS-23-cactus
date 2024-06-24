@@ -5,10 +5,8 @@ import card.Cards.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
-import scala.language.postfixOps
-
 class CardTests extends AnyFlatSpec:
-  def card: Card = Card(10, Spades)
+  def card: Card = GenericCard(10, Suit.Spades)
 
   "A Card" should "have an integer value" in:
     card.value shouldBe a [Int]
@@ -16,11 +14,11 @@ class CardTests extends AnyFlatSpec:
   "A Card" should "have a suit" in:
     card.suit shouldBe a [Suit]
 
-  def twoOfClubs: Card = Card(2, Clubs)
+  def twoOfClubs: Card = GenericCard(2, Suit.Clubs)
 
   "The card two of clubs" should "have a value of 2 and Clubs as suit" in:
     twoOfClubs.value should be (2)
-    twoOfClubs.suit should be (Clubs)
+    twoOfClubs.suit should be (Suit.Clubs)
 
 
 
