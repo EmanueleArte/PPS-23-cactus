@@ -19,6 +19,8 @@ prevede le seguenti attività:
   Sprint Planning si produce uno _Sprint Backlog_ che assegna a ogni membro del team
   dei _task_ da eseguire.
 
+Nel caso in cui gli item da implementare vengono completati prima del previsto, verrà fatto un ulteriore _sprint planning_ semplificato, tramite il quale verranno aggiunte ulteriori funzionalità da sviluppare nello sprint corrente.
+
 Al termine dello sprint si prevedono tre ulteriori attività:
 - **Product Backlog Refinement**: una riunione in cui il team di sviluppo di accorda sulle
   migliorie che devono essere apportate al Product Backlog.
@@ -29,7 +31,8 @@ Al termine dello sprint si prevedono tre ulteriori attività:
 
 L'organizzazione del personale all'interno del processo Scrum prevede tre ruoli:
 - **Product Owner**: si occupa di redarre il _Product Backlog_ e di verificare l'adeguatezza del
-  sistema realizzato. Il ruolo, nel nostro caso specifico, è condiviso tra tutti i membri del team.
+  sistema realizzato. Il ruolo, nel nostro caso, è svolto da Enrico Tagliaferri.
+- **Scrum Master**: agisce da esperto del processo Scrum e da mediatore tra gli altri due ruoli. Il ruolo è stato assunto da Emanuele Artegiani.
 - **Development Team**: si occupa di progettare soluzioni adeguate ai task definiti dal Product
   Owner, stimando tempi di realizzazione e proponendo modifiche sul sistema al Product Owner.
   Il team di sviluppo sarà composto da:
