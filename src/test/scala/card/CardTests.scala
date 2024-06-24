@@ -34,4 +34,3 @@ class CardTests extends AnyFlatSpec:
     coverableCard.isCovered should be (false)
     coverableCard.cover()
     coverableCard.isCovered should be (true)
-

@@ -12,6 +12,3 @@ class PokerCardTests extends AnyFlatSpec:
       PokerCard(-3, PokerSuit.Spades)
     intercept[IllegalArgumentException]:
       PokerCard(14, PokerSuit.Spades)
-
-
-
