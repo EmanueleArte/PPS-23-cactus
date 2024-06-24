@@ -19,7 +19,6 @@ object Cards:
      * The suit of the card.
      */
     def suit: Suit
-    def copy: Card = this
 
   /**
    * Represents generic a card with a value and a suit.
