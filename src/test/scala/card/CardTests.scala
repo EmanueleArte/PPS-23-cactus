@@ -8,10 +8,10 @@ import org.scalatest.flatspec.AnyFlatSpec
 class CardTests extends AnyFlatSpec:
   val card: Card = GenericCard(10, PokerSuit.Spades)
 
-  "A Card" should "have an integer value" in:
+  "Generic Card" should "have a non-null value" in:
     card.value shouldBe a [Int]
 
-  "A Card" should "have a suit" in:
+  "Generic Card" should "have a suit" in:
     card.suit shouldBe a [Suit]
 
   def twoOfClubs: Card = GenericCard(2, PokerSuit.Clubs)
@@ -22,15 +22,15 @@ class CardTests extends AnyFlatSpec:
 
   val coverableCard: Card & Coverable = new GenericCard(5, PokerSuit.Diamonds) with Coverable
 
-  "A coverable card" should "be covered by default" in:
+  "Coverable card" should "be covered by default" in:
     coverableCard.isCovered should be (true)
 
-  "A coverable card" should "be able to be uncovered" in:
+  "Coverable card" should "be able to be uncovered" in:
     coverableCard.isCovered should be (true)
     coverableCard.uncover()
     coverableCard.isCovered should be (false)
 
-  "A coverable card" should "be able to be covered" in:
+  "Coverable card" should "be able to be covered" in:
     coverableCard.isCovered should be (false)
     coverableCard.cover()
     coverableCard.isCovered should be (true)
