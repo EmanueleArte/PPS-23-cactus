@@ -21,7 +21,7 @@ object Cards:
     def suit: Suit
 
   /**
-   * Represents generic a card with a value and a suit.
+   * Represents generic a card with a value and a suit. It is an extension of the [[Card]] trait.
    *
    * @tparam A the type of the value of the card
    * @param value the value of the card
@@ -31,7 +31,7 @@ object Cards:
     override type Value = A
 
   /**
-   * Represents a poker card with a value and a suit.
+   * Represents a poker card with a value and a suit. It is an extension of the [[Card]] trait.
    *
    * @param value the value of the card that ranges from 1 to 13
    * @param suit the suit of the card
