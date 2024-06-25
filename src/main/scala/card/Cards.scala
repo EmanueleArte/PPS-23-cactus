@@ -23,12 +23,24 @@ object Cards:
   /**
    * Represents generic a card with a value and a suit. It is an extension of the [[Card]] trait.
    *
-   * @tparam A the type of the value of the card
    * @param value the value of the card
    * @param suit the suit of the card
+   * @tparam A the type of the value of the card
    */
   case class GenericCard[A](value: A, suit: Suit) extends Card:
     override type Value = A
+
+  /** Companion object of [[Card]]. */
+  object Card:
+    /**
+     * Creates a generic card with a value and a suit.
+     *
+     * @param value the value of the card
+     * @param suit  the suit of the card
+     * @tparam A the type of the value of the card
+     * @return a generic card with a value and a suit
+     */
+    def apply[A](value: A, suit: Suit): Card = GenericCard(value, suit)
 
   /**
    * Represents a poker card with a value and a suit. It is an extension of the [[Card]] trait.
