@@ -2,22 +2,16 @@ package card
 
 import card.CardsData.*
 
-/**
- * Cards with a value and a suit implementation.
- */
+/** Cards with a value and a suit implementation. */
 object Cards:
-  /**
-   * Represents a card with a value and a suit.
-   */
+  /** Represents a card with a value and a suit. */
   trait Card:
     type Value
-    /**
-     * The value of the card.
-     */
+
+    /** The value of the card. */
     def value: Value
-    /**
-     * The suit of the card.
-     */
+
+    /** The suit of the card. */
     def suit: Suit
 
   /**
@@ -53,23 +47,20 @@ object Cards:
     require(value >= 1, "Card value cannot be less than 1")
     require(value <= 13, "Card value cannot be greater than 13")
 
-  /**
-   * Represents a card that can be covered and uncovered.
-   */
+  /** Represents a card that can be covered and uncovered. */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   trait Coverable:
     private var covered = true
+
     /**
      * Checks if the card is covered.
      *
      * @return true if the card is covered, false otherwise
      */
     def isCovered: Boolean = covered
-    /**
-     * Covers the card.
-     */
+
+    /** Covers the card. */
     def cover(): Unit = covered = true
-    /**
-     * Uncovers the card.
-     */
+
+    /** Uncovers the card. */
     def uncover(): Unit = covered = false

@@ -5,7 +5,9 @@ import card.Cards.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
+/** Tests for cards. */
 class CardTests extends AnyFlatSpec:
+
   val card: Card = Card(10, PokerSuit.Spades)
 
   "Generic Card" should "have a non-null value" in:

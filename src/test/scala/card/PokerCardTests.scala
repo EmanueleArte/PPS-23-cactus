@@ -1,13 +1,14 @@
 package card
 
 import card.CardsData.*
+import PokerCardNames.*
 import PokerSuit.*
 import card.Cards.*
-import card.CardBuilder.PokerCardNames.*
 import card.CardBuilder.PokerDSL.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
+/** Tests for poker cards. */
 class PokerCardTests extends AnyFlatSpec:
 
   "Poker card" should "have an value between 1 to 13" in:
