@@ -3,9 +3,7 @@ package card
 import card.CardsData.PokerSuit
 import card.Cards.*
 
-/**
- * Builder for creating cards.
- */
+/** Builder for creating cards. */
 object CardBuilder:
 
   /** Represents the names of poker cards associated to their values. */
