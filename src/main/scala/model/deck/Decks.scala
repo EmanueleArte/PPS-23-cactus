@@ -119,3 +119,18 @@ object Decks:
      */
     def apply(values: Range, suits: List[Suit], shuffled: Boolean): Deck =
       GenericDeck(values, suits, shuffled)
+
+
+  trait DiscardPile:
+    type CardType <: Card
+//    def cards: List[CardType]
+    def size: Int
+    def put(card: Card): DiscardPile
+    def cards: List[CardType]
+
+  case class PokerPile(cards: List[PokerCard]) extends DiscardPile:
+    override type CardType = PokerCard
+    override def size: Int = cards.size
+    override def put(card: Card): DiscardPile = card match
+      case pokerCard: PokerCard => PokerPile(pokerCard +: cards)
+      case _ => this
