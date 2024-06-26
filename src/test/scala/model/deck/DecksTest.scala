@@ -5,9 +5,10 @@ import card.CardBuilder.PokerDSL.of
 import card.Cards.{Card, PokerCard}
 import card.CardsData.PokerSuit.*
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.must.Matchers.{be, have, not}
+import org.scalatest.matchers.must.Matchers.{be, defined, have, not, empty}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import model.deck.Decks.Deck
+import org.scalatest.matchers.must.Matchers
 
 import scala.collection.immutable.List
 
@@ -37,4 +38,26 @@ class DecksTest extends AnyFlatSpec:
     val deckShuffled: Deck = deck.shuffle()
     deck.cards should not equal deckShuffled.cards
 
-  
+  it should "be possible to draw the first card" in:
+    val deck: Deck = DecksFactory.pokerDeck
+    val cardOption: Option[Card] = deck.draw()
+    cardOption shouldBe defined
+    cardOption.fold(None)(card => card) should be (Ace of Spades)
+
+  "After drawing, the head of the deck" should "be different" in:
+    val deck: Deck = DecksFactory.pokerDeck
+    deck.draw()
+    val cardOption: Option[Card] = deck.draw()
+    cardOption shouldBe defined
+    cardOption.fold(None)(card => card) should be (2 of Spades)
+
+  "After drawing the last card, the deck" should "be empty" in:
+    val deck: Deck = DecksFactory.pokerDeck
+    for (i <- 1 to 52) deck.draw()
+    deck.draw() shouldBe empty
+
+  "Drawing more cards after the deck ends" should "retrieve empty options" in:
+    val deck: Deck = DecksFactory.pokerDeck
+    for (i <- 1 to 52) deck.draw()
+    deck.draw() shouldBe empty
+    deck.draw() shouldBe empty

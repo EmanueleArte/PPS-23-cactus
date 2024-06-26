@@ -12,11 +12,16 @@ import scala.util.Random
 
 object Decks:
 
+  @SuppressWarnings(Array("org.wartremover.warts.All"))
   trait Deck:
-    type CardType
+    type CardType <: Card
+    var head: Int = -1
     def cards: List[CardType]
     def size: Int = cards.size
     def shuffle(): Deck
+    def draw(): Option[CardType] = head match
+      case n if n < size - 1 => head = head + 1; Some(cards(head))
+      case _                 => Option.empty
 
   case class GenericDeck(values: Range, suits: List[Suit], shuffled: Boolean)
       extends Deck:
