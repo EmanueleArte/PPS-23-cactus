@@ -4,40 +4,41 @@ import card.CardBuilder.PokerDSL.*
 import card.CardBuilder.PokerCardNames.*
 import card.CardsData.PokerSuit.*
 
-import scala.collection.immutable.HashSet
 import card.Cards.Card
 import card.Cards.PokerCard
 import card.CardsData.{PokerSuit, Suit}
+
+import scala.util.Random
 
 object Decks:
 
   trait Deck:
     type CardType
-    def drawPile: List[CardType]
-    def size: Int
+    def cards: List[CardType]
+    def size: Int = cards.size
 
-  case class GenericDeck(values: Range, suits: Array[Suit]) extends Deck:
+  case class GenericDeck(values: Range, suits: List[Suit], shuffled: Boolean)
+      extends Deck:
     override type CardType = Card
 
-    override def size: Int = drawPile.size
+    override def cards: List[CardType] =
+      for
+        suit <- if shuffled then Random.shuffle(suits) else suits
+        value <- if shuffled then Random.shuffle(values) else values
+      yield Card(value, suit)
 
-    override def drawPile: List[CardType] =
-      (for
-        suit <- suits
-        value <- values
-      yield Card(value, suit)).toList
-
-  case class PokerDeck() extends Deck:
+  case class PokerDeck(shuffled: Boolean) extends Deck:
     override type CardType = PokerCard
 
-    override def size: Int = drawPile.size
+    private val SUITS: List[PokerSuit] = List(Spades, Diamonds, Clubs, Hearts)
+    private val VALUES: Range = Ace to King
 
-    override def drawPile: List[CardType] =
-      (for
-        suit <- Array(Spades, Diamonds, Clubs, Hearts);
-        value <- Ace to King
-      yield value of suit).toList
+    override def cards: List[CardType] =
+      for
+        suit <- if shuffled then Random.shuffle(SUITS) else SUITS;
+        value <- if shuffled then Random.shuffle(VALUES) else VALUES
+      yield value of suit
 
   object Deck:
-    def apply(values: Range, suits: Array[Suit]): Deck =
-      GenericDeck(values, suits)
+    def apply(values: Range, suits: List[Suit], shuffled: Boolean): Deck =
+      GenericDeck(values, suits, shuffled)
