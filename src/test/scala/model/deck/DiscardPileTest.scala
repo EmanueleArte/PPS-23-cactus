@@ -3,7 +3,7 @@ package model.deck
 import card.CardBuilder.PokerCardNames
 import card.CardBuilder.PokerCardNames.Ace
 import card.CardBuilder.PokerDSL.of
-import card.Cards.PokerCard
+import card.Cards.{Card, PokerCard}
 import card.CardsData.PokerSuit.Spades
 import model.deck.Decks.{DiscardPile, PokerPile}
 import org.scalatest.flatspec.AnyFlatSpec
@@ -28,3 +28,18 @@ class DiscardPileTest extends AnyFlatSpec:
       .put(2 of Spades)
       .put(3 of Spades)
     updatedPile.cards should be(List(3 of Spades, 2 of Spades, Ace of Spades))
+
+  "Draw" should "retrieve the last card discarded" in:
+    val discardPile: DiscardPile = PokerPile(List())
+    val updatedPile: DiscardPile = discardPile
+      .put(Ace of Spades)
+      .put(2 of Spades)
+      .put(3 of Spades)
+    val cardOption: Option[Card] = updatedPile.draw()
+    cardOption shouldBe defined
+    cardOption.fold(Nil)(card => card) should be (3 of Spades)
+
+  "Draw from an empty pile" should "return empty Option" in:
+    val discardPile: DiscardPile = PokerPile(List())
+    val cardOption: Option[Card] = discardPile.draw()
+    cardOption shouldBe empty

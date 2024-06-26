@@ -127,6 +127,7 @@ object Decks:
     def size: Int
     def put(card: Card): DiscardPile
     def cards: List[CardType]
+    def draw(): Option[CardType]
 
   case class PokerPile(cards: List[PokerCard]) extends DiscardPile:
     override type CardType = PokerCard
@@ -134,3 +135,5 @@ object Decks:
     override def put(card: Card): DiscardPile = card match
       case pokerCard: PokerCard => PokerPile(pokerCard +: cards)
       case _ => this
+
+    override def draw(): Option[PokerCard] = cards.headOption
