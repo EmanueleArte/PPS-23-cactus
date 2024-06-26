@@ -1,5 +1,0 @@
-package player
-
-object Player {
-
-}
