@@ -13,7 +13,7 @@ class CardTests extends AnyFlatSpec:
   "Generic Card" should "have a non-null value" in:
     card.value shouldBe a [Int]
 
-  "Generic Card" should "have a suit" in:
+  it should "have a suit" in:
     card.suit shouldBe a [Suit]
 
   def twoOfClubs: Card = GenericCard(2, PokerSuit.Clubs)
@@ -27,12 +27,12 @@ class CardTests extends AnyFlatSpec:
   "Coverable card" should "be covered by default" in:
     coverableCard.isCovered should be (true)
 
-  "Coverable card" should "be able to be uncovered" in:
+  it should "be able to be uncovered" in:
     coverableCard.isCovered should be (true)
     coverableCard.uncover()
     coverableCard.isCovered should be (false)
 
-  "Coverable card" should "be able to be covered" in:
+  it should "be able to be covered" in:
     coverableCard.isCovered should be (false)
     coverableCard.cover()
     coverableCard.isCovered should be (true)
