@@ -20,14 +20,21 @@ class DecksTest extends AnyFlatSpec:
   )
 
   "A deck" should "contain 52 cards" in:
-    val deck: Deck = DecksFactory.pokerDeck()
+    val deck: Deck = DecksFactory.pokerDeck
     deck.size shouldBe 52
 
   "New deck" should "be unshuffled" in :
-    val deck: Deck = DecksFactory.pokerDeck() //(Ace to King, Array(Spades, Hearts, Diamonds, Clubs))
+    val deck: Deck = DecksFactory.pokerDeck //(Ace to King, Array(Spades, Hearts, Diamonds, Clubs))
     deck.cards should be (cardsList)
 
   "Shuffled deck" should "has cards ordered differently than the initial order" in:
     val shuffledDeck: Deck = DecksFactory.pokerDeck(shuffled = true)
 
     shuffledDeck.cards should not equal cardsList
+
+  it should "be shuffled more times" in:
+    val deck: Deck = DecksFactory.pokerDeck(shuffled = true)
+    val deckShuffled: Deck = deck.shuffle()
+    deck.cards should not equal deckShuffled.cards
+
+  
