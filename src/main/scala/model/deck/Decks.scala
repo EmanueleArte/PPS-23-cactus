@@ -12,19 +12,23 @@ import scala.util.Random
 
 object Decks:
 
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   trait Deck:
     type CardType <: Card
-    var head: Int = -1
     def cards: List[CardType]
-    def size: Int = cards.size
+    def size: Int
     def shuffle(): Deck
-    def draw(): Option[CardType] = head match
+    def draw(): Option[CardType]
+
+  @SuppressWarnings(Array("org.wartremover.warts.All"))
+  abstract class DeckImpl(shuffled: Boolean) extends Deck:
+    var head: Int = -1
+    override def size: Int = cards.size
+    override def draw(): Option[CardType] = head match
       case n if n < size - 1 => head = head + 1; Some(cards(head))
       case _                 => Option.empty
 
   case class GenericDeck(values: Range, suits: List[Suit], shuffled: Boolean)
-      extends Deck:
+      extends DeckImpl(shuffled):
     override type CardType = Card
 
     override def shuffle(): Deck = GenericDeck(values, suits, true)
@@ -35,7 +39,7 @@ object Decks:
         value <- if shuffled then Random.shuffle(values) else values
       yield Card(value, suit)
 
-  case class PokerDeck(shuffled: Boolean) extends Deck:
+  case class PokerDeck(shuffled: Boolean) extends DeckImpl(shuffled):
     override type CardType = PokerCard
 
     private val SUITS: List[PokerSuit] = List(Spades, Diamonds, Clubs, Hearts)
