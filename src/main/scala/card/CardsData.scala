@@ -10,7 +10,7 @@ object CardsData:
     case Hearts, Diamonds, Clubs, Spades
 
   /** Represents the names of poker cards associated to their values. */
-  object PokerCardNames extends Enumeration:
+  object PokerCardName extends Enumeration:
     val Ace   = 1
     val Jack  = 11
     val Queen = 12

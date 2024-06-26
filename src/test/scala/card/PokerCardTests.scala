@@ -1,7 +1,7 @@
 package card
 
 import card.CardsData.*
-import PokerCardNames.*
+import PokerCardName.*
 import PokerSuit.*
 import card.Cards.*
 import card.CardBuilder.PokerDSL.*
