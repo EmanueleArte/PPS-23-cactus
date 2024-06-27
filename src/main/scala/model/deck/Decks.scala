@@ -1,9 +1,9 @@
 package model.deck
 
-import card.CardBuilder.PokerCardNames.*
-import card.CardBuilder.PokerDSL.*
+import card.CardBuilder.PokerDSL.of
 import card.Cards.{Card, PokerCard}
-import card.CardsData.PokerSuit.*
+import card.CardsData.PokerCardName.{Ace, King}
+import card.CardsData.PokerSuit.{Spades, Diamonds, Clubs, Hearts}
 import card.CardsData.{PokerSuit, Suit}
 
 import scala.util.Random
@@ -43,8 +43,6 @@ object Decks:
       */
     def draw(): Option[CardType]
     def reset(): Deck
-
-
 
   /** Basic implementation of a deck.
     * @param shuffled
@@ -99,18 +97,20 @@ object Decks:
     override def shuffle(): Deck = GenericDeck(values, suits, true)
     override protected def sameDeck: Deck = this
 
-  /**
-   * Companion object of [[GenericDeck]].
-   */
+  /** Companion object of [[GenericDeck]].
+    */
   object GenericDeck:
-    /**
-     * Create an unshuffled generic deck.
-     *
-     * @param values range of values of the cards.
-     * @param suits list of suits of the cards.
-     * @return an unshuffled generic deck.
-     */
-    def apply(values: Range, suits: List[Suit]): GenericDeck = GenericDeck(values, suits, false)
+    /** Create an unshuffled generic deck.
+      *
+      * @param values
+      *   range of values of the cards.
+      * @param suits
+      *   list of suits of the cards.
+      * @return
+      *   an unshuffled generic deck.
+      */
+    def apply(values: Range, suits: List[Suit]): GenericDeck =
+      GenericDeck(values, suits, false)
 
   /** Specific deck with french-suited cards, without the jokers.
     *
@@ -133,14 +133,13 @@ object Decks:
     override protected def sameDeck: Deck = new PokerDeck(false):
       override def cards: List[CardType] = PokerDeck.this.cards
 
-  /**
-   * Companion object of [[PokerDeck]].
-   */
+  /** Companion object of [[PokerDeck]].
+    */
   object PokerDeck:
-    /**
-     * Creates an unshuffled poker deck.
-     * @return an unshaffled poker deck.
-     */
+    /** Creates an unshuffled poker deck.
+      * @return
+      *   an unshaffled poker deck.
+      */
     def apply(): PokerDeck = PokerDeck(false)
 
   /** Companion object of [[Deck]]

@@ -1,7 +1,7 @@
 package model.deck
 
-import card.CardBuilder.PokerCardNames
-import card.CardBuilder.PokerCardNames.Ace
+import card.CardsData.PokerCardName
+import card.CardsData.PokerCardName.Ace
 import card.CardBuilder.PokerDSL.of
 import card.Cards.{Card, PokerCard}
 import card.CardsData.PokerSuit.Spades
