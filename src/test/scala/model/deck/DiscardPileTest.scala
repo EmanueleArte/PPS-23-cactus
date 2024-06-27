@@ -7,7 +7,7 @@ import card.Cards.{Card, PokerCard}
 import card.CardsData.PokerSuit.Spades
 import model.deck.Decks.{DiscardPile, PokerPile}
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.must.Matchers.{be, defined, empty, have, not}
+import org.scalatest.matchers.must.Matchers.{be, defined, empty, have, not, an}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import org.scalatest.matchers.must.Matchers
 
@@ -43,3 +43,7 @@ class DiscardPileTest extends AnyFlatSpec:
     val discardPile: DiscardPile = PokerPile(List())
     val cardOption: Option[Card] = discardPile.draw()
     cardOption shouldBe empty
+
+  "Card not from a certain deck" should "not be put on a pile" in:
+    val discardPile: DiscardPile = PokerPile(List())
+    an [IllegalArgumentException] should be thrownBy discardPile.put(Card(1, Spades))
