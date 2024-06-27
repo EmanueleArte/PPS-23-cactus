@@ -1,13 +1,12 @@
 package model.deck
 
-import card.CardBuilder.PokerDSL.*
 import card.CardBuilder.PokerCardNames.*
+import card.CardBuilder.PokerDSL.*
+import card.Cards.{Card, PokerCard}
 import card.CardsData.PokerSuit.*
-import card.Cards.Card
-import card.Cards.PokerCard
 import card.CardsData.{PokerSuit, Suit}
 
-import scala.util.{Random, Try}
+import scala.util.Random
 
 /** Cards deck with different implementations.
   */
@@ -43,6 +42,16 @@ object Decks:
       *   the card on top.
       */
     def draw(): Option[CardType]
+    def reset(): Deck
+
+  trait DiscardPile:
+    type CardType <: Card
+//    def cards: List[CardType]
+    def size: Int
+    def put(card: Card): DiscardPile
+    def cards: List[CardType]
+    def draw(): Option[CardType]
+    def empty(): DiscardPile
 
   /** Basic implementation of a deck.
     * @param shuffled
@@ -50,11 +59,24 @@ object Decks:
     */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   abstract class DeckImpl(shuffled: Boolean) extends Deck:
-    var head: Int = -1
-    override def size: Int = cards.size
+    private val INITIAL_HEAD_VALUE: Int = -1
+    private var head: Int = INITIAL_HEAD_VALUE
+    protected val _rawCards: List[CardType] = List()
+    private lazy val _cards: List[CardType] = shuffled match
+      case true => Random.shuffle(_rawCards)
+      case _    => _rawCards
+
     override def draw(): Option[CardType] = head match
       case n if n < size - 1 => head = head + 1; Some(cards(head))
       case _                 => Option.empty
+
+    override def size: Int = cards.size
+    override def cards: List[CardType] = _cards
+    override def reset(): Deck =
+      head = INITIAL_HEAD_VALUE
+      sameDeck
+
+    protected def sameDeck: Deck
 
   /** The most general kind of deck creatable.
     *
@@ -76,13 +98,13 @@ object Decks:
       extends DeckImpl(shuffled):
     override type CardType = Card
 
-    override def shuffle(): Deck = GenericDeck(values, suits, true)
+    override protected val _rawCards: List[Card] = for
+      suit <- suits
+      value <- values
+    yield Card(value, suit)
 
-    override def cards: List[CardType] =
-      for
-        suit <- if shuffled then Random.shuffle(suits) else suits
-        value <- if shuffled then Random.shuffle(values) else values
-      yield Card(value, suit)
+    override def shuffle(): Deck = GenericDeck(values, suits, true)
+    override protected def sameDeck: Deck = this
 
   /** Specific deck with french-suited cards, without the jokers.
     *
@@ -95,13 +117,30 @@ object Decks:
     private val SUITS: List[PokerSuit] = List(Spades, Diamonds, Clubs, Hearts)
     private val VALUES: Range = Ace to King
 
+    override val _rawCards: List[CardType] = for
+      suit <- SUITS;
+      value <- VALUES
+    yield value of suit
+
     override def shuffle(): Deck = PokerDeck(true)
 
-    override def cards: List[CardType] =
-      for
-        suit <- if shuffled then Random.shuffle(SUITS) else SUITS;
-        value <- if shuffled then Random.shuffle(VALUES) else VALUES
-      yield value of suit
+    override protected def sameDeck: Deck = new PokerDeck(false):
+      override def cards: List[CardType] = PokerDeck.this.cards
+
+
+  @SuppressWarnings(Array("org.wartremover.warts.All"))
+  case class PokerPile(cards: List[PokerCard]) extends DiscardPile:
+    override type CardType = PokerCard
+    override def size: Int = cards.size
+    override def put(card: Card): DiscardPile =
+      require(card.isInstanceOf[PokerCard], "Expected a PokerCard")
+      card match
+        case pokerCard: PokerCard => PokerPile(pokerCard +: cards)
+        case _                    => this
+
+    override def draw(): Option[PokerCard] = cards.headOption
+
+    override def empty(): DiscardPile = PokerPile(List())
 
   /** Companion object of [[Deck]]
     */
@@ -119,26 +158,3 @@ object Decks:
       */
     def apply(values: Range, suits: List[Suit], shuffled: Boolean): Deck =
       GenericDeck(values, suits, shuffled)
-
-  trait DiscardPile:
-    type CardType <: Card
-//    def cards: List[CardType]
-    def size: Int
-    def put(card: Card): DiscardPile
-    def cards: List[CardType]
-    def draw(): Option[CardType]
-    def empty(): DiscardPile
-
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class PokerPile(cards: List[PokerCard]) extends DiscardPile:
-    override type CardType = PokerCard
-    override def size: Int = cards.size
-    override def put(card: Card): DiscardPile =
-      require(card.isInstanceOf[PokerCard], "Expected a PokerCard")
-      card match
-        case pokerCard: PokerCard => PokerPile(pokerCard +: cards)
-        case _                    => this
-
-    override def draw(): Option[PokerCard] = cards.headOption
-
-    override def empty(): DiscardPile = PokerPile(List())

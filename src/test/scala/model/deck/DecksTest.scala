@@ -61,3 +61,20 @@ class DecksTest extends AnyFlatSpec:
     for (i <- 1 to 52) deck.draw()
     deck.draw() shouldBe empty
     deck.draw() shouldBe empty
+
+  "A deck" should "be resettable" in:
+    val deck: Deck = DecksFactory.pokerDeck
+    deck.draw()
+    deck.draw()
+    val cardOption: Option[Card] = deck.reset().draw()
+    cardOption shouldBe defined
+    cardOption.fold(Nil)(card => card) shouldBe (Ace of Spades)
+
+  "A resetted shuffled deck" should "maintain the order" in:
+    val deck: Deck = DecksFactory.pokerDeck(true)
+    val firstCardOption: Option[Card] = deck.draw()
+    val firstCardAfterResetOption: Option[Card] = deck.reset().draw()
+    firstCardOption shouldBe defined
+    firstCardAfterResetOption shouldBe defined
+    firstCardOption.fold(Nil)(card => card) should be
+      (firstCardAfterResetOption.fold(Nil)(card => card))
