@@ -127,6 +127,7 @@ object Decks:
     def put(card: Card): DiscardPile
     def cards: List[CardType]
     def draw(): Option[CardType]
+    def empty(): DiscardPile
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   case class PokerPile(cards: List[PokerCard]) extends DiscardPile:
@@ -139,3 +140,5 @@ object Decks:
         case _                    => this
 
     override def draw(): Option[PokerCard] = cards.headOption
+
+    override def empty(): DiscardPile = PokerPile(List())

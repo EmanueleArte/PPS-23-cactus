@@ -47,3 +47,23 @@ class DiscardPileTest extends AnyFlatSpec:
   "Card not from a certain deck" should "not be put on a pile" in:
     val discardPile: DiscardPile = PokerPile(List())
     an [IllegalArgumentException] should be thrownBy discardPile.put(Card(1, Spades))
+
+  "Pile" should "be emptiable" in:
+    val discardPile: DiscardPile = PokerPile(List())
+      .put(Ace of Spades)
+      .put(2 of Spades)
+      .put(3 of Spades)
+      .empty()
+    discardPile.size shouldBe 0
+
+  "Empty an already empty pile" should "not give an error" in:
+    val discardPile: DiscardPile = PokerPile(List()).empty()
+    discardPile.size shouldBe 0
+
+  "After emptying a pile" should "be possibile to add cards" in:
+    val discardPile: DiscardPile = PokerPile(List())
+      .put(Ace of Spades)
+      .empty()
+      .put(2 of Spades)
+
+    discardPile.cards should be (List(2 of Spades))
