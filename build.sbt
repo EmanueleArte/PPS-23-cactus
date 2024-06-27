@@ -29,9 +29,6 @@ lazy val root = project
     },
     fork := true,
 
-    /* Scala formatter */
-    libraryDependencies += "org.scalameta" % "sbt-scalafmt_2.12_1.0" % "2.5.2",
-
     /* Wartremover */
     wartremoverErrors ++= Warts.unsafe,
     wartremoverWarnings ++= Warts.unsafe
