@@ -5,9 +5,9 @@ import card.CardBuilder.PokerDSL.of
 import card.Cards.{Card, PokerCard}
 import card.CardsData.PokerSuit.*
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.must.Matchers.{be, defined, have, not, empty}
+import org.scalatest.matchers.must.Matchers.{be, defined, empty, have, not}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
-import model.deck.Decks.Deck
+import model.deck.Decks.{Deck, PokerDeck}
 import org.scalatest.matchers.must.Matchers
 
 import scala.collection.immutable.List
@@ -21,49 +21,49 @@ class DecksTest extends AnyFlatSpec:
   )
 
   "A deck" should "contain 52 cards" in:
-    val deck: Deck = DecksFactory.pokerDeck
+    val deck: Deck = PokerDeck()
     deck.size shouldBe 52
 
   "New deck" should "be unshuffled" in :
-    val deck: Deck = DecksFactory.pokerDeck //(Ace to King, Array(Spades, Hearts, Diamonds, Clubs))
+    val deck: Deck = PokerDeck()
     deck.cards should be (cardsList)
 
   "Shuffled deck" should "has cards ordered differently than the initial order" in:
-    val shuffledDeck: Deck = DecksFactory.pokerDeck(shuffled = true)
+    val shuffledDeck: Deck = PokerDeck(shuffled = true)
 
     shuffledDeck.cards should not equal cardsList
 
   it should "be shuffled more times" in:
-    val deck: Deck = DecksFactory.pokerDeck(shuffled = true)
+    val deck: Deck = PokerDeck(shuffled = true)
     val deckShuffled: Deck = deck.shuffle()
     deck.cards should not equal deckShuffled.cards
 
   it should "be possible to draw the first card" in:
-    val deck: Deck = DecksFactory.pokerDeck
+    val deck: Deck = PokerDeck()
     val cardOption: Option[Card] = deck.draw()
     cardOption shouldBe defined
     cardOption.fold(None)(card => card) should be (Ace of Spades)
 
   "After drawing, the head of the deck" should "be different" in:
-    val deck: Deck = DecksFactory.pokerDeck
+    val deck: Deck = PokerDeck()
     deck.draw()
     val cardOption: Option[Card] = deck.draw()
     cardOption shouldBe defined
     cardOption.fold(None)(card => card) should be (2 of Spades)
 
   "After drawing the last card, the deck" should "be empty" in:
-    val deck: Deck = DecksFactory.pokerDeck
+    val deck: Deck = PokerDeck()
     for (i <- 1 to 52) deck.draw()
     deck.draw() shouldBe empty
 
   "Drawing more cards after the deck ends" should "retrieve empty options" in:
-    val deck: Deck = DecksFactory.pokerDeck
+    val deck: Deck = PokerDeck()
     for (i <- 1 to 52) deck.draw()
     deck.draw() shouldBe empty
     deck.draw() shouldBe empty
 
   "A deck" should "be resettable" in:
-    val deck: Deck = DecksFactory.pokerDeck
+    val deck: Deck = PokerDeck()
     deck.draw()
     deck.draw()
     val cardOption: Option[Card] = deck.reset().draw()
@@ -71,7 +71,7 @@ class DecksTest extends AnyFlatSpec:
     cardOption.fold(Nil)(card => card) shouldBe (Ace of Spades)
 
   "A resetted shuffled deck" should "maintain the order" in:
-    val deck: Deck = DecksFactory.pokerDeck(true)
+    val deck: Deck = PokerDeck(true)
     val firstCardOption: Option[Card] = deck.draw()
     val firstCardAfterResetOption: Option[Card] = deck.reset().draw()
     firstCardOption shouldBe defined

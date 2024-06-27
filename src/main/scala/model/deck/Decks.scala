@@ -8,7 +8,6 @@ import card.CardsData.{PokerSuit, Suit}
 
 import scala.util.Random
 
-// TODO: change List with iterable (or smt similar) to let classes implement cards how they want (list, set, ...)
 /** Cards deck with different implementations.
   */
 object Decks:
@@ -100,6 +99,19 @@ object Decks:
     override def shuffle(): Deck = GenericDeck(values, suits, true)
     override protected def sameDeck: Deck = this
 
+  /**
+   * Companion object of [[GenericDeck]].
+   */
+  object GenericDeck:
+    /**
+     * Create an unshuffled generic deck.
+     *
+     * @param values range of values of the cards.
+     * @param suits list of suits of the cards.
+     * @return an unshuffled generic deck.
+     */
+    def apply(values: Range, suits: List[Suit]): GenericDeck = GenericDeck(values, suits, false)
+
   /** Specific deck with french-suited cards, without the jokers.
     *
     * @param shuffled
@@ -120,6 +132,16 @@ object Decks:
 
     override protected def sameDeck: Deck = new PokerDeck(false):
       override def cards: List[CardType] = PokerDeck.this.cards
+
+  /**
+   * Companion object of [[PokerDeck]].
+   */
+  object PokerDeck:
+    /**
+     * Creates an unshuffled poker deck.
+     * @return an unshaffled poker deck.
+     */
+    def apply(): PokerDeck = PokerDeck(false)
 
   /** Companion object of [[Deck]]
     */
