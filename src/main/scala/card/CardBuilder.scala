@@ -6,13 +6,6 @@ import card.Cards.*
 /** Builder for creating cards. */
 object CardBuilder:
 
-  /** Represents the names of poker cards associated to their values. */
-  object PokerCardNames extends Enumeration:
-    val Ace = 1
-    val Jack = 11
-    val Queen = 12
-    val King = 13
-
   /** A DSL definition for [[PokerCard]]. */
   object PokerDSL:
     extension (value: Int)
@@ -23,3 +16,12 @@ object CardBuilder:
        * @return a poker card with the given value and suit
        */
       def of(suit: PokerSuit): PokerCard = PokerCard(value, suit)
+
+      /**
+       * Creates a coverable poker card with the given value and suit. Using the syntax `value OF suit`
+       * (e.g. 5 OF Spades).
+       *
+       * @param suit the suit of the card
+       * @return a coverable poker card with the given value and suit
+       */
+      def OF(suit: PokerSuit): PokerCard & Coverable = new PokerCard(value, suit) with Coverable
