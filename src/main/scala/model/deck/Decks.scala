@@ -8,6 +8,7 @@ import card.CardsData.{PokerSuit, Suit}
 
 import scala.util.Random
 
+// TODO: change List with iterable (or smt similar) to let classes implement cards how they want (list, set, ...)
 /** Cards deck with different implementations.
   */
 object Decks:
@@ -44,14 +45,7 @@ object Decks:
     def draw(): Option[CardType]
     def reset(): Deck
 
-  trait DiscardPile:
-    type CardType <: Card
-//    def cards: List[CardType]
-    def size: Int
-    def put(card: Card): DiscardPile
-    def cards: List[CardType]
-    def draw(): Option[CardType]
-    def empty(): DiscardPile
+
 
   /** Basic implementation of a deck.
     * @param shuffled
@@ -126,21 +120,6 @@ object Decks:
 
     override protected def sameDeck: Deck = new PokerDeck(false):
       override def cards: List[CardType] = PokerDeck.this.cards
-
-
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class PokerPile(cards: List[PokerCard]) extends DiscardPile:
-    override type CardType = PokerCard
-    override def size: Int = cards.size
-    override def put(card: Card): DiscardPile =
-      require(card.isInstanceOf[PokerCard], "Expected a PokerCard")
-      card match
-        case pokerCard: PokerCard => PokerPile(pokerCard +: cards)
-        case _                    => this
-
-    override def draw(): Option[PokerCard] = cards.headOption
-
-    override def empty(): DiscardPile = PokerPile(List())
 
   /** Companion object of [[Deck]]
     */
