@@ -78,3 +78,9 @@ class DecksTest extends AnyFlatSpec:
     firstCardAfterResetOption shouldBe defined
     firstCardOption.fold(Nil)(card => card) should be
       (firstCardAfterResetOption.fold(Nil)(card => card))
+
+  "Drawing cards" should "reduce deck's size" in:
+    val deck: Deck = PokerDeck()
+    val drawnCards: Int = 5
+    for (i <- 1 to drawnCards) deck.draw()
+    deck.size shouldBe 52 - drawnCards
