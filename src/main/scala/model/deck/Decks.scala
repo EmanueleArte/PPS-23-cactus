@@ -3,7 +3,6 @@ package model.deck
 import card.CardBuilder.PokerDSL.of
 import card.Cards.{Card, PokerCard}
 import card.CardsData.PokerCardName.{Ace, King}
-import card.CardsData.PokerSuit.{Spades, Diamonds, Clubs, Hearts}
 import card.CardsData.{PokerSuit, Suit}
 
 import scala.util.Random
@@ -50,12 +49,12 @@ object Decks:
     */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   abstract class DeckImpl(shuffled: Boolean) extends Deck:
-    private val INITIAL_HEAD_VALUE: Int = -1
-    private var head: Int = INITIAL_HEAD_VALUE
-    protected val _rawCards: List[CardType] = List()
     private lazy val _cards: List[CardType] = shuffled match
       case true => Random.shuffle(_rawCards)
       case _    => _rawCards
+    protected val _rawCards: List[CardType] = List()
+    private val INITIAL_HEAD_VALUE: Int = -1
+    private var head: Int = INITIAL_HEAD_VALUE
 
     override def draw(): Option[CardType] = head match
       case n if n < size - 1 => head = head + 1; Some(cards(head))
@@ -97,21 +96,6 @@ object Decks:
     override def shuffle(): Deck = GenericDeck(values, suits, true)
     override protected def sameDeck: Deck = this
 
-  /** Companion object of [[GenericDeck]].
-    */
-  object GenericDeck:
-    /** Create an unshuffled generic deck.
-      *
-      * @param values
-      *   range of values of the cards.
-      * @param suits
-      *   list of suits of the cards.
-      * @return
-      *   an unshuffled generic deck.
-      */
-    def apply(values: Range, suits: List[Suit]): GenericDeck =
-      GenericDeck(values, suits, false)
-
   /** Specific deck with french-suited cards, without the jokers.
     *
     * @param shuffled
@@ -129,6 +113,21 @@ object Decks:
 
     override protected def sameDeck: Deck = new PokerDeck(false):
       override def cards: List[CardType] = PokerDeck.this.cards
+
+  /** Companion object of [[GenericDeck]].
+    */
+  object GenericDeck:
+    /** Create an unshuffled generic deck.
+      *
+      * @param values
+      *   range of values of the cards.
+      * @param suits
+      *   list of suits of the cards.
+      * @return
+      *   an unshuffled generic deck.
+      */
+    def apply(values: Range, suits: List[Suit]): GenericDeck =
+      GenericDeck(values, suits, false)
 
   /** Companion object of [[PokerDeck]].
     */
