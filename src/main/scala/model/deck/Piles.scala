@@ -44,15 +44,6 @@ object Piles:
       */
     def empty(): DiscardPile
 
-  /** Companion object of [[DiscardPile]].
-    */
-  object DiscardPile:
-    /** Create a generic pile.
-      * @return
-      *   a generic pile.
-      */
-    def apply(): DiscardPile = GenericPile()
-
   /** Basic implementation of a pile.
     */
   abstract class PileImpl() extends DiscardPile:
@@ -72,15 +63,6 @@ object Piles:
 
     override def empty(): DiscardPile = GenericPile()
 
-  /** Companion object of [[GenericPile]].
-    */
-  object GenericPile:
-    /** Create an empty generic pile.
-      * @return
-      *   an empty generic pile.
-      */
-    def apply(): GenericPile = GenericPile(List())
-
   /** Specific pile for french-suited cards.
     * @param cards
     *   list of cards.
@@ -98,6 +80,24 @@ object Piles:
         case _                    => this
 
     override def empty(): DiscardPile = PokerPile()
+
+  /** Companion object of [[DiscardPile]].
+    */
+  object DiscardPile:
+    /** Create a generic pile.
+      * @return
+      *   a generic pile.
+      */
+    def apply(): DiscardPile = GenericPile()
+
+  /** Companion object of [[GenericPile]].
+    */
+  object GenericPile:
+    /** Create an empty generic pile.
+      * @return
+      *   an empty generic pile.
+      */
+    def apply(): GenericPile = GenericPile(List())
 
   /** Companion object of [[PokerPile]].
     */

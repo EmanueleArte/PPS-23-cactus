@@ -120,12 +120,9 @@ object Decks:
   case class PokerDeck(shuffled: Boolean) extends DeckImpl(shuffled):
     override type CardType = PokerCard
 
-    private val SUITS: List[PokerSuit] = List(Spades, Diamonds, Clubs, Hearts)
-    private val VALUES: Range = Ace to King
-
     override val _rawCards: List[CardType] = for
-      suit <- SUITS;
-      value <- VALUES
+      suit <- PokerSuit.values.toList;
+      value <- Ace to King
     yield value of suit
 
     override def shuffle(): Deck = PokerDeck(true)
