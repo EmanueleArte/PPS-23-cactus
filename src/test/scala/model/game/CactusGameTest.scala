@@ -11,7 +11,7 @@ class CactusGameTest extends AnyFlatSpec:
   val playersNumber: Int = 3
   val game: Game = CactusGame()
 
-  "Setupgame " should "return the players" in:
+  "Game setup " should "return the players" in:
     val game: Game = CactusGame()
     val players: Players = game.setupGame(playersNumber)
     players should have size playersNumber
