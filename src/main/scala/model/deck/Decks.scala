@@ -114,8 +114,7 @@ object Decks:
     override protected def sameDeck: Deck = new PokerDeck(false):
       override def cards: List[CardType] = PokerDeck.this.cards
 
-  /** Companion object of [[GenericDeck]].
-    */
+  /** Companion object of [[GenericDeck]]. */
   object GenericDeck:
     /** Create an unshuffled generic deck.
       *
