@@ -1,11 +1,12 @@
 package player
 
+import card.Cards.Card
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 import player.Players.HumanPlayer
 
 class PlayerTest extends AnyFlatSpec {
-  val player: HumanPlayer = HumanPlayer(List.empty[Int])
+  val player: HumanPlayer = HumanPlayer(List.empty[Card])
 
   "Player" should "be a HumanPlayer" in:
     player shouldBe a[HumanPlayer]
