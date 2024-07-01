@@ -16,4 +16,8 @@ La durata dello sprint è di una settimana, quindi termina il giorno 30/06/2024.
 
 ## Sprint Review
 
+Non tutti i task prefissati sono stati svolti, a causa di problemi di coordinazione tra i membri del gruppo e a causa di altri impegni universitari.
+
 ## Sprint Retrospective
+
+Necessaria una maggiore sincronizzazione tra i task da svolgere.
