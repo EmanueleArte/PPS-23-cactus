@@ -1,10 +1,11 @@
 package model.game
 
 import card.Cards.Card
-import model.game.Games.{CactusGame, Game, Player}
+import model.game.Games.{CactusGame, Game}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{be, empty, have}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
+import player.Players.Player
 
 class CactusGameTest extends AnyFlatSpec:
   type Players = List[Player]

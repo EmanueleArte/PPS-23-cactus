@@ -3,12 +3,10 @@ package model.game
 import card.Cards.Card
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
+import player.Players.{CactusPlayer, Player}
 
 /** Module with CactusGame implementation. */
 object Games:
-  /* Placeholder for the real Player implementation */
-  trait Player:
-    def cards: List[Card] = List()
 
   /** Generic card game. */
   trait Game:
@@ -35,12 +33,5 @@ object Games:
       (1 to playersNumber).toList
         .map(_ => (1 to 4).toList.map(_ => deck.draw().get))
         .map(list =>
-          new Player() {
-            override def cards: List[Card] = list
-          }
+          new CactusPlayer(list)
         )
-
-  private case class PlayerImpl() extends Player
-
-  object Player:
-    def apply(): Player = PlayerImpl()
