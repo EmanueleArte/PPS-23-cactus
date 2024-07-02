@@ -1,6 +1,6 @@
-package card
+package model.card
 
-import card.CardsData.*
+import model.card.CardsData.{PokerSuit, Suit}
 
 /** Cards with a value and a suit implementation. */
 object Cards:

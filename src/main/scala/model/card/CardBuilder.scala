@@ -1,7 +1,7 @@
-package card
+package model.card
 
-import card.CardsData.PokerSuit
-import card.Cards.*
+import CardsData.PokerSuit
+import Cards.*
 
 /** Builder for creating cards. */
 object CardBuilder:

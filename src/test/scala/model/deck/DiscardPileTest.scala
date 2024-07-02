@@ -1,10 +1,10 @@
 package model.deck
 
-import card.CardsData.PokerCardName
-import card.CardsData.PokerCardName.Ace
-import card.CardBuilder.PokerDSL.of
-import card.Cards.{Card, PokerCard}
-import card.CardsData.PokerSuit.Spades
+import model.card.CardsData.PokerCardName
+import model.card.CardsData.PokerCardName.Ace
+import model.card.CardBuilder.PokerDSL.of
+import model.card.Cards.{Card, PokerCard}
+import model.card.CardsData.PokerSuit.Spades
 import model.deck.Piles.{DiscardPile, PokerPile}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{be, defined, empty, have, not, an}
