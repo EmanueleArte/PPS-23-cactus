@@ -3,7 +3,7 @@ package model.card
 import CardsData.PokerSuit
 import Cards.*
 
-/** Builder for creating cards. */
+/** Builders for creating cards. */
 object CardBuilder:
 
   /** A DSL definition for [[PokerCard]]. */

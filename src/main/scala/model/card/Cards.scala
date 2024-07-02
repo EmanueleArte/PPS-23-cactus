@@ -2,7 +2,7 @@ package model.card
 
 import model.card.CardsData.{PokerSuit, Suit}
 
-/** Cards with a value and a suit implementation. */
+/** Cards with a value and a suit implementations. */
 object Cards:
   /** Represents a card with a value and a suit. */
   trait Card:
