@@ -63,7 +63,7 @@ object Cards:
     /**
      * Checks if the card is covered.
      *
-     * @return true if the card is covered, false otherwise
+     * @return `true` if the card is covered, `false` otherwise
      */
     def isCovered: Boolean = _covered
 
