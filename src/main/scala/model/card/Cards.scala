@@ -8,10 +8,18 @@ object Cards:
   trait Card:
     type Value
 
-    /** The value of the card. */
+    /**
+     * The value of the card.
+     * 
+     * @return the value of the card
+     */
     def value: Value
 
-    /** The suit of the card. */
+    /**
+     * The suit of the card.
+     * 
+     * @return the suit of the card
+     */
     def suit: Suit
 
   /**
