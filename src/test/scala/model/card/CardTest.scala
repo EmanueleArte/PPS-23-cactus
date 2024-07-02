@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
 /** Tests for cards. */
-class CardTests extends AnyFlatSpec:
+class CardTest extends AnyFlatSpec:
 
   val card: Card = Card(10, Spades)
 
