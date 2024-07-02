@@ -14,7 +14,7 @@ object Logic:
   trait Logic:
     type Score
 
-    protected val _players: List[Player]          = List()
+    protected val _players: List[Player]                   = List()
     protected val _currentPlayer: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
 
     /** Represents all the actions action done during the turn. */
