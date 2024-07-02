@@ -50,17 +50,17 @@ object Cards:
   /** Represents a card that can be covered and uncovered. */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   trait Coverable:
-    private var covered = true
+    private var _covered = true
 
     /**
      * Checks if the card is covered.
      *
      * @return true if the card is covered, false otherwise
      */
-    def isCovered: Boolean = covered
+    def isCovered: Boolean = _covered
 
     /** Covers the card. */
-    def cover(): Unit = covered = true
+    def cover(): Unit = _covered = true
 
     /** Uncovers the card. */
-    def uncover(): Unit = covered = false
+    def uncover(): Unit = _covered = false
