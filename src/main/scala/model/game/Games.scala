@@ -1,6 +1,5 @@
 package model.game
 
-import model.card.Cards.Card
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import player.Players.{CactusPlayer, Player}
@@ -32,6 +31,7 @@ object Games:
     override def setupGame(playersNumber: Int): List[Player] =
       (1 to playersNumber).toList
         .map(_ => (1 to 4).toList.map(_ => deck.draw().get))
-        .map(list =>
-          new CactusPlayer(list)
+        .zipWithIndex
+        .map((list, index) =>
+          new CactusPlayer("Player " + index, list)
         )

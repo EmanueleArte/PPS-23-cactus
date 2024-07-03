@@ -1,12 +1,12 @@
 package model.logic
 
-import model.utils.Iterator.PeekableIterator
+import model.utils.Iterators.PeekableIterator
 import player.Players.Player
 
 import scala.annotation.tailrec
 
 /** Logic of a game. */
-object Logic:
+object Logics:
 
   /** Logic of a generic turn based game. */
   trait Logic:

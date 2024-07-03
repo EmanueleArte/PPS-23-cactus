@@ -1,7 +1,7 @@
 package model.utils
 
 /** Utility classes for iterators. */
-object Iterator:
+object Iterators:
   /**
    * Iterator that allows to peek the current element.
    *
