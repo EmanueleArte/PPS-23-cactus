@@ -4,6 +4,7 @@ import card.CardBuilder.PokerDSL.of
 import card.Cards.{Card, PokerCard}
 import card.CardsData.PokerCardName.{Ace, King}
 import card.CardsData.{PokerSuit, Suit}
+import model.deck.Piles.DiscardPile
 
 import scala.util.Random
 
@@ -42,6 +43,18 @@ object Decks:
      *   the card on top.
      */
     def draw(): Option[CardType]
+
+    /**
+     * Restore the deck with the cards given in the discard pile.
+     * @param pile the discard pile to take the cards from.
+     * @return new deck with the cards unshuffled.
+     */
+    def reset(pile: DiscardPile): Deck
+
+    /**
+     * Restore the deck with the initial cards.
+     * @return new deck with the cards unshuffled.
+     */
     def reset(): Deck
 
   /**
@@ -64,39 +77,42 @@ object Decks:
 
     override def size: Int             = cards.size - head - 1
     override def cards: List[CardType] = _cards
-    override def reset(): Deck =
+    override def reset(pile: DiscardPile): Deck =
       head = INITIAL_HEAD_VALUE
-      sameDeck
+      createDeck(pile.cards.reverse)
 
-    protected def sameDeck: Deck
+    override def reset(): Deck =
+      val discardPile: DiscardPile = DiscardPile()
+      cards.foreach(card => discardPile.put(card))
+      reset(discardPile)
 
-  /**
-   * The most general kind of deck creatable.
-   *
-   * The following example will show the creation of a deck formed by 6 cards,
-   * which are: 1 of Spades, 2 of Spades, 3 of Spades, 1 of Diamonds, 2 of
-   * Diamonds and 3 of Diamonds (in this order).
-   * {{{
-   * val deck: Deck = GenericDeck(1 to 3, List(Spades, Diamonds), false)
-   * }}}
-   *
-   * @param values
-   *   range of values of the cards.
-   * @param suits
-   *   list of suits of the cards.
-   * @param shuffled
-   *   if `true` the deck is initially shuffled, if `false` it is not.
-   */
-  case class GenericDeck(values: Range, suits: List[Suit], shuffled: Boolean) extends DeckImpl(shuffled):
+    protected def createDeck(cards: List[Card]): Deck
+
+  /** The most general kind of deck creatable.
+    *
+    * The following example will show the creation of a deck formed by 6 cards,
+    * which are: 1 of Spades, 2 of Spades, 3 of Spades, 1 of Diamonds, 2 of
+    * Diamonds and 3 of Diamonds (in this order).
+    * {{{
+    * val deck: Deck = GenericDeck(1 to 3, List(Spades, Diamonds), false)
+    * }}}
+    *
+    * @param values
+    *   range of values of the cards.
+    * @param suits
+    *   list of suits of the cards.
+    * @param shuffled
+    *   if `true` the deck is initially shuffled, if `false` it is not.
+    */
+  case class GenericDeck(inputCards: List[Card], shuffled: Boolean)
+      extends DeckImpl(shuffled):
     override type CardType = Card
 
-    override protected val _rawCards: List[Card] = for
-      suit  <- suits
-      value <- values
-    yield Card(value, suit)
+    override protected val _rawCards: List[Card] = inputCards
 
-    override def shuffle(): Deck          = GenericDeck(values, suits, true)
-    override protected def sameDeck: Deck = this
+    override def shuffle(): Deck = GenericDeck(inputCards, true)
+    override protected def createDeck(cards: List[Card]): Deck = Deck(cards)
+
 
   /**
    * Specific deck with french-suited cards, without the jokers.
@@ -114,7 +130,7 @@ object Decks:
 
     override def shuffle(): Deck = PokerDeck(true)
 
-    override protected def sameDeck: Deck = new PokerDeck(false):
+    override protected def createDeck(cards: List[Card]): Deck = new PokerDeck(false):
       override def cards: List[CardType] = PokerDeck.this.cards
 
   /** Companion object of [[GenericDeck]]. */
@@ -130,7 +146,8 @@ object Decks:
      *   an unshuffled generic deck.
      */
     def apply(values: Range, suits: List[Suit]): GenericDeck =
-      GenericDeck(values, suits, false)
+      GenericDeck(for suit <- suits; value <- values yield Card(value, suit), false)
+
 
   /** Companion object of [[PokerDeck]]. */
   object PokerDeck:
@@ -143,17 +160,37 @@ object Decks:
 
   /** Companion object of [[Deck]] */
   object Deck:
-    /**
-     * Creates a generic deck.
-     *
-     * @param values
-     *   range of values of the cards.
-     * @param suits
-     *   list of suits of the cards.
-     * @param shuffled
-     *   if `true` the deck is initially shuffled, if `false` it is not.
-     * @return
-     *   a generic deck.
-     */
-    def apply(values: Range, suits: List[Suit], shuffled: Boolean): Deck =
-      GenericDeck(values, suits, shuffled)
+
+    /** Creates a generic deck.
+      *
+      * @param values
+      *   range of values of the cards.
+      * @param suits
+      *   list of suits of the cards.
+      * @param shuffled
+      *   if `true` the deck is initially shuffled, if `false` it is not.
+      * @return
+      *   a generic deck.
+      */
+    def apply(values: Range, suits: List[Suit], shuffled: Boolean): Deck = GenericDeck(values, suits)
+
+    /** Creates a generic deck.
+      *
+      * @param cards
+      *   list of the cards to put in the deck.
+      * @param shuffled
+      *   if `true` the deck is initially shuffled, if `false` it is not.
+      * @return
+      *   a generic deck.
+      */
+    def apply(cards: List[Card], shuffled: Boolean): Deck = new GenericDeck(cards, shuffled)
+
+    /** Creates a generic deck.
+      *
+      * @param cards
+      *   list of the cards to put in the deck.
+      * @return
+      *   a generic deck.
+      */
+    def apply(cards: List[Card]): Deck = Deck(cards, false)
+
