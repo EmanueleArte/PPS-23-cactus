@@ -1,7 +1,7 @@
 package player
 
-import card.Cards.Card
-import card.CardsData
+import model.card.Cards.Card
+import model.card.CardsData
 import model.deck.Decks.{Deck, PokerDeck}
 import model.game.Games.CactusGame
 import org.scalatest.matchers.should.Matchers.*

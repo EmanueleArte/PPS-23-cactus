@@ -1,6 +1,6 @@
 package model.game
 
-import card.Cards.Card
+import model.card.Cards.Card
 import model.game.Games.{CactusGame, Game}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{be, empty, have}

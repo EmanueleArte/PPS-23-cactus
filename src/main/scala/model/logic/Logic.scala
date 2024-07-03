@@ -1,20 +1,18 @@
 package model.logic
 
 import model.utils.Iterator.PeekableIterator
+import player.Players.Player
+
 import scala.annotation.tailrec
 
 /** Logic of a game. */
 object Logic:
 
-  /** Temporary implementation of a player. */
-  trait Player:
-    def name: String
-
   /** Logic of a generic turn based game. */
   trait Logic:
     type Score
 
-    protected val _players: List[Player]                   = List()
+    protected val _players: List[Player] = List()
     protected val _currentPlayer: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
 
     /** Represents all the actions action done during the turn. */

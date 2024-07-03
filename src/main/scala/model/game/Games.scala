@@ -1,6 +1,6 @@
 package model.game
 
-import card.Cards.Card
+import model.card.Cards.Card
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import player.Players.{CactusPlayer, Player}

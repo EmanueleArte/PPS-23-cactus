@@ -3,6 +3,7 @@ package model.logic
 import model.logic.Logic.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
+import player.Players.Player
 
 /** Tests for basic game logic. */
 class LogicTest extends AnyFlatSpec:
@@ -20,8 +21,7 @@ class LogicTest extends AnyFlatSpec:
     override def isGameOver: Boolean = _counter == N
     override def calculateScore: Map[Player, Score] = players.map(player => player -> _counter).toMap
   
-  case class PlayerImpl(name: String) extends Player
-  val players: List[Player] = List(PlayerImpl("Alice"), PlayerImpl("Bob"), PlayerImpl("Charlie"))
+  val players: List[Player] = List(Player("Alice"), Player("Bob"), PlayerImpl("Charlie"))
 
   "The players" should "play turns cyclically" in :
     val logic = TestLogic(players)
