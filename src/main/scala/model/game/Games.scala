@@ -32,6 +32,6 @@ object Games:
       (1 to playersNumber).toList
         .map(_ => (1 to 4).toList.map(_ => deck.draw().get))
         .zipWithIndex
-        .map((list, index) =>
-          new CactusPlayer("Player " + index, list)
+        .map((list, i) =>
+          new CactusPlayer("Player $i", list)
         )
