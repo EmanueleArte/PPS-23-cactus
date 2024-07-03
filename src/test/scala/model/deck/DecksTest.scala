@@ -12,6 +12,7 @@ import org.scalatest.matchers.must.Matchers
 
 import scala.collection.immutable.List
 
+@SuppressWarnings(Array("org.wartremover.warts.All"))
 class DecksTest extends AnyFlatSpec:
   val cardsList: List[PokerCard] = List(
     Ace of Spades, 2 of Spades, 3 of Spades, 4 of Spades, 5 of Spades, 6 of Spades, 7 of Spades, 8 of Spades, 9 of Spades, 10 of Spades, Jack of Spades, Queen of Spades, King of Spades,
@@ -84,3 +85,27 @@ class DecksTest extends AnyFlatSpec:
     val drawnCards: Int = 5
     for (i <- 1 to drawnCards) deck.draw()
     deck.size shouldBe 52 - drawnCards
+
+  "Deck" should "be resettable using a discard pile" in:
+    import model.deck.Piles.DiscardPile
+    val cardsNumber: Int = 3
+    val deck: Deck = Deck(1 to cardsNumber, List(Spades), shuffled = false)
+    val pile: DiscardPile = DiscardPile()
+      .put(deck.draw().get)
+      .put(deck.draw().get)
+      .put(deck.draw().get)
+    deck.reset(pile).cards should be (List(Card(1, Spades), Card(2, Spades), Card(3, Spades)))
+
+  "Resetting a deck using a partial discard pile" should "create a deck with only the cards of the discard pile" in:
+    import model.deck.Piles.DiscardPile
+    val cardsNumber: Int = 4
+    val deck: Deck = Deck(1 to cardsNumber, List(Spades), shuffled = false)
+    // Drawn cards are not put on the pile...
+    deck.draw()
+    deck.draw()
+    // ... only the last 2 cards are put on the pile
+    val pile: DiscardPile = DiscardPile()
+      .put(deck.draw().get)
+      .put(deck.draw().get)
+    deck.reset(pile).cards should be (List(Card(3, Spades), Card(4, Spades)))
+
