@@ -17,12 +17,12 @@ class LogicTest extends AnyFlatSpec:
     override def playTurn(): Unit = _counter += 1
     override def isGameOver: Boolean = _counter == N
     override def calculateScore: Map[Player, Score] = players.map(player => player -> _counter).toMap
-
+  
   case class PlayerImpl(name: String) extends Player
   val players: List[Player] = List(PlayerImpl("Alice"), PlayerImpl("Bob"), PlayerImpl("Charlie"))
 
   "The players" should "play turns cyclically" in :
-    val logic = new TestLogic(players)
+    val logic = TestLogic(players)
     for _ <- players do logic.playTurn()
     logic.playTurn()
     for (_, s) <- logic.calculateScore do s should be(players.size + 1)
