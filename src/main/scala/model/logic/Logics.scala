@@ -1,5 +1,6 @@
 package model.logic
 
+import model.game.Games.{CactusGame, Game}
 import model.utils.Iterators.PeekableIterator
 import player.Players.Player
 
@@ -11,8 +12,9 @@ object Logics:
   /** Logic of a generic turn based game. */
   trait Logic:
     type Score
-
-    protected val _players: List[Player] = List()
+    type Players = List[Player]
+    
+    protected val _players: Players = List()
     protected val _currentPlayer: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
 
     /** Represents all the actions action done during the turn. */
@@ -38,12 +40,10 @@ object Logics:
   /**
    * Abstract implementation of a [[Logic]] that provides implementations of basic methods.
    *
-   * @param players list of players in the game.
+   * @param nPlayers list of players in the game.
    */
-  abstract class AbstractLogic(players: List[Player]) extends Logic:
+  abstract class AbstractLogic(nPlayers: Int) extends Logic:
     type Score = Int
-
-    override protected val _players: List[Player] = players
 
     @tailrec
     override final def gameLoop(): Unit =
@@ -51,3 +51,22 @@ object Logics:
         playTurn()
         _currentPlayer.next()
         gameLoop()
+
+  /** Provider of a [[Game]]. */
+  trait GameProvider:
+    /** Instance of the game to play. */
+    val game: Game
+
+  /** Trait that represents a game logic based on a certain game. */
+  trait GameLogic extends GameProvider
+
+  class CactusLogic(nPlayers: Int) extends AbstractLogic(nPlayers) with GameLogic:
+    type Score = Int
+
+    override val game: Game = CactusGame()
+
+    override def playTurn(): Unit = None
+
+    override def isGameOver: Boolean = true
+
+    override def calculateScore: Map[Player, Score] = Map()
