@@ -11,7 +11,6 @@ import player.Players.Player
 
 /** Tests for basic game logic. */
 class LogicTest extends AnyFlatSpec:
-  type Players = List[Player]
 
   val N: Int = 10
   val nPlayers: Int = 3
@@ -46,8 +45,8 @@ class LogicTest extends AnyFlatSpec:
   "A game logic" should "provide a score of the game" in:
     val logic = TestLogic(nPlayers)
     logic.calculateScore should be (Map(
-      PlayerImpl("Player 1") -> 0, 
-      PlayerImpl("Player 2") -> 0, 
+      PlayerImpl("Player 1") -> 0,
+      PlayerImpl("Player 2") -> 0,
       PlayerImpl("Player 3") -> 0)
     )
 
