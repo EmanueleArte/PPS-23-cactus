@@ -12,6 +12,8 @@ class LogicTest extends AnyFlatSpec:
   /** Simple game logic implementation for testing. */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class TestLogic(players: List[Player]) extends AbstractLogic(players: List[Player]):
+    type Score = Int
+    
     protected var _counter = 0
 
     override def playTurn(): Unit = _counter += 1
