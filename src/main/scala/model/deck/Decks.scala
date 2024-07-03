@@ -8,39 +8,40 @@ import model.deck.Piles.DiscardPile
 
 import scala.util.Random
 
-/** Cards deck with different implementations.
-  */
+/** Cards deck with different implementations. */
 object Decks:
 
-  /** Deck of [[Card]] with basic methods.
-    */
+  /** Deck of [[Card]] with basic methods. */
   trait Deck:
-    /** Type of the cards in the deck.
-      */
+    /** Type of the cards in the deck. */
     type CardType <: Card
 
-    /** The representation of the cards in the deck.
-      * @return
-      *   list of cards.
-      */
+    /**
+     * The representation of the cards in the deck.
+     * @return
+     *   list of cards.
+     */
     def cards: List[CardType]
 
-    /** Size of the deck.
-      * @return
-      *   number of cards in the deck.
-      */
+    /**
+     * Size of the deck.
+     * @return
+     *   number of remaining cards in the deck.
+     */
     def size: Int
 
-    /** Shuffle the cards in the deck.
-      * @return
-      *   new deck with the cards shuffled.
-      */
+    /**
+     * Shuffle the cards in the deck.
+     * @return
+     *   new deck with the cards shuffled.
+     */
     def shuffle(): Deck
 
-    /** Pick the first card of the deck.
-      * @return
-      *   the card on top.
-      */
+    /**
+     * Pick the first card of the deck.
+     * @return
+     *   the card on top.
+     */
     def draw(): Option[CardType]
 
     /**
@@ -56,24 +57,27 @@ object Decks:
      */
     def reset(): Deck
 
-  /** Basic implementation of a deck.
-    * @param shuffled
-    *   if `true` the deck is initially shuffled, if `false` it is not.
-    */
+  /**
+   * Basic implementation of a deck.
+   * @param shuffled
+   *   if `true` the deck is initially shuffled, if `false` it is not.
+   */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   abstract class DeckImpl(shuffled: Boolean) extends Deck:
     private lazy val _cards: List[CardType] = shuffled match
       case true => Random.shuffle(_rawCards)
       case _    => _rawCards
     protected val _rawCards: List[CardType] = List()
-    private val INITIAL_HEAD_VALUE: Int = -1
-    private var head: Int = INITIAL_HEAD_VALUE
+    private val INITIAL_HEAD_VALUE: Int     = -1
+    private var head: Int                   = INITIAL_HEAD_VALUE
 
-    override def draw(): Option[CardType] = head match
-      case n if n < size - 1 => head = head + 1; Some(cards(head))
-      case _                 => Option.empty
+    override def draw(): Option[CardType] =
+      println("Head: " + head + " | Size: " + size)
+      head match
+        case n if n < _cards.size - 1 => head = head + 1; Some(cards(head))
+        case _                 => Option.empty
 
-    override def size: Int = cards.size
+    override def size: Int             = cards.size - head - 1
     override def cards: List[CardType] = _cards
     override def reset(pile: DiscardPile): Deck =
       head = INITIAL_HEAD_VALUE
@@ -111,16 +115,18 @@ object Decks:
     override def shuffle(): Deck = GenericDeck(inputCards, true)
     override protected def createDeck(cards: List[Card]): Deck = Deck(cards)
 
-  /** Specific deck with french-suited cards, without the jokers.
-    *
-    * @param shuffled
-    *   if `true` the deck is initially shuffled, if `false` it is not.
-    */
+
+  /**
+   * Specific deck with french-suited cards, without the jokers.
+   *
+   * @param shuffled
+   *   if `true` the deck is initially shuffled, if `false` it is not.
+   */
   case class PokerDeck(shuffled: Boolean) extends DeckImpl(shuffled):
     override type CardType = PokerCard
 
     override val _rawCards: List[CardType] = for
-      suit <- PokerSuit.values.toList;
+      suit  <- PokerSuit.values.toList;
       value <- Ace to King
     yield value of suit
 
@@ -131,31 +137,32 @@ object Decks:
 
   /** Companion object of [[GenericDeck]]. */
   object GenericDeck:
-    /** Create an unshuffled generic deck.
-      *
-      * @param values
-      *   range of values of the cards.
-      * @param suits
-      *   list of suits of the cards.
-      * @return
-      *   an unshuffled generic deck.
-      */
+    /**
+     * Create an unshuffled generic deck.
+     *
+     * @param values
+     *   range of values of the cards.
+     * @param suits
+     *   list of suits of the cards.
+     * @return
+     *   an unshuffled generic deck.
+     */
     def apply(values: Range, suits: List[Suit]): GenericDeck =
       GenericDeck(for suit <- suits; value <- values yield Card(value, suit), false)
 
 
-  /** Companion object of [[PokerDeck]].
-    */
+  /** Companion object of [[PokerDeck]]. */
   object PokerDeck:
-    /** Creates an unshuffled poker deck.
-      * @return
-      *   an unshaffled poker deck.
-      */
+    /**
+     * Creates an unshuffled poker deck.
+     * @return
+     *   an unshaffled poker deck.
+     */
     def apply(): PokerDeck = PokerDeck(false)
 
-  /** Companion object of [[Deck]]
-    */
+  /** Companion object of [[Deck]] */
   object Deck:
+
     /** Creates a generic deck.
       *
       * @param values
@@ -169,5 +176,23 @@ object Decks:
       */
     def apply(values: Range, suits: List[Suit], shuffled: Boolean): Deck = GenericDeck(values, suits)
 
+    /** Creates a generic deck.
+      *
+      * @param cards
+      *   list of the cards to put in the deck.
+      * @param shuffled
+      *   if `true` the deck is initially shuffled, if `false` it is not.
+      * @return
+      *   a generic deck.
+      */
     def apply(cards: List[Card], shuffled: Boolean): Deck = new GenericDeck(cards, shuffled)
+
+    /** Creates a generic deck.
+      *
+      * @param cards
+      *   list of the cards to put in the deck.
+      * @return
+      *   a generic deck.
+      */
     def apply(cards: List[Card]): Deck = Deck(cards, false)
+

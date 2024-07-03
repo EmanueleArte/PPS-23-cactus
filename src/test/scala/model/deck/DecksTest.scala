@@ -80,6 +80,12 @@ class DecksTest extends AnyFlatSpec:
     firstCardOption.fold(Nil)(card => card) should be
       (firstCardAfterResetOption.fold(Nil)(card => card))
 
+  "Drawing cards" should "reduce deck's size" in:
+    val deck: Deck = PokerDeck()
+    val drawnCards: Int = 5
+    for (i <- 1 to drawnCards) deck.draw()
+    deck.size shouldBe 52 - drawnCards
+
   "Deck" should "be resettable using a discard pile" in:
     import model.deck.Piles.DiscardPile
     val cardsNumber: Int = 3
@@ -89,7 +95,6 @@ class DecksTest extends AnyFlatSpec:
       .put(deck.draw().get)
       .put(deck.draw().get)
     deck.reset(pile).cards should be (List(Card(1, Spades), Card(2, Spades), Card(3, Spades)))
-
 
   "Resetting a deck using a partial discard pile" should "create a deck with only the cards of the discard pile" in:
     import model.deck.Piles.DiscardPile
