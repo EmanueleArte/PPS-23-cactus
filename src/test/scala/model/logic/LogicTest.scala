@@ -1,27 +1,39 @@
 package model.logic
 
-import model.logic.Logic.*
+import model.card.CardBuilder.PokerDSL.of
+import model.card.Cards.Card
+import model.card.CardsData.PokerSuit.*
+import model.deck.Decks.Deck
+import model.logic.Logics.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 import player.Players.Player
 
 /** Tests for basic game logic. */
 class LogicTest extends AnyFlatSpec:
+  type Players = List[Player]
 
-  val N = 10
+  val N: Int = 10
 
   /** Simple game logic implementation for testing. */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class TestLogic(players: List[Player]) extends AbstractLogic(players: List[Player]):
     type Score = Int
-    
+
     protected var _counter = 0
 
     override def playTurn(): Unit = _counter += 1
     override def isGameOver: Boolean = _counter == N
     override def calculateScore: Map[Player, Score] = players.map(player => player -> _counter).toMap
-  
-  val players: List[Player] = List(Player("Alice"), Player("Bob"), PlayerImpl("Charlie"))
+
+  /** Simple player implementation for testing. */
+  @SuppressWarnings(Array("org.wartremover.warts.All"))
+  case class PlayerImpl(name: String) extends Player:
+    var cards: List[Card] = List()
+    override def draw(deck: Deck): Unit = None
+    override def discard(cardIndex: Int): Card = 2 of Spades
+
+  val players: Players = List(PlayerImpl("Alice"), PlayerImpl("Bob"), PlayerImpl("Charlie"))
 
   "The players" should "play turns cyclically" in :
     val logic = TestLogic(players)
