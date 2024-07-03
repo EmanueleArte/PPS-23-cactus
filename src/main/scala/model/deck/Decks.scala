@@ -71,9 +71,11 @@ object Decks:
     private val INITIAL_HEAD_VALUE: Int     = -1
     private var head: Int                   = INITIAL_HEAD_VALUE
 
-    override def draw(): Option[CardType] = head match
-      case n if n < size - 1 => head = head + 1; Some(cards(head))
-      case _                 => Option.empty
+    override def draw(): Option[CardType] =
+      println("Head: " + head + " | Size: " + size)
+      head match
+        case n if n < _cards.size - 1 => head = head + 1; Some(cards(head))
+        case _                 => Option.empty
 
     override def size: Int             = cards.size - head - 1
     override def cards: List[CardType] = _cards
