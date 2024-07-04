@@ -29,7 +29,8 @@ object Games:
 
     @SuppressWarnings(Array("org.wartremover.warts.All"))
     override def setupGame(playersNumber: Int): List[Player] =
-      (1 to playersNumber).toList
+      val nPlayers: Int = (playersNumber max 2) min 6
+      (1 to nPlayers).toList
         .map(_ => (1 to 4).toList.map(_ => deck.draw().get))
         .zipWithIndex
         .map((list, i) =>
