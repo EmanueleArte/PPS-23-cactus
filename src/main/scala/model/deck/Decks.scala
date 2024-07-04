@@ -4,6 +4,7 @@ import model.card.CardBuilder.PokerDSL.of
 import model.card.Cards.{Card, PokerCard}
 import model.card.CardsData.PokerCardName.{Ace, King}
 import model.card.CardsData.{PokerSuit, Suit}
+import model.deck.DeckUtils.Drawable
 import model.deck.Piles.DiscardPile
 
 import scala.util.Random
@@ -12,9 +13,11 @@ import scala.util.Random
 object Decks:
 
   /** Deck of [[Card]] with basic methods. */
-  trait Deck:
+  trait Deck extends Drawable:
     /** Type of the cards in the deck. */
     type CardType <: Card
+
+    override def draw(): Option[CardType]
 
     /**
      * The representation of the cards in the deck.
@@ -36,14 +39,7 @@ object Decks:
      *   new deck with the cards shuffled.
      */
     def shuffle(): Deck
-
-    /**
-     * Pick the first card of the deck.
-     * @return
-     *   the card on top.
-     */
-    def draw(): Option[CardType]
-
+    
     /**
      * Restore the deck with the cards given in the discard pile.
      * @param pile the discard pile to take the cards from.

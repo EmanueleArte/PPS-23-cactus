@@ -3,6 +3,7 @@ package model.logic
 import model.card.CardBuilder.PokerDSL.of
 import model.card.Cards.Card
 import model.card.CardsData.PokerSuit.*
+import model.deck.DeckUtils.Drawable
 import model.deck.Decks.Deck
 import model.logic.Logics.*
 import org.scalatest.matchers.should.Matchers.*
@@ -20,7 +21,7 @@ class LogicTest extends AnyFlatSpec:
   case class PlayerImpl(name: String) extends Player:
     var cards: List[Card] = List()
 
-    override def draw(deck: Deck): Unit = None
+    override def draw(deck: Drawable): Unit = None
 
     override def discard(cardIndex: Int): Card = 2 of Spades
 

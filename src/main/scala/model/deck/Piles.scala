@@ -1,13 +1,16 @@
 package model.deck
 
 import model.card.Cards.{Card, PokerCard}
+import model.deck.DeckUtils.Drawable
 
 /** Stack of discarded cards with different implementations. */
 object Piles:
   /** Pile of [[Card]] with basic methods. */
-  trait DiscardPile:
+  trait DiscardPile extends Drawable:
     /** Type of the cards in the pile. */
     type CardType <: Card
+
+    override def draw(): Option[CardType]
 
     /**
      * Size of the pile.
@@ -31,13 +34,6 @@ object Piles:
      *   list of cards.
      */
     def cards: List[CardType]
-
-    /**
-     * Pick the last card discarded.
-     * @return
-     *   the card on top of the pile.
-     */
-    def draw(): Option[CardType]
 
     /**
      * Remove all the cards from the pile.
