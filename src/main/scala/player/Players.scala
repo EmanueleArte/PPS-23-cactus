@@ -4,25 +4,27 @@ import card.Cards.Card
 import model.deck.Decks.Deck
 import model.deck.Piles.DiscardPile
 
-/** A player of the game */
+/** A player of the game. */
 object Players:
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  /** Represents a generic player */
+  /** Represents a generic player. */
   trait Player:
-    /** The cards in the player's hand */
+    /** The cards in the player's hand. */
     var cards: List[Card]
 
-    /** Draws a card from a deck
+    /**
+     * Draws a card from a deck.
      * @param deck the deck to draw from
      */
     def draw(deck: Deck): Unit
 
-    /** Discards a card from the player's hand
+    /**
+     * Discards a card from the player's hand.
      * @param cardIndex the index of the card in the list to discard
      * @return the discarded card
      */
-    def discard(cardIndex: Int) : Card
+    def discard(cardIndex: Int): Card
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   case class CactusPlayer(var cards: List[Card]) extends Player:
     @SuppressWarnings(Array("org.wartremover.warts.All"))
