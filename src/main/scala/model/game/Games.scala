@@ -34,5 +34,5 @@ object Games:
         .map(_ => (1 to 4).toList.map(_ => deck.draw().get))
         .zipWithIndex
         .map((list, i) =>
-          CactusPlayer("Player $i", list)
+          CactusPlayer(s"Player $i", list)
         )
