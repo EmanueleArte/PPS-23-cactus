@@ -4,7 +4,6 @@ import model.card.CardBuilder.PokerDSL.of
 import model.card.Cards.Card
 import model.card.CardsData.PokerSuit.*
 import model.deck.DeckUtils.Drawable
-import model.deck.Decks.Deck
 import model.logic.Logics.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
@@ -31,11 +30,11 @@ class LogicTest extends AnyFlatSpec:
     type Score = Int
 
     override val _players: Players = (1 to nPlayers).toList.map(i => PlayerImpl(s"Player $i"))
-    protected var _counter = 0
+    private var _counter = 0
 
     override def playTurn(): Unit = _counter += 1
     override def isGameOver: Boolean = _counter == N
-    override def calculateScore: Map[Player, Score] = _players.map(player => player -> _counter).toMap
+    override def calculateScore: Map[Player, Score] = players.map(player => player -> _counter).toMap
 
   "The players" should "play turns cyclically" in :
     val logic = TestLogic(nPlayers)
