@@ -10,7 +10,7 @@ import player.Players.CactusPlayer
 
 class PlayerTest extends AnyFlatSpec {
 
-  "Player " should "be a HumanPlayer" in:
+  "Player " should "be a CactusPlayer" in:
     val player: CactusPlayer = CactusPlayer(List.empty[Card])
     player shouldBe a[CactusPlayer]
 
