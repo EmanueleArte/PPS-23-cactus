@@ -99,10 +99,6 @@ object Decks:
     * val deck: Deck = GenericDeck(1 to 3, List(Spades, Diamonds), false)
     * }}}
     *
-    * @param values
-    *   range of values of the cards.
-    * @param suits
-    *   list of suits of the cards.
     * @param shuffled
     *   if `true` the deck is initially shuffled, if `false` it is not.
     */
@@ -126,7 +122,7 @@ object Decks:
     override type CardType = PokerCard
 
     override val _rawCards: List[CardType] = for
-      suit  <- PokerSuit.values.toList;
+      suit  <- PokerSuit.values.toList
       value <- Ace to King
     yield value of suit
 

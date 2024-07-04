@@ -27,12 +27,12 @@ object Games:
     export deck.{size => deckSize}
     export discardPile.{draw => drawFromDiscardPile}
 
-    @SuppressWarnings(Array("org.wartremover.warts.All"))
+    @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
     override def setupGame(playersNumber: Int): List[Player] =
       val nPlayers: Int = (playersNumber max 2) min 6
       (1 to nPlayers).toList
         .map(_ => (1 to 4).toList.map(_ => deck.draw().get))
         .zipWithIndex
         .map((list, i) =>
-          new CactusPlayer("Player $i", list)
+          CactusPlayer("Player $i", list)
         )
