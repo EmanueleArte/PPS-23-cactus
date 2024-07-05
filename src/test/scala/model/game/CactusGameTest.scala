@@ -5,9 +5,9 @@ import card.CardBuilder.PokerDSL.of
 import card.Cards.Card
 import card.CardsData.PokerCardName.Ace
 import model.deck.Decks
-import model.game.Games.{CactusGame, Game}
+import model.game.Scores
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.must.Matchers.{an, be, contain, empty, have, not}
+import org.scalatest.matchers.must.Matchers.{be, empty, have, not}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import player.Players.{CactusPlayer, Player}
 
@@ -52,21 +52,21 @@ class CactusGameTest extends AnyFlatSpec:
       .map(card => List(card))
       .map(list => CactusPlayer(list))
       .toList
-    val scores: Map[Player, Int] = CactusGame().calculateScores(players)
+    val scores: Scores = CactusGame().calculateScores(players)
     for (i <- 1 to 13)
-      scores(players(i - 1)) should be (i)
+      scores.get(players(i - 1)) should be (Some(i))
 
   "The sum of the cards of player" should "be consistent with their values" in:
     val player: CactusPlayer = CactusPlayer(List(Ace of Spades, 2 of Spades, 3 of Spades))
-    val scores: Map[Player, Int] = CactusGame().calculateScores(List(player))
-    scores(player) should be (Ace + 2 + 3)
+    val scores: Scores = CactusGame().calculateScores(List(player))
+    scores.get(player) should be (Some(Ace + 2 + 3))
 
   "If no players are passed it" should "return an empty map" in:
-    val scores: Map[Player, Int] = CactusGame().calculateScores(List())
-    scores should be (empty)
+    val scores: Scores = CactusGame().calculateScores(List())
+    scores.isEmpty should be (true)
 
   "Calculate scores of player with non poker cards" should "return empty score" in:
-    CactusGame().calculateScores(List(nonCactusPlayer)) should be (empty)
+    CactusGame().calculateScores(List(nonCactusPlayer)).isEmpty should be (true)
 
   "Calculate scores of players with some of them having non poker cards" should "return scores for only the players with poker cards" in:
     val players: Players = List(
@@ -74,8 +74,8 @@ class CactusGameTest extends AnyFlatSpec:
       nonCactusPlayer,
       CactusPlayer(List(10 of Clubs, 10 of Spades))
     )
-    val scores: Map[Player, Int] = CactusGame().calculateScores(players)
+    val scores: Scores = CactusGame().calculateScores(players)
     scores.size should be (2)
-    scores(players(0)) should be (Ace + 2)
-    scores(players(2)) should be (10 + 10)
-    scores.keys should not contain nonCactusPlayer
+    scores.get(players(0)) should be (Some(Ace + 2))
+    scores.get(players(2)) should be (Some(10 + 10))
+    scores.players should not contain nonCactusPlayer
