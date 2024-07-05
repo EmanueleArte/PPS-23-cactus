@@ -85,6 +85,7 @@ case class CactusGame() extends Game:
 
   /** Pile with the discarded cards. */
   val discardPile: DiscardPile = PokerPile()
+  val initialPlayerCardsNumber: Int = 4
 
   export deck.{size => deckSize}
   export discardPile.{draw => drawFromDiscardPile}
@@ -92,7 +93,7 @@ case class CactusGame() extends Game:
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   override def setupGame(playersNumber: Int): List[Player] =
     (1 to playersNumber).toList
-      .map(_ => (1 to 4).toList.map(_ => deck.draw().get))
+      .map(_ => (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get))
       .map(list => CactusPlayer(list))
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex

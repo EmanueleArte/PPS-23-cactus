@@ -34,7 +34,7 @@ class CactusGameTest extends AnyFlatSpec:
     val game: CactusGame = CactusGame()
     @SuppressWarnings(Array("org.wartremover.warts.All"))
     val players: Players = game.setupGame(playersNumber)
-    players.foreach(player => player.cards should have size 4)
+    players.foreach(player => player.cards should have size game.initialPlayerCardsNumber)
 
   "Initialized players" should "always have different cards" in:
     val players1: Players = CactusGame().setupGame(playersNumber)
@@ -55,7 +55,7 @@ class CactusGameTest extends AnyFlatSpec:
   "After player initialization deck " should " have less cards" in:
     val game: CactusGame = CactusGame()
     game.setupGame(playersNumber)
-    game.deckSize should be (52 - playersNumber * 4)
+    game.deckSize should be (52 - playersNumber * game.initialPlayerCardsNumber)
 
   "Each card" should "score points equal to their value" in:
     val players: Players = (1 to 13)
