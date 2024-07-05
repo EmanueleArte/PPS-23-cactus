@@ -81,7 +81,7 @@ trait Game:
 /** Cactus game implementation. */
 case class CactusGame() extends Game:
   /** Deck with the cards to draw. */
-  val deck: Deck = PokerDeck()
+  val deck: Deck = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
   val discardPile: DiscardPile = PokerPile()

@@ -36,7 +36,18 @@ class CactusGameTest extends AnyFlatSpec:
     val players: Players = game.setupGame(playersNumber)
     players.foreach(player => player.cards should have size 4)
 
-  "The discard pile " should " be empty" in:
+  "Initialized players" should "always have different cards" in:
+    val players1: Players = CactusGame().setupGame(playersNumber)
+    val players2: Players = CactusGame().setupGame(playersNumber)
+    players1 should not be players2
+
+  "Drawn cards from players" should "not be in the deck anymore" in:
+    val game: CactusGame = CactusGame()
+    val players: Players = game.setupGame(playersNumber)
+    val drawnCards: List[Card] = players.flatMap(player => player.cards)
+    game.deck.cards should not contain drawnCards
+
+  "The discard pile" should "be empty" in:
     val game: CactusGame = CactusGame()
     val cardOption: Option[Card] = game.drawFromDiscardPile()
     cardOption shouldBe empty
