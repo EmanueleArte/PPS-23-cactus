@@ -3,7 +3,6 @@ package player
 import model.card.Cards.Card
 import model.card.CardsData
 import model.deck.Decks.{Deck, PokerDeck}
-import model.game.Games.CactusGame
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 import player.Players.CactusPlayer
