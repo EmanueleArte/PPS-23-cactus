@@ -113,7 +113,18 @@ object Logics:
     import InitialMove.*
     import DiscardMove.*
 
-    override def playTurn(): Unit = None
+    override def playTurn(): Unit =
+      val move = waitInput(1)
+      move match
+        case DrawFromDeck => playerIterator.peek.get.draw(game.deck)
+        case _            => playerIterator.peek.get.draw(game.discardPile)
+      val discarded = currentPlayer.discard(
+        waitInput(2) match
+          case Discard(i) => i
+      )
+      println(discarded)
+      game.discardPile = game.discardPile.put(discarded)
+      println(game.discardPile)
 
     override def isGameOver: Boolean = true
 
