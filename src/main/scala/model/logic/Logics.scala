@@ -1,6 +1,6 @@
 package model.logic
 
-import model.game.{CactusGame, Game}
+import model.game.{CactusGame, Game, Scores}
 import model.utils.Iterators.PeekableIterator
 import player.Players.Player
 
@@ -55,7 +55,7 @@ object Logics:
      *
      * @return a map with the [[Player]] and the [[Score]].
      */
-    def calculateScore: Map[Player, Score]
+    def calculateScore: Scores
 
     /** Main loop of the game. */
     def gameLoop(): Unit
@@ -128,7 +128,7 @@ object Logics:
 
     override def isGameOver: Boolean = true
 
-    override def calculateScore: Map[Player, Score] = players.map(p => p -> 0).toMap
+    override def calculateScore: Scores = Scores(players.map(p => p -> 0).toMap)
 
     private def waitInput(moveNumber: Int): Move = moveNumber match
       case 1 => DrawFromDeck
