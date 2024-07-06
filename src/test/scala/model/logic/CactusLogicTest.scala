@@ -13,4 +13,12 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = CactusLogic(playersNumber)
     logic.players.size should be (playersNumber)
 
+  "Players" should "have always the same amount of cards at the end of a turn" in:
+    val logic = CactusLogic(playersNumber)
+    for _ <- 1 to playersNumber do
+      logic.playTurn()
+      logic.playerIterator.next()
+    logic.players.foreach(player => player.cards.size should be (4))
+    logic.game.discardPile.size should be (playersNumber)
+
 
