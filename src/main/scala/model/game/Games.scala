@@ -79,16 +79,17 @@ trait Game:
   def calculateScores(players: List[Player]): Scores
 
 /** Cactus game implementation. */
+@SuppressWarnings(Array("org.wartremover.warts.Var"))
 case class CactusGame() extends Game:
   /** Deck with the cards to draw. */
   val deck: Deck = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  val discardPile: DiscardPile      = PokerPile()
+  var discardPile: DiscardPile      = PokerPile()
   val initialPlayerCardsNumber: Int = 4
 
   export deck.{size => deckSize}
-  export discardPile.{draw => drawFromDiscardPile}
+//  export discardPile.{draw => drawFromDiscardPile}
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   override def setupGame(playersNumber: Int): List[Player] =

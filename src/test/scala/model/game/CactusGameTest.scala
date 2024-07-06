@@ -51,7 +51,7 @@ class CactusGameTest extends AnyFlatSpec:
 
   "The discard pile" should "be empty" in:
     val game: CactusGame = CactusGame()
-    val cardOption: Option[Card] = game.drawFromDiscardPile()
+    val cardOption: Option[Card] = game.discardPile.draw() //game.drawFromDiscardPile()
     cardOption shouldBe empty
 
   "After player initialization deck " should " have less cards" in:
