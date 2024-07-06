@@ -1,6 +1,6 @@
 package model.game
 
-import card.Cards.{Card, PokerCard}
+import model.card.Cards.{Card, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import player.Players.{CactusPlayer, Player}
@@ -84,7 +84,7 @@ case class CactusGame() extends Game:
   val deck: Deck = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  val discardPile: DiscardPile = PokerPile()
+  val discardPile: DiscardPile      = PokerPile()
   val initialPlayerCardsNumber: Int = 4
 
   export deck.{size => deckSize}
@@ -93,8 +93,8 @@ case class CactusGame() extends Game:
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   override def setupGame(playersNumber: Int): List[Player] =
     (1 to playersNumber).toList
-      .map(_ => (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get))
-      .map(list => CactusPlayer(list))
+      .map(p => CactusPlayer(s"Player $p", (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get)))
+
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex
       .map((player, index) => (player, player.cards))
