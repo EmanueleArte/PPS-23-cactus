@@ -97,12 +97,14 @@ object Logics:
    *
    * @param nPlayers number of players in the game.
    */
+  @SuppressWarnings(Array("org.wartremover.warts.Var"))
   class CactusLogic(nPlayers: Int) extends AbstractLogic(nPlayers) with GameLogic:
     type Score = Int
 
-    override val game: CactusGame    = CactusGame()
-    override val _players: Players   = setup(nPlayers)
-    private val turnMovesNumber: Int = 2
+    override val game: CactusGame  = CactusGame()
+    override val _players: Players = setup(nPlayers)
+    var turnsRemaining: Int        = nPlayers
+    private var lastRound: Boolean = false
 
     private enum InitialMove extends Move:
       case DrawFromDeck, DrawFromDiscards
@@ -110,8 +112,12 @@ object Logics:
     private enum DiscardMove extends Move:
       case Discard(cardIndex: Int)
 
+    private enum FinalMove extends Move:
+      case Cactus
+
     import InitialMove.*
     import DiscardMove.*
+    import FinalMove.*
 
     override def playTurn(): Unit =
       val move = waitInput(1)
@@ -122,17 +128,21 @@ object Logics:
         waitInput(2) match
           case Discard(i) => i
       )
-      println(discarded)
       game.discardPile = game.discardPile.put(discarded)
-      println(game.discardPile)
+      if waitInput(3) == Cactus then lastRound = true
 
-    override def isGameOver: Boolean = true
+    override def isGameOver: Boolean = lastRound match
+      case true =>
+        turnsRemaining -= 1
+        turnsRemaining < 1
+      case _ => false
 
     override def calculateScore: Scores = Scores(players.map(p => p -> 0).toMap)
 
     private def waitInput(moveNumber: Int): Move = moveNumber match
       case 1 => DrawFromDeck
       case 2 => Discard(1)
+      case 3 => Cactus
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:
