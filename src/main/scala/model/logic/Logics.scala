@@ -1,6 +1,6 @@
 package model.logic
 
-import model.game.Games.{CactusGame, Game}
+import model.game.{CactusGame, Game}
 import model.utils.Iterators.PeekableIterator
 import player.Players.Player
 
@@ -107,19 +107,28 @@ object Logics:
     private enum InitialMove extends Move:
       case DrawFromDeck, DrawFromDiscards
 
-    import InitialMove.*
+    private enum DiscardMove extends Move:
+      case Discard(cardIndex: Int)
 
-    override def playTurn(): Unit =
-      for
-        _ <- 1 to 1
-        move = waitInput
-        _ = move match
-          case DrawFromDeck => playerIterator.peek.get.draw(game.deck)
-          case _            => playerIterator.peek.get.draw(game.discardPile)
-      do ()
+    import InitialMove.*
+    import DiscardMove.*
+
+    override def playTurn(): Unit = None
 
     override def isGameOver: Boolean = true
 
     override def calculateScore: Map[Player, Score] = players.map(p => p -> 0).toMap
 
-    private def waitInput: Move = DrawFromDeck
+    private def waitInput(moveNumber: Int): Move = moveNumber match
+      case 1 => DrawFromDeck
+      case 2 => Discard(1)
+
+  /** Companion object for [[CactusLogic]]. */
+  object CactusLogic:
+    /**
+     * Factory method for [[CactusLogic]].
+     *
+     * @param nPlayers number of players in the game.
+     * @return a new instance of [[CactusLogic]].
+     */
+    def apply(nPlayers: Int): CactusLogic = new CactusLogic(nPlayers)
