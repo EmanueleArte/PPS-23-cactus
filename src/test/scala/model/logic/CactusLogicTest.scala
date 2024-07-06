@@ -21,4 +21,11 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.players.foreach(player => player.cards.size should be (4))
     logic.game.discardPile.size should be (playersNumber)
 
+  "A Cactus match" should "end after another full round after the call of cactus" in:
+    val logic = CactusLogic(playersNumber)
+    logic.gameLoop()
+    logic.isGameOver should be (true)
+    logic.game.discardPile.size should be (playersNumber)
+    logic.game.deckSize should be (52 - playersNumber * 5)
+
 
