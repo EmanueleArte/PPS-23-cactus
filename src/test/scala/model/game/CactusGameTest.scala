@@ -89,6 +89,6 @@ class CactusGameTest extends AnyFlatSpec:
     )
     val scores: Scores = CactusGame().calculateScores(players)
     scores.size should be (2)
-    scores.get(players(0)) should be (Some(Ace + 2))
+    scores.get(players.head) should be (Some(Ace + 2))
     scores.get(players(2)) should be (Some(10 + 10))
     scores.players should not contain nonCactusPlayer
