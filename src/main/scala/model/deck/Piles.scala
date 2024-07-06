@@ -67,10 +67,13 @@ object Piles:
    *   list of cards.
    */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class PokerPile(cards: List[PokerCard]) extends PileImpl:
+  case class PokerPile(var cards: List[PokerCard]) extends PileImpl:
     override type CardType = PokerCard
 
-    override def draw(): Option[CardType] = cards.headOption
+    override def draw(): Option[CardType] =
+      val card = cards.headOption
+      cards = cards.drop(1)
+      card
 
     override def put(card: Card): DiscardPile =
       require(card.isInstanceOf[PokerCard], "Expected a PokerCard")

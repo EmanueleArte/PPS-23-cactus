@@ -38,6 +38,7 @@ class DiscardPileTest extends AnyFlatSpec:
     val cardOption: Option[Card] = updatedPile.draw()
     cardOption shouldBe defined
     cardOption.fold(Nil)(card => card) should be (3 of Spades)
+    updatedPile.size shouldBe 2
 
   "Draw from an empty pile" should "return empty Option" in:
     val discardPile: DiscardPile = PokerPile()
