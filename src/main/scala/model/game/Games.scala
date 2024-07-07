@@ -1,6 +1,6 @@
 package model.game
 
-import card.Cards.Card
+import card.Cards.PokerCard
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import player.Players.{CactusPlayer, Player}
@@ -20,10 +20,10 @@ object Games:
   /** Cactus game implementation. */
   case class CactusGame() extends Game:
     /** Deck with the cards to draw. */
-    val deck: Deck = PokerDeck()
+    val deck: Deck[PokerCard] = PokerDeck()
 
     /** Pile with the discarded cards. */
-    val discardPile: DiscardPile = PokerPile()
+    val discardPile: DiscardPile[PokerCard] = PokerPile()
 
     export deck.{size => deckSize}
     export discardPile.{draw => drawFromDiscardPile}
