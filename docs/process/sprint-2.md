@@ -16,6 +16,8 @@ La durata dello sprint è di una settimana, quindi termina il giorno 7/07/2024.
 
 ## Sprint Review
 
+Gli obiettivi prefissati sono stati raggiunti nei tempi.
 
 ## Sprint Retrospective
 
+Per questo sprint non ci sono stati grossi intoppi.
