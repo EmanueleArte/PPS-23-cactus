@@ -19,3 +19,4 @@ Di seguito vengono elencati il _Product Backlog_ e le documentazioni relative ai
 - [Product Backlog](product-backlog.xlsx)
 - [First Sprint](sprint-1.md)
 - [Second Sprint](sprint-2.md)
+- [Third Sprint](sprint-3.md)
