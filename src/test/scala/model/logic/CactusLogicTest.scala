@@ -17,5 +17,19 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = CactusLogic(playersNumber)
     logic.draw(true)
     logic.currentPlayer.cards.size should be (logic.game.initialPlayerCardsNumber + 1)
-    logic.game.deck.size should be (52 - playersNumber * logic.game.initialPlayerCardsNumber - 1)
+    logic.game.deckSize should be (52 - playersNumber * logic.game.initialPlayerCardsNumber - 1)
 
+  it should "discard a card" in:
+    val logic = CactusLogic(playersNumber)
+    logic.discard(0)
+    logic.currentPlayer.cards.size should be (logic.game.initialPlayerCardsNumber - 1)
+    logic.game.discardPile.size should be (1)
+
+  it should "draw from the discard pile" in :
+    val logic = CactusLogic(playersNumber)
+    logic.discard(0)
+    logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber - 1)
+    logic.game.discardPile.size should be(1)
+    logic.draw(false)
+    logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber)
+    logic.game.discardPile.size should be(0)
