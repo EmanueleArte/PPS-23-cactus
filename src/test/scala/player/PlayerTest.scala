@@ -1,9 +1,9 @@
 package player
 
-import card.Cards.Card
+import card.Cards.{Card, PokerCard}
 import card.CardsData
+import card.CardsData.PokerSuit.Spades
 import model.deck.Decks.{Deck, PokerDeck}
-import model.game.Games.CactusGame
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 import player.Players.CactusPlayer
@@ -20,13 +20,13 @@ class PlayerTest extends AnyFlatSpec {
 
   "Player " should "have 1 cards after a draw" in :
     val player: CactusPlayer = CactusPlayer(List.empty[Card])
-    val deck: Deck = PokerDeck()
+    val deck: Deck[PokerCard] = PokerDeck()
     player.draw(deck)
     player.cards.length shouldBe 1
 
   "Player " should "have 3 of Diamonds after drawing 3 of Diamonds" in :
     val player: CactusPlayer = CactusPlayer(List.empty[Card])
-    val deck: Deck = Deck(3 to 3, List(CardsData.PokerSuit.Diamonds), false)
+    val deck: Deck[Card] = Deck(3 to 3, List(CardsData.PokerSuit.Diamonds), false)
     player.draw(deck)
     player.cards(0) shouldBe Card(3, CardsData.PokerSuit.Diamonds)
 
