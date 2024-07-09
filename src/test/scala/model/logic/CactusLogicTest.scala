@@ -43,12 +43,11 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.game.discardPile.size should be(1)
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
 
-  it should "make a complete match using basic moves" in:
+  "Players" should "make a complete match using basic moves" in:
     val logic = CactusLogic(playersNumber)
     while !logic.isGameOver do
       logic.draw(true)
       logic.discard(0)
-      println(logic.currentPlayer.name)
       logic.callCactus()
       logic.nextPlayer
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
