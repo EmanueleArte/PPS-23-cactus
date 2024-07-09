@@ -17,9 +17,17 @@ object Bots:
      */
     def seeCard(cardIndex: Int): Unit;
 
+    /** Removes the [[Card]] from the known cards list.
+     * @param card the card to remove
+     */
+    def removeFromKnownCards(card: Card): Unit
+
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBot(cards: List[Card]) extends CactusPlayer(cards) with Bot:
     var knownCards: List[Card] = List.empty
 
     override def seeCard(cardIndex: Int): Unit =
       knownCards = knownCards :+ cards(cardIndex)
+
+    override def removeFromKnownCards(card: Card): Unit =
+      knownCards = knownCards.filterNot(c => c == card)

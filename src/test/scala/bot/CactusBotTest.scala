@@ -29,5 +29,5 @@ class CactusBotTest extends AnyFlatSpec:
   "Bot " should "not have 8 of Spades in his known cards" in:
     val cactusBot: CactusBot = CactusBot(List(Card(8, CardsData.PokerSuit.Spades), Card(2, CardsData.PokerSuit.Diamonds)))
     cactusBot.seeCard(0)
-    cactusBot.discard(0)
+    cactusBot.removeFromKnownCards(cactusBot.discard(0))
     cactusBot.knownCards shouldBe List.empty[Card]
