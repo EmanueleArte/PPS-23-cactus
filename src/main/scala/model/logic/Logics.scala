@@ -1,8 +1,10 @@
 package model.logic
 
+import model.card.Cards.PokerCard
+import model.deck.Drawable
 import model.game.{CactusGame, Game, Scores}
 import model.utils.Iterators.PeekableIterator
-import player.Players.Player
+import player.Players.{CactusPlayer, Player}
 
 import scala.annotation.tailrec
 
@@ -21,6 +23,7 @@ object Logics:
   trait Logic:
     /** Type of the score of the game. */
     type Score
+    type PlayerType <: Player
 
     protected val _players: Players = List()
 
@@ -43,8 +46,8 @@ object Logics:
      *
      * @return the current player.
      */
-    @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-    def currentPlayer: Player = playerIterator.peek.get
+    @SuppressWarnings(Array("org.wartremover.warts.All"))
+    def currentPlayer: PlayerType = playerIterator.peek.get.asInstanceOf[PlayerType]
 
     /**
      * Switch to the next player.
@@ -92,7 +95,8 @@ object Logics:
    */
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
   class CactusLogic(nPlayers: Int) extends Logic with GameLogic:
-    type Score = Int
+    override type Score = Int
+    override type PlayerType = CactusPlayer
 
     override val game: CactusGame   = CactusGame()
     override val _players: Players  = setup(nPlayers)
@@ -101,23 +105,22 @@ object Logics:
 
     override def continue(): Unit =
       val move = 1
-//      move match
-//        case DrawFromDeck => playerIterator.peek.get.draw(game.deck)
-//        case _            => playerIterator.peek.get.draw(game.discardPile)
-//      val discarded = currentPlayer.discard(
-//        waitInput(2) match
-//          case Discard(i) => i
-//      )
-//      game.discardPile = game.discardPile.put(discarded)
-//      if waitInput(3) == Cactus then lastRound = true
-//
-    override def isGameOver: Boolean = lastRound match
-      case true =>
-        turnsRemaining -= 1
-        turnsRemaining < 1
-      case _ => false
+
+    override def isGameOver: Boolean = if lastRound then
+      turnsRemaining -= 1
+      turnsRemaining < 1
+    else false
 
     override def calculateScore: Scores = Scores(players.map(p => p -> 0).toMap)
+
+    /**
+     * Make the current player to draw a card from the deck or the discard pile.
+     *
+     * @param fromDeck if `true` the card is drawn from the deck, if `false` it is drawn from the discard pile.
+     */
+    def draw(fromDeck: Boolean): Unit =
+      if fromDeck then currentPlayer.draw(game.deck)
+      else currentPlayer.draw(game.discardPile)
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:
