@@ -1,6 +1,6 @@
 package model.deck
 
-import card.Cards.Card
+import model.card.Cards.Card
 
 
 /**

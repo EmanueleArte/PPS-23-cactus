@@ -3,7 +3,7 @@ package model.logic
 import model.card.CardBuilder.PokerDSL.of
 import model.card.Cards.Card
 import model.card.CardsData.PokerSuit.*
-import model.deck.DeckUtils.Drawable
+import .Drawable
 import model.game.Scores
 import model.game.Scores.toMap
 import model.logic.Logics.*

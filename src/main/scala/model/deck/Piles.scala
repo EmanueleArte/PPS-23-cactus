@@ -1,6 +1,6 @@
 package model.deck
 
-import card.Cards.{Card, PokerCard}
+import model.card.Cards.{Card, PokerCard}
 import model.deck.Drawable
 
 /** Stack of discarded cards with different implementations. */
