@@ -1,5 +1,6 @@
 package model.logic
 
+import model.game.Scores.toMap
 import model.logic.Logics.CactusLogic
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
@@ -53,3 +54,11 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
     logic.game.discardPile.size should be(playersNumber)
 
+  "At the end of a Cactus match" should "be possible to calculate the scores" in:
+    val logic = CactusLogic(playersNumber)
+    while !logic.isGameOver do
+      logic.draw(true)
+      logic.discard(0)
+      logic.callCactus()
+      logic.nextPlayer
+    for (_, score) <- toMap(logic.calculateScore) do score should be > 0
