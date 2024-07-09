@@ -30,21 +30,24 @@ class LogicTest extends AnyFlatSpec:
 
   /** Simple game logic implementation for testing. */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  class TestLogic(nPlayers: Int) extends AbstractLogic(nPlayers):
+  class TestLogic(nPlayers: Int) extends Logic:
     type Score = Int
 
     override val _players: Players = (1 to nPlayers).toList.map(i => PlayerImpl(s"Player $i"))
     private var _counter = 0
 
-    override def playTurn(): Unit = _counter += 1
+    override def continue(): Unit = _counter += 1
     override def isGameOver: Boolean = _counter == N
     override def calculateScore: Scores = Scores(players.map(player => player -> _counter).toMap)
 
   "The players" should "play turns cyclically" in :
     val logic = TestLogic(nPlayers)
-    for _ <- 1 to nPlayers do logic.playTurn()
-    logic.playTurn()
-    for (_, s) <- toMap(logic.calculateScore) do s should be (nPlayers + 1)
+    logic.currentPlayer should be (PlayerImpl("Player 1"))
+    for _ <- 1 to nPlayers do
+      logic.continue()
+      logic.nextPlayer
+    logic.currentPlayer should be (PlayerImpl("Player 1"))
+    for (_, s) <- toMap(logic.calculateScore) do s should be (nPlayers)
 
   "A game logic" should "provide a score of the game" in:
     val logic = TestLogic(nPlayers)
@@ -56,5 +59,5 @@ class LogicTest extends AnyFlatSpec:
 
   it should "play turns until the game is over" in:
     val logic = TestLogic(nPlayers)
-    logic.gameLoop()
+    while !logic.isGameOver do logic.continue()
     for (_, s) <- toMap(logic.calculateScore) do s should be (N)

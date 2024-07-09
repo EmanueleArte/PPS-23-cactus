@@ -29,7 +29,7 @@ object Logics:
      *
      * @return an iterator of the players in the game.
      */
-    val playerIterator: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
+    protected val playerIterator: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
 
     /**
      * Getter for the list of players in the game.
@@ -46,8 +46,15 @@ object Logics:
     @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
     def currentPlayer: Player = playerIterator.peek.get
 
-    /** Represents all the actions action done during the turn. */
-    def playTurn(): Unit
+    /**
+     * Switch to the next player.
+     *
+     * @return the next player.
+     */
+    def nextPlayer: Player = playerIterator.next()
+
+    /** Continue to the next step. */
+    def continue(): Unit
 
     /**
      * Check if the game is over.
@@ -63,24 +70,6 @@ object Logics:
      */
     def calculateScore: Scores
 
-    /** Main loop of the game. */
-    def gameLoop(): Unit
-
-  /**
-   * Abstract implementation of a [[Logic]] that provides implementations of basic methods.
-   *
-   * @param nPlayers number of players in the game.
-   */
-  abstract class AbstractLogic(nPlayers: Int) extends Logic:
-    type Score = Int
-
-    @tailrec
-    override final def gameLoop(): Unit =
-      if !isGameOver then
-        playTurn()
-        playerIterator.next()
-        gameLoop()
-
   /** Provider of a [[Game]]. */
   trait GameProvider:
     /** Instance of the game to play. */
@@ -88,8 +77,6 @@ object Logics:
 
   /** Trait that represents a game logic based on a certain game. */
   trait GameLogic extends GameProvider:
-    protected trait Move
-
     /**
      * Setup the game.
      *
@@ -104,29 +91,16 @@ object Logics:
    * @param nPlayers number of players in the game.
    */
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
-  class CactusLogic(nPlayers: Int) extends AbstractLogic(nPlayers) with GameLogic:
+  class CactusLogic(nPlayers: Int) extends Logic with GameLogic:
     type Score = Int
 
-    override val game: CactusGame  = CactusGame()
-    override val _players: Players = setup(nPlayers)
-    var turnsRemaining: Int        = nPlayers
-    private var lastRound: Boolean = false
+    override val game: CactusGame   = CactusGame()
+    override val _players: Players  = setup(nPlayers)
+    private var turnsRemaining: Int = nPlayers
+    private var lastRound: Boolean  = false
 
-    private enum InitialMove extends Move:
-      case DrawFromDeck, DrawFromDiscards
-
-    private enum DiscardMove extends Move:
-      case Discard(cardIndex: Int)
-
-    private enum FinalMove extends Move:
-      case Cactus
-
-    import InitialMove.*
-    import DiscardMove.*
-    import FinalMove.*
-
-    override def playTurn(): Unit =
-      val move = waitInput(1)
+    override def continue(): Unit =
+      val move = 1
 //      move match
 //        case DrawFromDeck => playerIterator.peek.get.draw(game.deck)
 //        case _            => playerIterator.peek.get.draw(game.discardPile)
@@ -144,11 +118,6 @@ object Logics:
       case _ => false
 
     override def calculateScore: Scores = Scores(players.map(p => p -> 0).toMap)
-
-    private def waitInput(moveNumber: Int): Move = moveNumber match
-      case 1 => DrawFromDeck
-      case 2 => Discard(1)
-      case 3 => Cactus
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:
