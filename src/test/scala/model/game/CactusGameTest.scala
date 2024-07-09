@@ -4,7 +4,8 @@ import card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
 import card.CardBuilder.PokerDSL.of
 import card.Cards.Card
 import card.CardsData.PokerCardName.Ace
-import model.deck.Decks
+import model.deck.{Decks, Drawable}
+import model.deck.Decks.Deck
 import model.game.Scores
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{be, empty, have, not}
@@ -19,7 +20,7 @@ class CactusGameTest extends AnyFlatSpec:
   val nonCactusPlayer: Player = new Player:
     var cards: List[Card] = List(Card(1, Spades), Card(2, Spades))
 
-    override def draw(deck: Decks.Deck): Unit = deck.draw() match
+    override def draw(drawable: Drawable[_ <: Card]): Unit = drawable.draw() match
       case Some(card) => cards = cards :+ card
       case _ => ()
 

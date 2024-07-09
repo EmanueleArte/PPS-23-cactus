@@ -1,13 +1,15 @@
 package model.deck
 
 import card.Cards.{Card, PokerCard}
+import model.deck.Drawable
 
 /** Stack of discarded cards with different implementations. */
 object Piles:
-  /** Pile of [[Card]] with basic methods. */
-  trait DiscardPile:
-    /** Type of the cards in the pile. */
-    type CardType <: Card
+  /**
+   * Pile of [[Card]] with basic methods.
+   * @tparam C type of the drawn item. C needs to be at least a [[Card]].
+   */
+  trait DiscardPile[C <: Card] extends Drawable[C]:
 
     /**
      * Size of the pile.
@@ -23,31 +25,24 @@ object Piles:
      * @return
      *   the pile with the card on top.
      */
-    def put(card: Card): DiscardPile
+    def put(card: C): DiscardPile[C]
 
     /**
      * The representations of the cards in the pile.
      * @return
      *   list of cards.
      */
-    def cards: List[CardType]
-
-    /**
-     * Pick the last card discarded.
-     * @return
-     *   the card on top of the pile.
-     */
-    def draw(): Option[CardType]
+    def cards: List[C]
 
     /**
      * Remove all the cards from the pile.
      * @return
      *   an empty pile.
      */
-    def empty(): DiscardPile
+    def empty(): DiscardPile[C]
 
-  /** Basic implementation of a pile. */
-  abstract class PileImpl() extends DiscardPile:
+  /** Abstract class providing implementations of common methods for a [[DiscardPile]] class. */
+  abstract class AbstractPile[C <: Card]() extends DiscardPile[C]:
     override def size: Int = cards.size
 
   /**
@@ -55,15 +50,14 @@ object Piles:
    * @param cards
    *   list of cards of the pile.
    */
-  case class GenericPile(cards: List[Card]) extends PileImpl:
-    override type CardType = Card
-    override def put(card: Card): DiscardPile = card match
+  case class GenericPile(cards: List[Card]) extends AbstractPile[Card]:
+    override def put(card: Card): DiscardPile[Card] = card match
       case card: Card => GenericPile(card +: cards)
       case _          => this
 
     override def draw(): Option[Card] = cards.headOption
 
-    override def empty(): DiscardPile = GenericPile()
+    override def empty(): DiscardPile[Card] = GenericPile()
 
   /**
    * Specific pile for french-suited cards.
@@ -71,18 +65,13 @@ object Piles:
    *   list of cards.
    */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class PokerPile(cards: List[PokerCard]) extends PileImpl:
-    override type CardType = PokerCard
+  case class PokerPile(cards: List[PokerCard]) extends AbstractPile[PokerCard]:
 
-    override def draw(): Option[CardType] = cards.headOption
+    override def draw(): Option[PokerCard] = cards.headOption
 
-    override def put(card: Card): DiscardPile =
-      require(card.isInstanceOf[PokerCard], "Expected a PokerCard")
-      card match
-        case pokerCard: PokerCard => PokerPile(pokerCard +: cards)
-        case _                    => this
+    override def put(card: PokerCard): DiscardPile[PokerCard] = PokerPile(card +: cards)
 
-    override def empty(): DiscardPile = PokerPile()
+    override def empty(): DiscardPile[PokerCard] = PokerPile()
 
   /** Companion object of [[DiscardPile]]. */
   object DiscardPile:
@@ -91,7 +80,7 @@ object Piles:
      * @return
      *   a generic pile.
      */
-    def apply(): DiscardPile = GenericPile()
+    def apply(): DiscardPile[Card] = GenericPile()
 
   /** Companion object of [[GenericPile]]. */
   object GenericPile:
