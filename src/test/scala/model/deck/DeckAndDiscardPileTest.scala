@@ -1,9 +1,9 @@
 package model.deck
 
-import card.CardsData.PokerCardName.*
-import card.CardBuilder.PokerDSL.of
-import card.Cards.{Card, PokerCard}
-import card.CardsData.PokerSuit.*
+import model.card.CardsData.PokerCardName.*
+import model.card.CardBuilder.PokerDSL.of
+import model.card.Cards.{Card, PokerCard}
+import model.card.CardsData.PokerSuit.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.be
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}

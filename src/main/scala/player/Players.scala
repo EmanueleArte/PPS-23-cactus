@@ -9,24 +9,23 @@ import model.deck.Drawable
 object Players:
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  /**
-   * Represents a generic player
-   *
-   * @tparam C type of the card item. C needs to be at least a [[Card]].
-   */
-  trait Player[C <: Card]:
+  /** Represents a generic player */
+  trait Player:
+    /** Type representing the type of the cards in the hand of a player. */
+    type CardType <: Card
+
     /** The name of the player. */
     val name: String
 
     /** The cards in the player's hand. */
-    var cards: List[C]
+    var cards: List[CardType]
 
     /**
      * Draws a card from a deck.
      *
      * @param drawable the drawable to draw from.
      */
-    def draw(drawable: Drawable[C]): Unit
+    def draw(drawable: Drawable[CardType]): Unit
 
     /**
      * Discards a card from the player's hand.
@@ -34,15 +33,17 @@ object Players:
      * @param cardIndex the index of the card in the list to discard.
      * @return the discarded card.
      */
-    def discard(cardIndex: Int): C
+    def discard(cardIndex: Int): CardType
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class CactusPlayer[C <: Card](name: String, var cards: List[C]) extends Player[PokerCard]:
-    override def draw(drawable: Drawable[C]): Unit =
+  case class CactusPlayer(name: String, var cards: List[PokerCard]) extends Player:
+    override type CardType = PokerCard
+
+    override def draw(drawable: Drawable[CardType]): Unit =
       cards = cards :+ drawable.draw().get
 
-    override def discard(cardIndex: Int): C =
-      val cardToRemove: C = cards(cardIndex)
+    override def discard(cardIndex: Int): CardType =
+      val cardToRemove: CardType = cards(cardIndex)
       cards = cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
       cardToRemove
 

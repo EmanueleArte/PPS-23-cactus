@@ -1,6 +1,5 @@
 package model.logic
 
-import model.card.Cards.CardType
 import model.game.{CactusGame, Game, Scores}
 import model.utils.Iterators.PeekableIterator
 import player.Players.Player
@@ -9,14 +8,14 @@ import scala.annotation.tailrec
 
 /**
  * Opaque type representing the players.
- * Internally it is a [[List[Player[CardType]]].
+ * Internally it is a list of [[Player]]].
  */
-opaque type Players = List[Player[CardType]]
+opaque type Players = List[Player]
 
 /** Logic of a game. */
 object Logics:
   /** Type alias for a list of [[Player]]. */
-  type Players = List[Player[CardType]]
+  type Players = List[Player]
 
   /** Logic of a generic turn based game. */
   trait Logic:
@@ -30,7 +29,7 @@ object Logics:
      *
      * @return an iterator of the players in the game.
      */
-    val playerIterator: PeekableIterator[Player[CardType]] = PeekableIterator(Iterator.continually(_players).flatten)
+    val playerIterator: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
 
     /**
      * Getter for the list of players in the game.
@@ -45,7 +44,7 @@ object Logics:
      * @return the current player.
      */
     @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-    def currentPlayer: Player[CardType] = playerIterator.peek.get
+    def currentPlayer: Player = playerIterator.peek.get
 
     /** Represents all the actions action done during the turn. */
     def playTurn(): Unit
@@ -128,16 +127,16 @@ object Logics:
 
     override def playTurn(): Unit =
       val move = waitInput(1)
-      move match
-        case DrawFromDeck => playerIterator.peek.get.draw(game.deck)
-        case _            => playerIterator.peek.get.draw(game.discardPile)
-      val discarded = currentPlayer.discard(
-        waitInput(2) match
-          case Discard(i) => i
-      )
-      game.discardPile = game.discardPile.put(discarded)
-      if waitInput(3) == Cactus then lastRound = true
-
+//      move match
+//        case DrawFromDeck => playerIterator.peek.get.draw(game.deck)
+//        case _            => playerIterator.peek.get.draw(game.discardPile)
+//      val discarded = currentPlayer.discard(
+//        waitInput(2) match
+//          case Discard(i) => i
+//      )
+//      game.discardPile = game.discardPile.put(discarded)
+//      if waitInput(3) == Cactus then lastRound = true
+//
     override def isGameOver: Boolean = lastRound match
       case true =>
         turnsRemaining -= 1

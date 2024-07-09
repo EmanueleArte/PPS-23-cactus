@@ -1,9 +1,9 @@
 package model.game
 
-import card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
-import card.CardBuilder.PokerDSL.of
-import card.Cards.Card
-import card.CardsData.PokerCardName.Ace
+import model.card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
+import model.card.CardBuilder.PokerDSL.of
+import model.card.Cards.Card
+import model.card.CardsData.PokerCardName.Ace
 import model.deck.{Decks, Drawable}
 import model.deck.Decks.Deck
 import model.game.Scores
@@ -18,13 +18,17 @@ class CactusGameTest extends AnyFlatSpec:
   val playersNumber: Int = 3
   val game: Game = CactusGame()
   val nonCactusPlayer: Player = new Player:
-    var cards: List[Card] = List(Card(1, Spades), Card(2, Spades))
+    override type CardType = Card
+    
+    override val name: String = "Player"
 
-    override def draw(drawable: Drawable[_ <: Card]): Unit = drawable.draw() match
+    var cards: List[CardType] = List(Card(1, Spades), Card(2, Spades))
+
+    override def draw(drawable: Drawable[CardType]): Unit = drawable.draw() match
       case Some(card) => cards = cards :+ card
       case _ => ()
 
-    override def discard(cardIndex: Int): Card = cards(cardIndex)
+    override def discard(cardIndex: Int): CardType = cards(cardIndex)
 
   "Game setup " should "return the players" in:
     val game: Game = CactusGame()

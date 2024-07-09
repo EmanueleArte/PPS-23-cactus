@@ -3,7 +3,7 @@ package model.logic
 import model.card.CardBuilder.PokerDSL.of
 import model.card.Cards.Card
 import model.card.CardsData.PokerSuit.*
-import .Drawable
+import model.deck.Drawable
 import model.game.Scores
 import model.game.Scores.toMap
 import model.logic.Logics.*
@@ -20,9 +20,11 @@ class LogicTest extends AnyFlatSpec:
   /** Simple player implementation for testing. */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   case class PlayerImpl(name: String) extends Player:
+    override type CardType = Card
+
     var cards: List[Card] = List()
 
-    override def draw(deck: Drawable): Unit = None
+    override def draw(deck: Drawable[CardType]): Unit = None
 
     override def discard(cardIndex: Int): Card = 2 of Spades
 
