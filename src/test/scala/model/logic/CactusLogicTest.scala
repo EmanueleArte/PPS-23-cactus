@@ -8,6 +8,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 class CactusLogicTest extends AnyFlatSpec:
 
   val playersNumber: Int = 4
+  val deckSize: Int = 52
 
   "A Cactus Logic" should "have the correct number of players after the setup" in:
     val logic = CactusLogic(playersNumber)
@@ -17,7 +18,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = CactusLogic(playersNumber)
     logic.draw(true)
     logic.currentPlayer.cards.size should be (logic.game.initialPlayerCardsNumber + 1)
-    logic.game.deckSize should be (52 - playersNumber * logic.game.initialPlayerCardsNumber - 1)
+    logic.game.deckSize should be (deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
 
   it should "discard a card" in:
     val logic = CactusLogic(playersNumber)
@@ -40,4 +41,16 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.discard(0)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber)
     logic.game.discardPile.size should be(1)
-    logic.game.deckSize should be(52 - playersNumber * logic.game.initialPlayerCardsNumber - 1)
+    logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
+
+  it should "make a complete match using basic moves" in:
+    val logic = CactusLogic(playersNumber)
+    while !logic.isGameOver do
+      logic.draw(true)
+      logic.discard(0)
+      println(logic.currentPlayer.name)
+      logic.callCactus()
+      logic.nextPlayer
+    logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
+    logic.game.discardPile.size should be(playersNumber)
+
