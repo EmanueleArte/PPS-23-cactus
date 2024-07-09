@@ -31,6 +31,7 @@ object Scores:
    * @return the underlying [[Scores]] of the provided [[Scores]].
    */
   def toMap(scores: Scores): Map[Player, Int] = scores
+
   extension (scores: Scores)
 
     /**

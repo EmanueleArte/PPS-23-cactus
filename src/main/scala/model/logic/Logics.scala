@@ -111,7 +111,7 @@ object Logics:
       turnsRemaining <= 0
     else false
 
-    override def calculateScore: Scores = Scores(players.map(p => p -> 0).toMap)
+    override def calculateScore: Scores = game.calculateScores(players)
 
     /**
      * Make the current player to draw a card from the deck or the discard pile.
