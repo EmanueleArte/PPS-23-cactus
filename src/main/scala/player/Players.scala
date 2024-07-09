@@ -9,11 +9,11 @@ import model.deck.Drawable
 object Players:
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  /** Represents a generic player */
+  /** Represents a generic player. */
   trait Player:
-    /** Type representing the type of the cards in the hand of a player. */
+    /** Type representing the type of the cards in a game. */
     type CardType <: Card
-
+    
     /** The name of the player. */
     val name: String
 
@@ -48,4 +48,4 @@ object Players:
       cardToRemove
 
   /** Companion object of [[Player]]. */
-  object Player;
+  object Player

@@ -43,5 +43,5 @@ class PlayerTest extends AnyFlatSpec {
   "Discarded card " should "be 9 of Spades" in:
     val player: CactusPlayer = CactusPlayer(name, List(PokerCard(9, CardsData.PokerSuit.Spades), PokerCard(7, CardsData.PokerSuit.Clubs)))
     val discardedCard = player.discard(0)
-    discardedCard shouldBe Card(9, CardsData.PokerSuit.Spades)
+    discardedCard shouldBe PokerCard(9, CardsData.PokerSuit.Spades)
 }

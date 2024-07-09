@@ -62,11 +62,7 @@ object Scores:
      */
     def isEmpty: Boolean = scores.isEmpty
 
-/**
- * Generic card game.
- *
- * @tparam C type of the card item. C needs to be at least a [[Card]].
- */
+/** Generic card game. */
 trait Game:
   /**
    * Setups method to call before start the game.
