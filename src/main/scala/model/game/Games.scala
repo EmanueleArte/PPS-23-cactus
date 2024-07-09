@@ -1,6 +1,6 @@
 package model.game
 
-import model.card.Cards.{Card, PokerCard}
+import model.card.Cards.{Card, CardType, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import player.Players.{CactusPlayer, Player}
@@ -9,7 +9,7 @@ import player.Players.{CactusPlayer, Player}
  * An opaque type representing the scores of players in a game.
  * Internally it is a [[ Map[Player, Int] ]].
  */
-opaque type Scores = Map[Player, Int]
+opaque type Scores = Map[Player[CardType], Int]
 
 /**
  * Companion object of [[Scores]] opaque type.
@@ -22,7 +22,7 @@ object Scores:
    * @param map the map of players and their scores.
    * @return t [[Scores]] representing the provided map.
    */
-  def apply(map: Map[Player, Int]): Scores = map
+  def apply(map: Map[Player[CardType], Int]): Scores = map
 
   /**
    * Converts a [[Scores]] to a Score.
@@ -30,7 +30,7 @@ object Scores:
    * @param scores the [[Scores]] to convert.
    * @return the underlying [[Scores]] of the provided [[Scores]].
    */
-  def toMap(scores: Scores): Map[Player, Int] = scores
+  def toMap(scores: Scores): Map[Player[CardType], Int] = scores
   extension (scores: Scores)
 
     /**
@@ -46,14 +46,14 @@ object Scores:
      * @param player The player whose score is to be retrieved.
      * @return an [[ Option[Int] ]] containing the score of the player if present, or `None` if the player is not in this [[Scores]].
      */
-    def get(player: Player): Option[Int] = scores.get(player)
+    def get(player: Player[CardType]): Option[Int] = scores.get(player)
 
     /**
      * Retrieves the players contained in the [[Scores]].
      *
      * @return an [[ Iterable[Player] ]] containing the keys of the Score associated to [[Scores]].
      */
-    def players: Iterable[Player] = scores.keys
+    def players: Iterable[Player[CardType]] = scores.keys
 
     /**
      * Checks if the provided [[Scores]] is empty.
@@ -69,14 +69,14 @@ trait Game:
    * @param playersNumber number of players in the match.
    * @return a list with the initialized players.
    */
-  def setupGame(playersNumber: Int): List[Player]
+  def setupGame(playersNumber: Int): List[Player[CardType]]
 
   /**
    * Calculate the scores for each player.
    * @param players list of players to which calculate the scores.
    * @return a [[Scores]] with the scores for each player.
    */
-  def calculateScores(players: List[Player]): Scores
+  def calculateScores(players: List[Player[CardType]]): Scores
 
 /** Cactus game implementation. */
 @SuppressWarnings(Array("org.wartremover.warts.Var"))
@@ -92,11 +92,11 @@ case class CactusGame() extends Game:
 //  export discardPile.{draw => drawFromDiscardPile}
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  override def setupGame(playersNumber: Int): List[Player] =
+  override def setupGame(playersNumber: Int): List[Player[PokerCard]] =
     (1 to playersNumber).toList
       .map(p => CactusPlayer(s"Player $p", (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get)))
 
-  override def calculateScores(players: List[Player]): Scores = Scores(
+  override def calculateScores(players: List[Player[CardType]]): Scores = Scores(
     players.zipWithIndex
       .map((player, index) => (player, player.cards))
       .filter((player, cards) =>

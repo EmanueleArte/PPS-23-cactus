@@ -4,6 +4,10 @@ import model.card.CardsData.{PokerSuit, Suit}
 
 /** Cards with a value and a suit implementations. */
 object Cards:
+
+  /** Type representing the type of the cards in the hand of players in a game. */
+  type CardType <: Card
+
   /** Represents a card with a value and a suit. */
   trait Card:
     type Value

@@ -1,15 +1,22 @@
 package model.logic
 
+import model.card.Cards.CardType
 import model.game.{CactusGame, Game, Scores}
 import model.utils.Iterators.PeekableIterator
 import player.Players.Player
 
 import scala.annotation.tailrec
 
+/**
+ * Opaque type representing the players.
+ * Internally it is a [[List[Player[CardType]]].
+ */
+opaque type Players = List[Player[CardType]]
+
 /** Logic of a game. */
 object Logics:
   /** Type alias for a list of [[Player]]. */
-  type Players = List[Player]
+  type Players = List[Player[CardType]]
 
   /** Logic of a generic turn based game. */
   trait Logic:
@@ -23,7 +30,7 @@ object Logics:
      *
      * @return an iterator of the players in the game.
      */
-    val playerIterator: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
+    val playerIterator: PeekableIterator[Player[CardType]] = PeekableIterator(Iterator.continually(_players).flatten)
 
     /**
      * Getter for the list of players in the game.
@@ -38,7 +45,7 @@ object Logics:
      * @return the current player.
      */
     @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-    def currentPlayer: Player = playerIterator.peek.get
+    def currentPlayer: Player[CardType] = playerIterator.peek.get
 
     /** Represents all the actions action done during the turn. */
     def playTurn(): Unit
