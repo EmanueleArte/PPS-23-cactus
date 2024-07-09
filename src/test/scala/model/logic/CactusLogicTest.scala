@@ -17,8 +17,5 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = CactusLogic(playersNumber)
     logic.draw(true)
     logic.currentPlayer.cards.size should be (logic.game.initialPlayerCardsNumber + 1)
-
-
-
-
+    logic.game.deck.size should be (52 - playersNumber * logic.game.initialPlayerCardsNumber - 1)
 
