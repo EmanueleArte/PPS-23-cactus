@@ -108,7 +108,7 @@ object Logics:
 
     override def isGameOver: Boolean = if lastRound then
       turnsRemaining -= 1
-      turnsRemaining < 1
+      turnsRemaining <= 0
     else false
 
     override def calculateScore: Scores = Scores(players.map(p => p -> 0).toMap)
@@ -128,6 +128,9 @@ object Logics:
      * @param cardIndex index of the card in the player hand to discard.
      */
     def discard(cardIndex: Int): Unit = game.discardPile = game.discardPile.put(currentPlayer.discard(cardIndex))
+
+    /** Make the current player to call Cactus. */
+    def callCactus(): Unit = lastRound = true
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:
