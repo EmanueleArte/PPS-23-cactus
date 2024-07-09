@@ -1,11 +1,11 @@
 package model.game
 
-import model.card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
-import model.card.CardBuilder.PokerDSL.of
-import model.card.Cards.Card
-import model.card.CardsData.PokerCardName.Ace
-import model.deck.DeckUtils.Drawable
-import model.deck.Decks
+import card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
+import card.CardBuilder.PokerDSL.of
+import card.Cards.Card
+import card.CardsData.PokerCardName.Ace
+import model.deck.{Decks, Drawable}
+import model.deck.Decks.Deck
 import model.game.Scores
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{be, empty, have, not}
@@ -18,10 +18,9 @@ class CactusGameTest extends AnyFlatSpec:
   val playersNumber: Int = 3
   val game: Game = CactusGame()
   val nonCactusPlayer: Player = new Player:
-    val name: String = "Non Cactus Player"
     var cards: List[Card] = List(Card(1, Spades), Card(2, Spades))
 
-    override def draw(source: Drawable): Unit = source.draw() match
+    override def draw(drawable: Drawable[_ <: Card]): Unit = drawable.draw() match
       case Some(card) => cards = cards :+ card
       case _ => ()
 

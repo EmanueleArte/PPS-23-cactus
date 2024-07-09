@@ -20,15 +20,21 @@ class PlayerTest extends AnyFlatSpec {
     val player: CactusPlayer = CactusPlayer(name, List.empty[Card])
     player.cards shouldBe a[List[Card]]
 
-  "Player " should "have 1 cards after a draw" in:
-    val player: CactusPlayer = CactusPlayer(name, List.empty[Card])
+  "Player " should "have 1 cards after a draw" in :
+    val player: CactusPlayer = CactusPlayer(List.empty[Card])
     val deck: Deck = PokerDeck()
+  "Player " should "have 1 cards after a draw" in :
+    val player: CactusPlayer = CactusPlayer(List.empty[Card])
+    val deck: Deck[PokerCard] = PokerDeck()
     player.draw(deck)
     player.cards.length shouldBe 1
 
-  "Player " should "have 3 of Diamonds after drawing 3 of Diamonds" in:
-    val player: CactusPlayer = CactusPlayer(name, List.empty[Card])
+  "Player " should "have 3 of Diamonds after drawing 3 of Diamonds" in :
+    val player: CactusPlayer = CactusPlayer(List.empty[Card])
     val deck: Deck = Deck(3 to 3, List(CardsData.PokerSuit.Diamonds), false)
+  "Player " should "have 3 of Diamonds after drawing 3 of Diamonds" in :
+    val player: CactusPlayer = CactusPlayer(List.empty[Card])
+    val deck: Deck[Card] = Deck(3 to 3, List(CardsData.PokerSuit.Diamonds), false)
     player.draw(deck)
     player.cards.head shouldBe Card(3, CardsData.PokerSuit.Diamonds)
 

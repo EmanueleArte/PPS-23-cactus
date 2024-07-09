@@ -4,6 +4,8 @@ import model.card.Cards.Card
 import model.deck.DeckUtils.Drawable
 import model.deck.Decks.Deck
 import model.deck.Piles.DiscardPile
+import card.Cards.Card
+import model.deck.Drawable
 
 /** A player of the game. */
 object Players:
@@ -22,7 +24,7 @@ object Players:
      *
      * @param source the deck to draw from.
      */
-    def draw(source: Drawable): Unit
+    def draw(drawable: Drawable[_ <: Card]): Unit
 
     /**
      * Discards a card from the player's hand.
@@ -33,9 +35,9 @@ object Players:
     def discard(cardIndex: Int): Card
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class CactusPlayer(name: String, var cards: List[Card]) extends Player:
-    override def draw(source: Drawable): Unit =
-      cards = cards :+ source.draw().get
+  case class CactusPlayer(var cards: List[Card]) extends Player:
+    override def draw(drawable: Drawable[_ <: Card]): Unit =
+      cards = cards :+ drawable.draw().get
 
     override def discard(cardIndex: Int): Card =
       val cardToRemove: Card = cards(cardIndex)

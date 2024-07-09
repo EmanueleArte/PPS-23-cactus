@@ -7,11 +7,13 @@ import model.card.Cards.{Card, PokerCard}
 import model.card.CardsData.PokerSuit.Spades
 import model.deck.Piles.{DiscardPile, PokerPile}
 import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.matchers.must.Matchers.{be, defined, empty, have, not, an}
+import org.scalatest.matchers.must.Matchers.{be, defined, empty}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import org.scalatest.matchers.must.Matchers
 
 class DiscardPileTest extends AnyFlatSpec:
+  type DiscardPile = model.deck.Piles.DiscardPile[PokerCard]
+
   "A discard pile" should "initially be empty" in:
     val discardPile: DiscardPile = PokerPile()
     discardPile.size shouldBe 0
@@ -45,10 +47,6 @@ class DiscardPileTest extends AnyFlatSpec:
     val cardOption: Option[Card] = discardPile.draw()
     cardOption shouldBe empty
 
-  "Card not from a certain deck" should "not be put on a pile" in:
-    val discardPile: DiscardPile = PokerPile()
-    an [IllegalArgumentException] should be thrownBy discardPile.put(Card(1, Spades))
-
   "Pile" should "be emptiable" in:
     val discardPile: DiscardPile = PokerPile()
       .put(Ace of Spades)
@@ -61,7 +59,7 @@ class DiscardPileTest extends AnyFlatSpec:
     val discardPile: DiscardPile = PokerPile().empty()
     discardPile.size shouldBe 0
 
-  "After emptying a pile" should "be possibile to add cards" in:
+  "After emptying a pile" should "be possible to add cards" in:
     val discardPile: DiscardPile = PokerPile()
       .put(Ace of Spades)
       .empty()

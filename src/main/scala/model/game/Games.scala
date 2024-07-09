@@ -82,10 +82,10 @@ trait Game:
 @SuppressWarnings(Array("org.wartremover.warts.Var"))
 case class CactusGame() extends Game:
   /** Deck with the cards to draw. */
-  val deck: Deck = PokerDeck(shuffled = true)
+  val deck: Deck[PokerCard] = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  var discardPile: DiscardPile      = PokerPile()
+  var discardPile: DiscardPile[PokerCard] = PokerPile()
   val initialPlayerCardsNumber: Int = 4
 
   export deck.{size => deckSize}
