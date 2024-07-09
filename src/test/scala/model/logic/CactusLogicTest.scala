@@ -33,3 +33,11 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.draw(false)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber)
     logic.game.discardPile.size should be(0)
+
+  it should "make a basic complete turn" in:
+    val logic = CactusLogic(playersNumber)
+    logic.draw(true)
+    logic.discard(0)
+    logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber)
+    logic.game.discardPile.size should be(1)
+    logic.game.deckSize should be(52 - playersNumber * logic.game.initialPlayerCardsNumber - 1)
