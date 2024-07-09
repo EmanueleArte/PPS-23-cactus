@@ -95,7 +95,7 @@ object Logics:
    */
   @SuppressWarnings(Array("org.wartremover.warts.Var"))
   class CactusLogic(nPlayers: Int) extends Logic with GameLogic:
-    override type Score = Int
+    override type Score      = Int
     override type PlayerType = CactusPlayer
 
     override val game: CactusGame   = CactusGame()
@@ -121,6 +121,13 @@ object Logics:
     def draw(fromDeck: Boolean): Unit =
       if fromDeck then currentPlayer.draw(game.deck)
       else currentPlayer.draw(game.discardPile)
+
+    /**
+     * Make the current player to discard a card.
+     *
+     * @param cardIndex index of the card in the player hand to discard.
+     */
+    def discard(cardIndex: Int): Unit = game.discardPile = game.discardPile.put(currentPlayer.discard(cardIndex))
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:
