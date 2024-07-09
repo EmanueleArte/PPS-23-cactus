@@ -24,6 +24,10 @@ object Players:
      * @return the discarded card
      */
     def discard(cardIndex: Int): Card
+
+  /** Represents a [[Player]] of the Cactus game.
+   * @param cards the list of the starting [[Card]]
+   */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   case class CactusPlayer(var cards: List[Card]) extends Player:
     override def draw(drawable: Drawable[_ <: Card]): Unit =
