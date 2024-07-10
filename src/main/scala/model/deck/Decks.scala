@@ -132,7 +132,7 @@ object Decks:
   case class PokerDeck(shuffled: Boolean) extends AbstractDeck[PokerCard](shuffled):
 
     override val inputCards: List[PokerCard] = for
-      suit  <- PokerSuit.values.toList;
+      suit  <- PokerSuit.values.toList
       value <- Ace to King
     yield value of suit
 

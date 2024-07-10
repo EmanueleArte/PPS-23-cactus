@@ -6,14 +6,6 @@ import model.game.{CactusGame, Game, Scores}
 import model.utils.Iterators.PeekableIterator
 import player.Players.{CactusPlayer, Player}
 
-import scala.annotation.tailrec
-
-/**
- * Opaque type representing the players.
- * Internally it is a list of [[Player]]].
- */
-opaque type Players = List[Player]
-
 /** Logic of a game. */
 object Logics:
   /** Type alias for a list of [[Player]]. */
@@ -32,7 +24,7 @@ object Logics:
      *
      * @return an iterator of the players in the game.
      */
-    protected val playerIterator: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
+    private val playerIterator: PeekableIterator[Player] = PeekableIterator(Iterator.continually(_players).flatten)
 
     /**
      * Getter for the list of players in the game.
@@ -76,7 +68,7 @@ object Logics:
   /** Provider of a [[Game]]. */
   trait GameProvider:
     /** Instance of the game to play. */
-    val game: Game
+    lazy val game: Game
 
   /** Trait that represents a game logic based on a certain game. */
   trait GameLogic extends GameProvider:
@@ -98,7 +90,7 @@ object Logics:
     override type Score      = Int
     override type PlayerType = CactusPlayer
 
-    override val game: CactusGame   = CactusGame()
+    override lazy val game: CactusGame   = CactusGame()
     override val _players: Players  = setup(nPlayers)
     private var turnsRemaining: Int = nPlayers
     private var lastRound: Boolean  = false
@@ -128,6 +120,21 @@ object Logics:
      * @param cardIndex index of the card in the player hand to discard.
      */
     def discard(cardIndex: Int): Unit = game.discardPile = game.discardPile.put(currentPlayer.discard(cardIndex))
+
+    /**
+     * Make the current player to discard a card but with a malus if the card does not match the discard criteria.
+     *
+     * @param cardIndex index of the card in the player hand to discard.
+     */
+    def discardWithMalus(cardIndex: Int): Unit = game.discardPile.draw() match
+      case Some(card) if card.value != currentPlayer.cards(cardIndex).value =>
+        currentPlayer.draw(game.deck)
+        game.discardPile = game.discardPile.put(card)
+      case Some(card) =>
+        game.discardPile = game.discardPile.put(card)
+        discard(cardIndex)
+      case _       => currentPlayer.draw(game.deck)
+
 
     /** Make the current player to call Cactus. */
     def callCactus(): Unit = lastRound = true
