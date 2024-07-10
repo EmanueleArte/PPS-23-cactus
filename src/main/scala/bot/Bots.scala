@@ -8,11 +8,12 @@ object Bots:
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   /** Represents a bot. */
-  trait Bot:
+  trait CactusBot:
     /** The cards that the bot knows. */
     var knownCards: List[Card]
 
-    /** Let the [[Bot]] see a [[Card]].
+    /** Let the [[CactusBot]] see a [[Card]].
+ *
      * @param cardIndex the index of the [[Card]] in the list of the cards.
      */
     def seeCard(cardIndex: Int): Unit;
@@ -23,7 +24,7 @@ object Bots:
     def removeFromKnownCards(card: Card): Unit
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  class CactusBot(cards: List[Card]) extends CactusPlayer(cards) with Bot:
+  class CactusBotImpl(cards: List[Card]) extends CactusPlayer(cards) with CactusBot:
     var knownCards: List[Card] = List.empty
 
     override def seeCard(cardIndex: Int): Unit =
