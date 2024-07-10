@@ -3,6 +3,8 @@ package model.deck
 import model.card.Cards.{Card, PokerCard}
 import model.deck.Drawable
 
+import scala.collection.mutable.ListBuffer
+
 /** Stack of discarded cards with different implementations. */
 object Piles:
   /**
@@ -47,31 +49,44 @@ object Piles:
 
   /**
    * The most general kind of pile creatable.
-   * @param cards
+   * @param inputCards
    *   list of cards of the pile.
    */
-  case class GenericPile(cards: List[Card]) extends AbstractPile[Card]:
+  @SuppressWarnings(Array("org.wartremover.warts.All"))
+  case class GenericPile(inputCards: List[Card]) extends AbstractPile[Card]:
+    var _cards: List[Card] = inputCards
     override def put(card: Card): DiscardPile[Card] = card match
       case card: Card => GenericPile(card +: cards)
       case _          => this
 
-    override def draw(): Option[Card] = cards.headOption
+    override def draw(): Option[Card] =
+      val returnedCard: Option[Card] = _cards.headOption
+      _cards = _cards.drop(1)
+      returnedCard
 
     override def empty(): DiscardPile[Card] = GenericPile()
 
+    override def cards: List[Card] = _cards
+
   /**
    * Specific pile for french-suited cards.
-   * @param cards
+   * @param inputCards
    *   list of cards.
    */
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class PokerPile(cards: List[PokerCard]) extends AbstractPile[PokerCard]:
+  case class PokerPile(inputCards: List[PokerCard]) extends AbstractPile[PokerCard]:
+    var _cards: List[PokerCard] = inputCards
 
-    override def draw(): Option[PokerCard] = cards.headOption
+    override def draw(): Option[PokerCard] =
+      val returnCard: Option[PokerCard] = _cards.headOption
+      _cards = _cards.drop(1)
+      returnCard
 
     override def put(card: PokerCard): DiscardPile[PokerCard] = PokerPile(card +: cards)
 
     override def empty(): DiscardPile[PokerCard] = PokerPile()
+
+    override def cards: List[PokerCard] = _cards
 
   /** Companion object of [[DiscardPile]]. */
   object DiscardPile:
