@@ -139,7 +139,8 @@ object Bots:
 
     override def discardWithMalus(cardIndex: Int): Card = ???
 
-    private def totKnownValue: Int = ???
+    private def totKnownValue: Int =
+      knownCards.map(c => c.##).sum     //TODO al posto di ## mettere il valore
 
     override def callCactus(): Boolean =
       cards.length <= 2 || (cards.length - knownCards.length <= 2 && totKnownValue < 10)
