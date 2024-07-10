@@ -29,14 +29,14 @@ class DiscardPileTest extends AnyFlatSpec:
     discardPile.cards should be(List(3 of Spades, 2 of Spades, Ace of Spades))
 
   "Draw" should "retrieve the last card discarded" in:
-    val cardOption: Option[Card] = PokerPile()
+    val discardPile: DiscardPile = PokerPile()
       .put(Ace of Spades)
       .put(2 of Spades)
       .put(3 of Spades)
-      .draw()
+    val cardOption: Option[Card] = discardPile.draw()
     cardOption shouldBe defined
     cardOption.fold(Nil)(card => card) should be (3 of Spades)
-    updatedPile.size shouldBe 2
+    discardPile.size shouldBe 2
 
   "Draw from an empty pile" should "return empty Option" in:
     PokerPile().draw() shouldBe empty
