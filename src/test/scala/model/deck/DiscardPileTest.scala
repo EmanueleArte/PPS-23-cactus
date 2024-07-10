@@ -15,36 +15,30 @@ class DiscardPileTest extends AnyFlatSpec:
   type DiscardPile = model.deck.Piles.DiscardPile[PokerCard]
 
   "A discard pile" should "initially be empty" in:
-    val discardPile: DiscardPile = PokerPile()
-    discardPile.size shouldBe 0
+    PokerPile().size shouldBe 0
 
   "A discarded card" should "be added on the pile" in:
-    val discardPile: DiscardPile = PokerPile()
-    val updatedPile: DiscardPile = discardPile.put(Ace of Spades)
-    updatedPile.cards should be (List(Ace of Spades))
+    val discardPile: DiscardPile = PokerPile().put(Ace of Spades)
+    discardPile.cards should be (List(Ace of Spades))
 
   "Multiple discarded cards" should "be added on the pile" in:
     val discardPile: DiscardPile = PokerPile()
-    val updatedPile: DiscardPile = discardPile
       .put(Ace of Spades)
       .put(2 of Spades)
       .put(3 of Spades)
-    updatedPile.cards should be(List(3 of Spades, 2 of Spades, Ace of Spades))
+    discardPile.cards should be(List(3 of Spades, 2 of Spades, Ace of Spades))
 
   "Draw" should "retrieve the last card discarded" in:
-    val discardPile: DiscardPile = PokerPile()
-    val updatedPile: DiscardPile = discardPile
+    val cardOption: Option[Card] = PokerPile()
       .put(Ace of Spades)
       .put(2 of Spades)
       .put(3 of Spades)
-    val cardOption: Option[Card] = updatedPile.draw()
+      .draw()
     cardOption shouldBe defined
     cardOption.fold(Nil)(card => card) should be (3 of Spades)
 
   "Draw from an empty pile" should "return empty Option" in:
-    val discardPile: DiscardPile = PokerPile()
-    val cardOption: Option[Card] = discardPile.draw()
-    cardOption shouldBe empty
+    PokerPile().draw() shouldBe empty
 
   "Draw" should "remove the card on top of the pile" in:
     val discardPile: DiscardPile = PokerPile().put(Ace of Spades).put(2 of Spades)
