@@ -30,4 +30,4 @@ class CactusBotTest extends AnyFlatSpec:
     val cactusBot: CactusBotImpl = CactusBotImpl(List(Card(8, CardsData.PokerSuit.Spades), Card(2, CardsData.PokerSuit.Diamonds)))
     cactusBot.seeCard(0)
     cactusBot.discard(0)
-    cactusBot.knownCards shouldBe List.empty[Card]*/
+    cactusBot.getKnownCards shouldBe List.empty[Card]*/

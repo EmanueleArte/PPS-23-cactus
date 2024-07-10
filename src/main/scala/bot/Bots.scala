@@ -1,8 +1,9 @@
 package bot
 
 import bot.Bots.DiscardMethods.Random
-import bot.Bots.DrawMethods.Deck
+import bot.Bots.DrawMethods.{Deck, PileSmartly}
 import card.Cards.Card
+import model.deck.Decks.PokerDeck
 import model.deck.Drawable
 import player.Players.CactusPlayer
 
@@ -12,11 +13,11 @@ object Bots:
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   /** Represents a bot. */
   trait CactusBot:
-    /** The cards that the bot knows. */
+    /*/** The cards that the bot knows. */
     var knownCards: List[Card]
     val drawMethod: DrawMethods
     val discardMethod: DiscardMethods
-    val memoryLossPercentage: MemoryLossPercentage
+    val memoryLossPercentage: MemoryLossPercentage*/
 
     /** Let the [[CactusBot]] see a [[Card]].
      *
@@ -29,7 +30,10 @@ object Bots:
      */
     def chooseDiscard(): Int
 
-    def chooseDraw(deck: Boolean): Drawable[_ <: Card]
+    /** Chooses the draw deck.
+     * @return true if the bot should draw from the deck, false if it should draw from the discard pile
+     */
+    def chooseDraw(): Boolean
 
     /** Discards a card from the player's hand.
      * @param cardIndex the index of the card in the list to discard
@@ -49,12 +53,15 @@ object Bots:
     def choosePlayer(player: CactusPlayer): CactusPlayer
 
   class MemoryLossPercentage(lp: Double):
-    val lossPercentage: Double = lp
+    private val lossPercentage: Double = lp
     require(lossPercentage <= 1)
     require(lossPercentage >= 0)
 
+    def getLossPercentage: Double =
+      lossPercentage
+
   enum DrawMethods:
-    case Deck, Pile, PileSmartly
+    case Deck, Pile, RandomDeck, PileSmartly
 
   enum DiscardMethods:
     case Unknown, Known, Random
@@ -66,14 +73,16 @@ object Bots:
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBotImpl(cards: List[Card], drMth: DrawMethods, discMth: DiscardMethods, mlp: MemoryLossPercentage) extends CactusPlayer(cards) with CactusBot:
-    var knownCards: List[Card] = List.empty
-    override val drawMethod: DrawMethods = drMth
-    override val discardMethod: DiscardMethods = discMth
-    override val memoryLossPercentage: MemoryLossPercentage = mlp
+    private var knownCards: List[Card] = List.empty
+    private val drawMethod: DrawMethods = drMth
+    private val discardMethod: DiscardMethods = discMth
+    private val memoryLossPercentage: MemoryLossPercentage = mlp
+
+    def getKnownCards: List[Card] = knownCards
 
     override def seeCard(cardIndex: Int): Unit =
       val random = scala.util.Random.nextDouble()
-      if (random > memoryLossPercentage.lossPercentage) {
+      if (random > memoryLossPercentage.getLossPercentage) {
         knownCards = knownCards :+ cards(cardIndex)
       }
 
@@ -86,9 +95,9 @@ object Bots:
       discardedCard
 
     private def higherKnownCard: Int =
-      var higherValue: Int = 0
+      var higherValue: Int = -1
       var higherValueIndex: Int = 0
-      for (i <- 0 until knownCards.length) {
+      for (i <- knownCards.indices) {
         if (knownCards(i).## > higherValue) {   //TODO ## non va bene
           higherValue = knownCards(i).##
           higherValueIndex = i
@@ -97,14 +106,25 @@ object Bots:
       higherValueIndex
 
     private def unknownCard: Int =
-      ???
+      val diff: List[Card] = cards.diff(knownCards)
+      var higherValue: Int = -1
+      for (i <- diff.indices) {     //TODO ## non va bene
+        if (diff(i).## > higherValue) {
+          higherValue = diff(i).##
+        }
+      }
+      cards.zipWithIndex.filter((c, _) => c.## == higherValue).map((_, i) => i).head
 
     override def chooseDiscard(): Int = discardMethod match
       case DiscardMethods.Unknown => higherKnownCard
       case DiscardMethods.Known => unknownCard
       case DiscardMethods.Random => scala.util.Random.nextInt(cards.length)
 
-    override def chooseDraw(deck: Boolean): Drawable[_ <: Card] = ???
+    override def chooseDraw(): Boolean = drawMethod match
+      case DrawMethods.Deck => true
+      case DrawMethods.Pile => false
+      case DrawMethods.RandomDeck => scala.util.Random.nextBoolean()
+      case DrawMethods.PileSmartly => ???   //TODO dovrebbe ottenere il valore della carta in cima alla pila degli scarti
 
     override def discardWithMalus(cardIndex: Int): Card = ???
 
