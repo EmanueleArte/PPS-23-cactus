@@ -38,6 +38,20 @@ object Bots:
 
     def choosePlayer(player: CactusPlayer): CactusPlayer
 
+  class MemoryLossPercentage(lossPercentage: Double):
+    require(lossPercentage <= 1)
+    require(lossPercentage >= 0)
+
+  enum DrawMethods:
+    case Deck, Pile, PileSmartly
+
+  enum DiscardMethods:
+    case Unknown, Known, Random
+
+  enum Memory(percentage: MemoryLossPercentage):
+    case Bad extends Memory(MemoryLossPercentage(0.8))
+    case Normal extends Memory(MemoryLossPercentage(0.5))
+    case Good extends Memory(MemoryLossPercentage(0.2))
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBotImpl(cards: List[Card]) extends CactusPlayer(cards) with CactusBot:
