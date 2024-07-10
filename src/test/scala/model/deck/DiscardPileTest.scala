@@ -46,6 +46,11 @@ class DiscardPileTest extends AnyFlatSpec:
     val cardOption: Option[Card] = discardPile.draw()
     cardOption shouldBe empty
 
+  "Draw" should "remove the card on top of the pile" in:
+    val discardPile: DiscardPile = PokerPile().put(Ace of Spades).put(2 of Spades)
+    discardPile.draw()
+    discardPile.cards should be (List(Ace of Spades))
+
   "Pile" should "be emptiable" in:
     val discardPile: DiscardPile = PokerPile()
       .put(Ace of Spades)
