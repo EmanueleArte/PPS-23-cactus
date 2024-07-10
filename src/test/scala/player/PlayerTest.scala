@@ -39,8 +39,4 @@ class PlayerTest extends AnyFlatSpec {
     val player: CactusPlayer = CactusPlayer(List(Card(9, CardsData.PokerSuit.Spades), Card(7, CardsData.PokerSuit.Clubs)))
     val discardedCard = player.discard(0)
     discardedCard shouldBe Card(9, CardsData.PokerSuit.Spades)
-
-  "FAFJISF" should "FAKJ" in:
-    val card: Card = Card(5, CardsData.PokerSuit.Clubs)
-    card.value shouldBe 5
 }

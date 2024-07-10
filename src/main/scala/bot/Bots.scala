@@ -3,8 +3,6 @@ package bot
 import bot.Bots.DiscardMethods.Random
 import bot.Bots.DrawMethods.{Deck, PileSmartly}
 import card.Cards.Card
-import model.deck.Decks.PokerDeck
-import model.deck.Drawable
 import player.Players.CactusPlayer
 
 /** The bots of the game */
@@ -44,7 +42,10 @@ object Bots:
     /*-checkEffect()*/
     def discardWithMalus(cardIndex: Int): Card
 
-    def callCactus(): Unit
+    /** Chooses if it has to call cactus.
+     * @return true if it calls cactus
+     */
+    def callCactus(): Boolean
 
     def chooseOwnCard(cardIndex: Int): Card
 
@@ -69,7 +70,9 @@ object Bots:
   enum Memory(percentage: MemoryLossPercentage):
     case Bad extends Memory(MemoryLossPercentage(0.8))
     case Normal extends Memory(MemoryLossPercentage(0.5))
-    case Good extends Memory(MemoryLossPercentage(0.2))
+    case Good extends Memory(MemoryLossPercentage(0.25))
+    case VeryGood extends Memory(MemoryLossPercentage(0.1))
+    case Optimal extends Memory(MemoryLossPercentage(0))
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBotImpl(cards: List[Card], drMth: DrawMethods, discMth: DiscardMethods, mlp: MemoryLossPercentage) extends CactusPlayer(cards) with CactusBot:
@@ -78,11 +81,14 @@ object Bots:
     private val discardMethod: DiscardMethods = discMth
     private val memoryLossPercentage: MemoryLossPercentage = mlp
 
+    /** Gets the known cards.
+     * @return the cards known by the bot.
+     */
     def getKnownCards: List[Card] = knownCards
 
     override def seeCard(cardIndex: Int): Unit =
       val random = scala.util.Random.nextDouble()
-      if (random > memoryLossPercentage.getLossPercentage) {
+      if (random >= memoryLossPercentage.getLossPercentage) {
         knownCards = knownCards :+ cards(cardIndex)
       }
 
@@ -113,7 +119,12 @@ object Bots:
           higherValue = diff(i).##
         }
       }
-      cards.zipWithIndex.filter((c, _) => c.## == higherValue).map((_, i) => i).head
+      val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => c.## == higherValue).map((_, i) => i)
+      if (indexes.isEmpty) {
+        0
+      } else {
+        indexes.head
+      }
 
     override def chooseDiscard(): Int = discardMethod match
       case DiscardMethods.Unknown => higherKnownCard
@@ -128,7 +139,10 @@ object Bots:
 
     override def discardWithMalus(cardIndex: Int): Card = ???
 
-    override def callCactus(): Unit = ???
+    private def totKnownValue: Int = ???
+
+    override def callCactus(): Boolean =
+      cards.length <= 2 || (cards.length - knownCards.length <= 2 && totKnownValue < 10)
 
     override def chooseOwnCard(cardIndex: Int): Card = ???
 
