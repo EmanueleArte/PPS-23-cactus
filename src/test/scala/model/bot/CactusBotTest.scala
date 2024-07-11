@@ -5,7 +5,7 @@ import model.card.CardBuilder.PokerDSL.of
 import model.card.Cards.PokerCard
 import model.card.CardsData.PokerCardName.Ace
 import model.card.CardsData.PokerSuit.Spades
-import model.deck.Decks.{Deck, PokerDeck}
+import model.deck.Decks.PokerDeck
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
@@ -27,3 +27,20 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.draw(deck)
     cactusBot.discard(0)
     cactusBot.knownCards.isEmpty shouldBe true
+
+  "Bot's index card to discard " should "be 3" in:
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.Deck, DiscardMethods.Known, model.bot.Bots.Memory.Optimal)
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
+    cactusBot.seeCard(1)
+    cactusBot.seeCard(3)
+    cactusBot.chooseDiscard() shouldBe 3
+
+  "Bot's index card to discard " should "be 1" in:
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.Deck, DiscardMethods.Unknown, model.bot.Bots.Memory.Optimal)
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
+    cactusBot.seeCard(0)
+    cactusBot.chooseDiscard() shouldBe 1

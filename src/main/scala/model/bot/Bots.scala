@@ -3,6 +3,8 @@ package model.bot
 import Bots.DiscardMethods.Random
 import Bots.DrawMethods.{Deck, PileSmartly}
 import model.card.Cards.PokerCard
+import model.card.CardsData.{PokerCardName, PokerSuit}
+import model.card.CardsData.PokerSuit.Clubs
 import model.player.Players.CactusPlayer
 
 /** The bots of the game */
@@ -107,35 +109,38 @@ object Bots:
       removeFromKnownCards(discardedCard)
       discardedCard
 
+    private def checkIfHigherValue(c1: PokerCard, c2: PokerCard): Boolean =
+      if(c1.value == PokerCardName.King && (c1.suit == PokerSuit.Hearts || c1.suit == PokerSuit.Diamonds)){
+        return false
+      }
+      if(c1.value > c2.value){
+        return true
+      }
+      false
+
     private def higherKnownCard: Int =
-      var higherValue: Int = -1
-      var higherValueIndex: Int = 0
+      var higherValueCard: PokerCard = PokerCard(PokerCardName.Ace, Clubs)
       for (i <- _knownCards.indices) {
-        if (_knownCards(i).value > higherValue) {
-          higherValue = _knownCards(i).value
-          higherValueIndex = i
+        if (checkIfHigherValue(_knownCards(i), higherValueCard) || i == 0) {
+          higherValueCard = _knownCards(i)
         }
       }
-      higherValueIndex
+      cards.zipWithIndex.filter((c, _) => c.equals(higherValueCard)).map((_, i) => i).head
 
     private def unknownCard: Int =
+      if (_knownCards.isEmpty) {
+        scala.util.Random.nextInt(cards.length)
+      }
       val diff: List[PokerCard] = cards.diff(_knownCards)
-      var higherValue: Int = -1
-      for (i <- diff.indices) {
-        if (diff(i).value > higherValue) {
-          higherValue = diff(i).value
-        }
+      if (diff.isEmpty) {
+        higherKnownCard
       }
-      val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => c.## == higherValue).map((_, i) => i)
-      if (indexes.isEmpty) {
-        0
-      } else {
-        indexes.head
-      }
+      val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => diff.contains(c)).map((_, i) => i)
+      indexes(scala.util.Random.nextInt(indexes.length))
 
     override def chooseDiscard(): Int = _discardMethod match
-      case DiscardMethods.Unknown => higherKnownCard
-      case DiscardMethods.Known => unknownCard
+      case DiscardMethods.Unknown => unknownCard
+      case DiscardMethods.Known => higherKnownCard
       case DiscardMethods.Random => scala.util.Random.nextInt(cards.length)
 
     override def chooseDraw(): Boolean = _drawMethod match
@@ -150,7 +155,7 @@ object Bots:
       _knownCards.map(c => c.value).sum
 
     override def callCactus(): Boolean =
-      cards.length <= 2 || ((cards.length - _knownCards.length) <= 2 && totKnownValue < 10)
+      cards.length <= 2 || ((cards.length - _knownCards.length) <= 1 && totKnownValue < 10)   //TODO magic numbers
 
     override def chooseOwnCard(cardIndex: Int): PokerCard = ???
 
