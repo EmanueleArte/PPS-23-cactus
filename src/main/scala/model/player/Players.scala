@@ -17,8 +17,10 @@ object Players:
     /** The name of the player. */
     val name: String
 
-    /** The cards in the player's hand. */
-    var cards: List[CardType]
+    /** The cards in the player's hand.
+     * @return the cards in the player's hand.
+     */
+    def cards: List[CardType]
 
     /**
      * Draws a card from a deck.
@@ -36,15 +38,17 @@ object Players:
     def discard(cardIndex: Int): CardType
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class CactusPlayer(name: String, var cards: List[PokerCard]) extends Player:
+  case class CactusPlayer(name: String, private var _cards: List[PokerCard]) extends Player:
     override type CardType = PokerCard
 
+    override def cards: List[PokerCard] = _cards
+
     override def draw(drawable: Drawable[CardType]): Unit =
-      cards = cards :+ drawable.draw().get
+      _cards = _cards :+ drawable.draw().get
 
     override def discard(cardIndex: Int): CardType =
       val cardToRemove: CardType = cards(cardIndex)
-      cards = cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
+      _cards = _cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
       cardToRemove
 
   /** Companion object of [[Player]]. */

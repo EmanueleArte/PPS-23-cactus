@@ -1,30 +1,29 @@
 package model.bot
 
-import model.deck.Decks.Deck
+import model.bot.Bots.{CactusBotImpl, DiscardMethods, DrawMethods}
+import model.card.CardBuilder.PokerDSL.of
+import model.card.Cards.PokerCard
+import model.card.CardsData.PokerCardName.Ace
+import model.card.CardsData.PokerSuit.Spades
+import model.deck.Decks.{Deck, PokerDeck}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
-
+@SuppressWarnings(Array("org.wartremover.warts.All"))
 class CactusBotTest extends AnyFlatSpec:
+  private val deck: PokerDeck = PokerDeck()
 
-  /*"Bot " should "have seen 8 of Spades" in:
-    val cactusBot: CactusBotImpl = CactusBotImpl(List(Card(8, CardsData.PokerSuit.Spades), Card(2, CardsData.PokerSuit.Diamonds)))
-    cactusBot.seeCard(0)
-    cactusBot.knownCards shouldBe List(Card(8, CardsData.PokerSuit.Spades))
-
-  "Bot " should "have 5 of Clubs in his hand" in :
-    val cactusBot: CactusBotImpl = CactusBotImpl(List.empty)
-    val deck: Deck[Card] = Deck(5 to 5, List(CardsData.PokerSuit.Clubs), false)
+  "Bot " should "know Ace of Spades" in:
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.Deck, DiscardMethods.Known, model.bot.Bots.Memory.Optimal)
     cactusBot.draw(deck)
-    cactusBot.cards shouldBe List(Card(5, CardsData.PokerSuit.Clubs))
-
-  "Bot " should "not have 8 of Spades in his cards" in:
-    val cactusBot: CactusBotImpl = CactusBotImpl(List(Card(8, CardsData.PokerSuit.Spades), Card(2, CardsData.PokerSuit.Diamonds)))
-    cactusBot.discard(0)
-    cactusBot.cards shouldBe List(Card(2, CardsData.PokerSuit.Diamonds))
-
-  "Bot " should "not have 8 of Spades in his known cards" in:
-    val cactusBot: CactusBotImpl = CactusBotImpl(List(Card(8, CardsData.PokerSuit.Spades), Card(2, CardsData.PokerSuit.Diamonds)))
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
     cactusBot.seeCard(0)
+    cactusBot.knownCards.head should be (Ace of Spades)
+
+  "Bot " should "not have a card in the known cards list" in :
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.Deck, DiscardMethods.Known, model.bot.Bots.Memory.Optimal)
+    cactusBot.draw(deck)
     cactusBot.discard(0)
-    cactusBot.getKnownCards shouldBe List.empty[Card]*/
+    cactusBot.knownCards.isEmpty shouldBe true
