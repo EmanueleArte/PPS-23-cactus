@@ -6,6 +6,7 @@ import model.card.Cards.PokerCard
 import model.card.CardsData.PokerCardName.Ace
 import model.card.CardsData.PokerSuit.Spades
 import model.deck.Decks.PokerDeck
+import model.deck.Piles.{DiscardPile, PokerPile}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
@@ -44,3 +45,13 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.draw(deck)
     cactusBot.seeCard(0)
     cactusBot.chooseDiscard() shouldBe 1
+
+  "Bot  " should "draw from pile" in :
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.Bots.Memory.Optimal)
+    var discardPile: DiscardPile[PokerCard] = PokerPile()
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
+    cactusBot.seeCard(0)
+    discardPile = discardPile.put(cactusBot.discard(2))
+    cactusBot.chooseDraw(discardPile) shouldBe true

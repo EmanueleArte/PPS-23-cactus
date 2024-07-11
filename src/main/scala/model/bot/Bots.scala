@@ -5,6 +5,7 @@ import Bots.DrawMethods.{Deck, PileSmartly}
 import model.card.Cards.PokerCard
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.card.CardsData.PokerSuit.Clubs
+import model.deck.Piles.DiscardPile
 import model.player.Players.CactusPlayer
 
 /** The bots of the game */
@@ -31,9 +32,10 @@ object Bots:
     def chooseDiscard(): Int
 
     /** Chooses the draw deck.
+     * @param discardPile the [[DiscardPile]] of the game
      * @return true if the bot should draw from the deck, false if it should draw from the discard pile
      */
-    def chooseDraw(): Boolean
+    def chooseDraw(discardPile: DiscardPile[PokerCard]): Boolean
 
     /** Discards a card from the player's hand.
      * @param cardIndex the index of the card in the list to discard
@@ -140,11 +142,22 @@ object Bots:
       case DiscardMethods.Known => higherKnownCard
       case DiscardMethods.Random => scala.util.Random.nextInt(cards.length)
 
-    override def chooseDraw(): Boolean = _drawMethod match
+    private def checkIfDiscardPileIsBetter(discardPile: DiscardPile[PokerCard]): Boolean =
+      if(discardPile.size == 0){
+        return false
+      }
+      val topDiscardPileCard: PokerCard = discardPile.draw().get
+      discardPile.put(topDiscardPileCard)
+      if(checkIfHigherValue(cards(higherKnownCard), topDiscardPileCard)) {
+        return true
+      }
+      false
+
+    override def chooseDraw(discardPile: DiscardPile[PokerCard]): Boolean = _drawMethod match
       case DrawMethods.Deck => true
       case DrawMethods.Pile => false
       case DrawMethods.RandomDeck => scala.util.Random.nextBoolean()
-      case DrawMethods.PileSmartly => ???   //TODO dovrebbe ottenere il valore della carta in cima alla pila degli scarti
+      case DrawMethods.PileSmartly => checkIfDiscardPileIsBetter(discardPile)
 
     override def discardWithMalus(cardIndex: Int): PokerCard = ???
 
