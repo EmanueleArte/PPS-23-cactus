@@ -104,8 +104,8 @@ object Bots:
       var higherValue: Int = -1
       var higherValueIndex: Int = 0
       for (i <- knownCards.indices) {
-        if (knownCards(i).## > higherValue) {   //TODO ## non va bene
-          higherValue = knownCards(i).##
+        if (knownCards(i).value > higherValue) {
+          higherValue = knownCards(i).value
           higherValueIndex = i
         }
       }
@@ -114,9 +114,9 @@ object Bots:
     private def unknownCard: Int =
       val diff: List[PokerCard] = cards.diff(knownCards)
       var higherValue: Int = -1
-      for (i <- diff.indices) {     //TODO ## non va bene
-        if (diff(i).## > higherValue) {
-          higherValue = diff(i).##
+      for (i <- diff.indices) {
+        if (diff(i).value > higherValue) {
+          higherValue = diff(i).value
         }
       }
       val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => c.## == higherValue).map((_, i) => i)
@@ -137,15 +137,15 @@ object Bots:
       case DrawMethods.RandomDeck => scala.util.Random.nextBoolean()
       case DrawMethods.PileSmartly => ???   //TODO dovrebbe ottenere il valore della carta in cima alla pila degli scarti
 
-    override def discardWithMalus(cardIndex: Int): CardType = ???
+    override def discardWithMalus(cardIndex: Int): PokerCard = ???
 
     private def totKnownValue: Int =
-      knownCards.map(c => c.##).sum     //TODO al posto di ## mettere il valore
+      knownCards.map(c => c.value).sum
 
     override def callCactus(): Boolean =
-      cards.length <= 2 || (cards.length - knownCards.length <= 2 && totKnownValue < 10)
+      cards.length <= 2 || ((cards.length - knownCards.length) <= 2 && totKnownValue < 10)
 
-    override def chooseOwnCard(cardIndex: Int): CardType = ???
+    override def chooseOwnCard(cardIndex: Int): PokerCard = ???
 
     override def choosePlayer(player: CactusPlayer): CactusPlayer = ???
 

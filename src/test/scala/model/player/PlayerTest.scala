@@ -1,4 +1,4 @@
-package player
+package model.player
 
 import model.card.CardBuilder.PokerDSL.of
 import model.card.Cards.{Card, PokerCard}

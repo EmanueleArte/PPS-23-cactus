@@ -1,4 +1,4 @@
-package bot
+package model.bot
 
 import model.deck.Decks.Deck
 import org.scalatest.matchers.should.Matchers.*
