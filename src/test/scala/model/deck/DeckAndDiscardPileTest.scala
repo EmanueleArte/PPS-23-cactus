@@ -11,7 +11,6 @@ import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.PokerPile
 import org.scalatest.matchers.must.Matchers
 
-@SuppressWarnings(Array("org.wartremover.warts.All"))
 class DeckAndDiscardPileTest extends AnyFlatSpec:
 
   "Deck" should "be resettable using a discard pile" in :
@@ -22,7 +21,7 @@ class DeckAndDiscardPileTest extends AnyFlatSpec:
       .put(deck.draw().get)
       .put(deck.draw().get)
       .put(deck.draw().get)
-    deck.reset(pile).cards should be(List(Card(1, Spades), Card(2, Spades), Card(3, Spades)))
+    deck.resetWithPile(pile).cards should be(List(Card(1, Spades), Card(2, Spades), Card(3, Spades)))
 
   "Resetting a deck using a partial discard pile" should "create a deck with only the cards of the discard pile" in :
     import model.deck.Piles.DiscardPile
@@ -35,7 +34,7 @@ class DeckAndDiscardPileTest extends AnyFlatSpec:
     val pile: DiscardPile[Card] = DiscardPile()
       .put(deck.draw().get)
       .put(deck.draw().get)
-    deck.reset(pile).cards should be(List(Card(3, Spades), Card(4, Spades)))
+    deck.resetWithPile(pile).cards should be(List(Card(3, Spades), Card(4, Spades)))
 
   "Player" should "draw from both deck and discard pile" in:
     val drawableDeck: Drawable[PokerCard] = PokerDeck()

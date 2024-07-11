@@ -8,7 +8,6 @@ import model.deck.Drawable
 /** A player of the game. */
 object Players:
 
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   /** Represents a generic player. */
   trait Player:
     /** Type representing the type of the cards in a game. */
@@ -35,12 +34,11 @@ object Players:
      */
     def discard(cardIndex: Int): CardType
 
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   case class CactusPlayer(name: String, var cards: List[PokerCard]) extends Player:
     override type CardType = PokerCard
 
     override def draw(drawable: Drawable[CardType]): Unit =
-      cards = cards :+ drawable.draw().get
+      cards = cards ::: drawable.draw().get :: Nil
 
     override def discard(cardIndex: Int): CardType =
       val cardToRemove: CardType = cards(cardIndex)

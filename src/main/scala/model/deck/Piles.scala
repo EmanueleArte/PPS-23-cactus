@@ -52,7 +52,6 @@ object Piles:
    * @param inputCards
    *   list of cards of the pile.
    */
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   case class GenericPile(inputCards: List[Card]) extends AbstractPile[Card]:
     var _cards: List[Card] = inputCards
     override def put(card: Card): DiscardPile[Card] = card match
@@ -73,7 +72,6 @@ object Piles:
    * @param inputCards
    *   list of cards.
    */
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   case class PokerPile(inputCards: List[PokerCard]) extends AbstractPile[PokerCard]:
     var _cards: List[PokerCard] = inputCards
 
@@ -104,7 +102,7 @@ object Piles:
      * @return
      *   an empty generic pile.
      */
-    def apply(): GenericPile = GenericPile(List())
+    def apply(): GenericPile = GenericPile(List[Card]())
 
   /** Companion object of [[PokerPile]]. */
   object PokerPile:
@@ -113,4 +111,4 @@ object Piles:
      * @return
      *   an empty poker pile.
      */
-    def apply(): PokerPile = PokerPile(List())
+    def apply(): PokerPile = PokerPile(List[PokerCard]())

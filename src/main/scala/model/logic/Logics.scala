@@ -17,7 +17,7 @@ object Logics:
     type Score
     type PlayerType <: Player
 
-    protected val _players: Players = List()
+    protected val _players: Players = List[PlayerType]()
 
     /**
      * Iterator of the players in the game.
@@ -38,7 +38,7 @@ object Logics:
      *
      * @return the current player.
      */
-    @SuppressWarnings(Array("org.wartremover.warts.All"))
+    @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
     def currentPlayer: PlayerType = playerIterator.peek.get.asInstanceOf[PlayerType]
 
     /**
@@ -85,7 +85,6 @@ object Logics:
    *
    * @param nPlayers number of players in the game.
    */
-  @SuppressWarnings(Array("org.wartremover.warts.Var"))
   class CactusLogic(nPlayers: Int) extends Logic with GameLogic:
     override type Score      = Int
     override type PlayerType = CactusPlayer

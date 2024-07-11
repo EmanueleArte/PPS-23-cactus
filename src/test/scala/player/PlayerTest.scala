@@ -10,7 +10,6 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 import player.Players.CactusPlayer
 
-@SuppressWarnings(Array("org.wartremover.warts.IterableOps"))
 class PlayerTest extends AnyFlatSpec {
 
   val name: String = "Player"
@@ -33,7 +32,7 @@ class PlayerTest extends AnyFlatSpec {
     val player: CactusPlayer = CactusPlayer("", List.empty[PokerCard])
     val deck: Deck[PokerCard] = PokerDeck()
     player.draw(deck)
-    player.cards.head should be (Ace of Spades)
+    player.cards(0) should be (Ace of Spades)
 
   "Player " should "have 0 cards after discard" in:
     val player: CactusPlayer = CactusPlayer(name, List(PokerCard(5, CardsData.PokerSuit.Clubs)))
