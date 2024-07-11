@@ -1,36 +1,51 @@
 package player
 
-import card.Cards.Card
+import model.card.Cards.{Card, PokerCard}
+import model.deck.Piles.DiscardPile
+import model.card.Cards.Card
 import model.deck.Drawable
 
-/** A player of the game */
+/** A player of the game. */
 object Players:
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  /** Represents a generic player */
+  /** Represents a generic player. */
   trait Player:
-    /** The cards in the player's hand */
-    var cards: List[Card]
+    /** Type representing the type of the cards in a game. */
+    type CardType <: Card
+    
+    /** The name of the player. */
+    val name: String
 
-    /** Draws a card from a deck
-     * @param deck the deck to draw from
-     */
-    def draw(drawable: Drawable[_ <: Card]): Unit
+    /** The cards in the player's hand. */
+    var cards: List[CardType]
 
-    /** Discards a card from the player's hand
-     * @param cardIndex the index of the card in the list to discard
-     * @return the discarded card
+    /**
+     * Draws a card from a deck.
+     *
+     * @param drawable the drawable to draw from.
      */
-    def discard(cardIndex: Int) : Card
+    def draw(drawable: Drawable[CardType]): Unit
+
+    /**
+     * Discards a card from the player's hand.
+     *
+     * @param cardIndex the index of the card in the list to discard.
+     * @return the discarded card.
+     */
+    def discard(cardIndex: Int): CardType
+
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  case class CactusPlayer(var cards: List[Card]) extends Player:
-    override def draw(drawable: Drawable[_ <: Card]): Unit =
+  case class CactusPlayer(name: String, var cards: List[PokerCard]) extends Player:
+    override type CardType = PokerCard
+
+    override def draw(drawable: Drawable[CardType]): Unit =
       cards = cards :+ drawable.draw().get
 
-    override def discard(cardIndex: Int): Card =
-      val cardToRemove: Card = cards(cardIndex)
+    override def discard(cardIndex: Int): CardType =
+      val cardToRemove: CardType = cards(cardIndex)
       cards = cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
       cardToRemove
 
   /** Companion object of [[Player]]. */
-  object Player;
+  object Player

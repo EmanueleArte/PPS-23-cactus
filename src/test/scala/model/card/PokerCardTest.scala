@@ -1,15 +1,15 @@
-package card
+package model.card
 
-import card.CardsData.*
+import CardsData.*
 import PokerCardName.*
 import PokerSuit.*
-import card.Cards.*
-import card.CardBuilder.PokerDSL.*
+import Cards.*
+import CardBuilder.PokerDSL.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
 /** Tests for poker cards. */
-class PokerCardTests extends AnyFlatSpec:
+class PokerCardTest extends AnyFlatSpec:
 
   "Poker card" should "have an value between 1 to 13" in:
     intercept[IllegalArgumentException]:

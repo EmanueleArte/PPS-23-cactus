@@ -1,4 +1,4 @@
-package card
+package model.card
 
 /** Values and suits for a card. */
 object CardsData:

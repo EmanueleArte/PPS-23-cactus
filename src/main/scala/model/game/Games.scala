@@ -1,6 +1,6 @@
 package model.game
 
-import card.Cards.{Card, PokerCard}
+import model.card.Cards.{Card, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import player.Players.{CactusPlayer, Player}
@@ -31,6 +31,7 @@ object Scores:
    * @return the underlying [[Scores]] of the provided [[Scores]].
    */
   def toMap(scores: Scores): Map[Player, Int] = scores
+
   extension (scores: Scores)
 
     /**
@@ -79,22 +80,23 @@ trait Game:
   def calculateScores(players: List[Player]): Scores
 
 /** Cactus game implementation. */
+@SuppressWarnings(Array("org.wartremover.warts.Var"))
 case class CactusGame() extends Game:
   /** Deck with the cards to draw. */
   val deck: Deck[PokerCard] = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  val discardPile: DiscardPile[PokerCard] = PokerPile()
-  val initialPlayerCardsNumber: Int = 4
+  var discardPile: DiscardPile[PokerCard] = PokerPile()
+  val initialPlayerCardsNumber: Int       = 4
 
   export deck.{size => deckSize}
-  export discardPile.{draw => drawFromDiscardPile}
+//  export discardPile.{draw => drawFromDiscardPile}
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   override def setupGame(playersNumber: Int): List[Player] =
     (1 to playersNumber).toList
-      .map(_ => (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get))
-      .map(list => CactusPlayer(list))
+      .map(p => CactusPlayer(s"Player $p", (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get)))
+
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex
       .map((player, index) => (player, player.cards))
