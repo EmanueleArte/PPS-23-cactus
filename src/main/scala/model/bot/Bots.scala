@@ -13,11 +13,11 @@ object Bots:
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   /** Represents a bot. */
   trait CactusBot:
-    /*/** The cards that the bot knows. */
-    var knownCards: List[PokerCard]
-    val _drawMethod: DrawMethods
-    val _discardMethod: DiscardMethods
-    val memoryLossPercentage: MemoryLossPercentage*/
+    /** Gets the known cards.
+     *
+     * @return the cards known by the bot.
+     */
+    def knownCards: List[PokerCard]
 
     /** Let the [[CactusBot]] see a [[Card]].
      *
@@ -83,14 +83,11 @@ object Bots:
   class CactusBotImpl(name: String, c: List[PokerCard], private val _drawMethod: DrawMethods, private val _discardMethod: DiscardMethods, private val _memory: Memory)
   extends CactusPlayer(name, c) with CactusBot:
     private var _knownCards: List[PokerCard] = List.empty
-    //private val _drawMethod: DrawMethods = drMth
-    //private val _discardMethod: DiscardMethods = discMth
-    //private val _memory: Memory = m
+    private val cardsListLengthForCactus: Int = 2
+    private val differenceForCactus: Int = 1
+    private val maxPointsForCactus: Int = 10
 
-    /** Gets the known cards.
-     * @return the cards known by the bot.
-     */
-    def knownCards: List[PokerCard] = _knownCards
+    override def knownCards: List[PokerCard] = _knownCards
 
     override def seeCard(cardIndex: Int): Unit =
       if (cards.isEmpty) {
@@ -152,14 +149,14 @@ object Bots:
     override def discardWithMalus(cardIndex: Int): PokerCard = ???
 
     private def totKnownValue: Int =
-      _knownCards.map(c => c.value).sum
+      _knownCards.map(c => c.value).sum //TODO non è considerato che il re rosso vale 0
 
     override def callCactus(): Boolean =
-      cards.length <= 2 || ((cards.length - _knownCards.length) <= 1 && totKnownValue < 10)   //TODO magic numbers
+      cards.length <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)
 
     override def chooseOwnCard(cardIndex: Int): PokerCard = ???
 
-    override def choosePlayer(player: CactusPlayer): CactusPlayer = ???
+    override def choosePlayer(players: List[CactusPlayer]): CactusPlayer = ???
 
   /** Companion object of [[CactusBotImpl]]. */
   /*object CactusBotImpl:
