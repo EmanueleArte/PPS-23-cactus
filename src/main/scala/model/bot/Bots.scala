@@ -53,7 +53,7 @@ object Bots:
 
     //def chooseTwoCards((Player, card: int), (Player, card: int))
 
-    def choosePlayer(player: CactusPlayer): CactusPlayer
+    def choosePlayer(players: List[CactusPlayer]): CactusPlayer
 
   /*class Memory(lp: Double):
     private val lossPercentage: Double = lp
