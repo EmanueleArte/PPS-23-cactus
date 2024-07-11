@@ -1,8 +1,5 @@
 package bot
 
-import bot.Bots.CactusBotImpl
-import card.Cards.Card
-import card.CardsData
 import model.deck.Decks.Deck
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec

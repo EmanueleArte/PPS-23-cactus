@@ -1,16 +1,17 @@
 package model.game
 
-import card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
-import card.CardBuilder.PokerDSL.of
-import card.Cards.Card
-import card.CardsData.PokerCardName.Ace
+import model.card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
+import model.card.CardBuilder.PokerDSL.of
+import model.card.Cards.Card
+import model.card.CardsData.PokerCardName.Ace
 import model.deck.{Decks, Drawable}
 import model.deck.Decks.Deck
 import model.game.Scores
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{be, empty, have, not}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
-import player.Players.{CactusPlayer, Player}
+import model.player.Players.Player
+import model.player.Players.CactusPlayer
 
 @SuppressWarnings(Array("org.wartremover.warts.All"))
 class CactusGameTest extends AnyFlatSpec:
@@ -18,13 +19,17 @@ class CactusGameTest extends AnyFlatSpec:
   val playersNumber: Int = 3
   val game: Game = CactusGame()
   val nonCactusPlayer: Player = new Player:
-    var cards: List[Card] = List(Card(1, Spades), Card(2, Spades))
+    override type CardType = Card
+    
+    override val name: String = "Player"
 
-    override def draw(drawable: Drawable[_ <: Card]): Unit = drawable.draw() match
+    var cards: List[CardType] = List(Card(1, Spades), Card(2, Spades))
+
+    override def draw(drawable: Drawable[CardType]): Unit = drawable.draw() match
       case Some(card) => cards = cards :+ card
       case _ => ()
 
-    override def discard(cardIndex: Int): Card = cards(cardIndex)
+    override def discard(cardIndex: Int): CardType = cards(cardIndex)
 
   "Game setup " should "return the players" in:
     val game: Game = CactusGame()
@@ -50,7 +55,7 @@ class CactusGameTest extends AnyFlatSpec:
 
   "The discard pile" should "be empty" in:
     val game: CactusGame = CactusGame()
-    val cardOption: Option[Card] = game.drawFromDiscardPile()
+    val cardOption: Option[Card] = game.discardPile.draw() //game.drawFromDiscardPile()
     cardOption shouldBe empty
 
   "After player initialization deck " should " have less cards" in:
@@ -62,14 +67,14 @@ class CactusGameTest extends AnyFlatSpec:
     val players: Players = (1 to 13)
       .map(index => index of Spades)
       .map(card => List(card))
-      .map(list => CactusPlayer(list))
+      .map(list => CactusPlayer("", list))
       .toList
     val scores: Scores = CactusGame().calculateScores(players)
     for (i <- 1 to 13)
       scores.get(players(i - 1)) should be (Some(i))
 
   "The sum of the cards of player" should "be consistent with their values" in:
-    val player: CactusPlayer = CactusPlayer(List(Ace of Spades, 2 of Spades, 3 of Spades))
+    val player: CactusPlayer = CactusPlayer("", List(Ace of Spades, 2 of Spades, 3 of Spades))
     val scores: Scores = CactusGame().calculateScores(List(player))
     scores.get(player) should be (Some(Ace + 2 + 3))
 
@@ -82,12 +87,12 @@ class CactusGameTest extends AnyFlatSpec:
 
   "Calculate scores of players with some of them having non poker cards" should "return scores for only the players with poker cards" in:
     val players: Players = List(
-      CactusPlayer(List(Ace of Spades, 2 of Hearts)),
+      CactusPlayer("", List(Ace of Spades, 2 of Hearts)),
       nonCactusPlayer,
-      CactusPlayer(List(10 of Clubs, 10 of Spades))
+      CactusPlayer("", List(10 of Clubs, 10 of Spades))
     )
     val scores: Scores = CactusGame().calculateScores(players)
     scores.size should be (2)
-    scores.get(players(0)) should be (Some(Ace + 2))
+    scores.get(players.head) should be (Some(Ace + 2))
     scores.get(players(2)) should be (Some(10 + 10))
     scores.players should not contain nonCactusPlayer

@@ -1,14 +1,15 @@
-package card
+package model.card
 
-import card.CardsData.*
-import card.Cards.*
+import model.card.Cards.*
+import model.card.CardsData.PokerSuit.{Clubs, Spades}
+import model.card.CardsData.{PokerSuit, Suit}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
 /** Tests for cards. */
-class CardTests extends AnyFlatSpec:
+class CardTest extends AnyFlatSpec:
 
-  val card: Card = Card(10, PokerSuit.Spades)
+  val card: Card = Card(10, Spades)
 
   "Generic Card" should "have a non-null value" in:
     card.value shouldBe a [Int]
@@ -16,7 +17,7 @@ class CardTests extends AnyFlatSpec:
   it should "have a suit" in:
     card.suit shouldBe a [Suit]
 
-  def twoOfClubs: Card = GenericCard(2, PokerSuit.Clubs)
+  def twoOfClubs: Card = GenericCard(2, Clubs)
 
   "The card two of clubs" should "have a value of 2 and Clubs as suit" in:
     twoOfClubs.value should be (2)

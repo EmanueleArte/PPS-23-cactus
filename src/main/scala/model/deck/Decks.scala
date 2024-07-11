@@ -1,9 +1,9 @@
 package model.deck
 
-import card.CardBuilder.PokerDSL.of
-import card.Cards.{Card, PokerCard}
-import card.CardsData.PokerCardName.{Ace, King}
-import card.CardsData.{PokerSuit, Suit}
+import model.card.CardBuilder.PokerDSL.of
+import model.card.Cards.{Card, PokerCard}
+import model.card.CardsData.PokerCardName.{Ace, King}
+import model.card.CardsData.{PokerSuit, Suit}
 import model.deck.Piles.{DiscardPile, PokerPile}
 
 import scala.util.Random
@@ -132,7 +132,7 @@ object Decks:
   case class PokerDeck(shuffled: Boolean) extends AbstractDeck[PokerCard](shuffled):
 
     override val inputCards: List[PokerCard] = for
-      suit  <- PokerSuit.values.toList;
+      suit  <- PokerSuit.values.toList
       value <- Ace to King
     yield value of suit
 

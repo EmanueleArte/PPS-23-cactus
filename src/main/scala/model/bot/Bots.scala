@@ -1,9 +1,9 @@
-package bot
+package model.bot
 
-import bot.Bots.DiscardMethods.Random
-import bot.Bots.DrawMethods.{Deck, PileSmartly}
-import card.Cards.Card
-import player.Players.CactusPlayer
+import Bots.DiscardMethods.Random
+import Bots.DrawMethods.{Deck, PileSmartly}
+import model.card.Cards.PokerCard
+import model.player.Players.CactusPlayer
 
 /** The bots of the game */
 object Bots:
@@ -37,17 +37,17 @@ object Bots:
      * @param cardIndex the index of the card in the list to discard
      * @return the discarded card
      */
-    def discard(cardIndex: Int): Card
+    def discard(cardIndex: Int): PokerCard
 
     /*-checkEffect()*/
-    def discardWithMalus(cardIndex: Int): Card
+    def discardWithMalus(cardIndex: Int): PokerCard
 
     /** Chooses if it has to call cactus.
      * @return true if it calls cactus
      */
     def callCactus(): Boolean
 
-    def chooseOwnCard(cardIndex: Int): Card
+    def chooseOwnCard(cardIndex: Int): PokerCard
 
     //def chooseTwoCards((Player, card: int), (Player, card: int))
 
@@ -75,8 +75,8 @@ object Bots:
     case Optimal extends Memory(MemoryLossPercentage(0))
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
-  class CactusBotImpl(cards: List[Card], drMth: DrawMethods, discMth: DiscardMethods, mlp: MemoryLossPercentage) extends CactusPlayer(cards) with CactusBot:
-    private var knownCards: List[Card] = List.empty
+  class CactusBotImpl(name: String, cards: List[PokerCard], drMth: DrawMethods, discMth: DiscardMethods, mlp: MemoryLossPercentage) extends CactusPlayer(name, cards) with CactusBot:
+    private var knownCards: List[PokerCard] = List.empty
     private val drawMethod: DrawMethods = drMth
     private val discardMethod: DiscardMethods = discMth
     private val memoryLossPercentage: MemoryLossPercentage = mlp
@@ -84,7 +84,7 @@ object Bots:
     /** Gets the known cards.
      * @return the cards known by the bot.
      */
-    def getKnownCards: List[Card] = knownCards
+    def getKnownCards: List[PokerCard] = knownCards
 
     override def seeCard(cardIndex: Int): Unit =
       val random = scala.util.Random.nextDouble()
@@ -92,10 +92,10 @@ object Bots:
         knownCards = knownCards :+ cards(cardIndex)
       }
 
-    private def removeFromKnownCards(card: Card): Unit =
+    private def removeFromKnownCards(card: PokerCard): Unit =
       knownCards = knownCards.filterNot(c => c == card)
 
-    override def discard(cardIndex: Int): Card =
+    override def discard(cardIndex: Int): PokerCard =
       val discardedCard = super.discard(cardIndex)
       removeFromKnownCards(discardedCard)
       discardedCard
@@ -112,7 +112,7 @@ object Bots:
       higherValueIndex
 
     private def unknownCard: Int =
-      val diff: List[Card] = cards.diff(knownCards)
+      val diff: List[PokerCard] = cards.diff(knownCards)
       var higherValue: Int = -1
       for (i <- diff.indices) {     //TODO ## non va bene
         if (diff(i).## > higherValue) {
@@ -137,7 +137,7 @@ object Bots:
       case DrawMethods.RandomDeck => scala.util.Random.nextBoolean()
       case DrawMethods.PileSmartly => ???   //TODO dovrebbe ottenere il valore della carta in cima alla pila degli scarti
 
-    override def discardWithMalus(cardIndex: Int): Card = ???
+    override def discardWithMalus(cardIndex: Int): CardType = ???
 
     private def totKnownValue: Int =
       knownCards.map(c => c.##).sum     //TODO al posto di ## mettere il valore
@@ -145,7 +145,7 @@ object Bots:
     override def callCactus(): Boolean =
       cards.length <= 2 || (cards.length - knownCards.length <= 2 && totKnownValue < 10)
 
-    override def chooseOwnCard(cardIndex: Int): Card = ???
+    override def chooseOwnCard(cardIndex: Int): CardType = ???
 
     override def choosePlayer(player: CactusPlayer): CactusPlayer = ???
 
