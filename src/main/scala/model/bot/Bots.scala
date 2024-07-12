@@ -1,7 +1,6 @@
 package model.bot
 
-import Bots.DiscardMethods.Random
-import Bots.DrawMethods.{Deck, PileSmartly}
+import model.bot.BotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.PokerCard
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.card.CardsData.PokerSuit.Clubs
@@ -44,6 +43,7 @@ object Bots:
     def discard(cardIndex: Int): PokerCard
 
     /*-checkEffect()*/
+
     def discardWithMalus(cardIndex: Int): PokerCard
 
     /** Chooses if it has to call cactus.
@@ -56,30 +56,6 @@ object Bots:
     //def chooseTwoCards((Player, card: int), (Player, card: int))
 
     def choosePlayer(players: List[CactusPlayer]): CactusPlayer
-
-  /*class Memory(lp: Double):
-    private val lossPercentage: Double = lp
-    require(lossPercentage <= 1)
-    require(lossPercentage >= 0)
-
-    def getLossPercentage: Double =
-      lossPercentage*/
-
-  enum DrawMethods:
-    case Deck, Pile, RandomDeck, PileSmartly
-
-  enum DiscardMethods:
-    case Unknown, Known, Random
-
-  enum Memory(val lossPercentage: Double):
-    require(lossPercentage <= 1)
-    require(lossPercentage >= 0)
-
-    case Bad extends Memory(0.8)
-    case Normal extends Memory(0.5)
-    case Good extends Memory(0.25)
-    case VeryGood extends Memory(0.1)
-    case Optimal extends Memory(0)
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBotImpl(name: String, c: List[PokerCard], private val _drawMethod: DrawMethods, private val _discardMethod: DiscardMethods, private val _memory: Memory)
@@ -111,7 +87,7 @@ object Bots:
     private def isRedKing(c: PokerCard): Boolean =
       c.value == PokerCardName.King && (c.suit == PokerSuit.Hearts || c.suit == PokerSuit.Diamonds)
 
-    private def checkIfHigherValue(c1: PokerCard, c2: PokerCard): Boolean =
+    private def isHigherValue(c1: PokerCard, c2: PokerCard): Boolean =
       if (isRedKing(c1)) {
         return false
       }
@@ -123,7 +99,7 @@ object Bots:
     private def higherKnownCard: Int =
       var higherValueCard: PokerCard = PokerCard(PokerCardName.Ace, Clubs)
       for (i <- _knownCards.indices) {
-        if (checkIfHigherValue(_knownCards(i), higherValueCard) || i == 0) {
+        if (isHigherValue(_knownCards(i), higherValueCard) || i == 0) {
           higherValueCard = _knownCards(i)
         }
       }
@@ -145,14 +121,14 @@ object Bots:
       case DiscardMethods.Known => higherKnownCard
       case DiscardMethods.Random => scala.util.Random.nextInt(cards.length)
 
-    private def checkIfDiscardPileIsBetter(discardPile: DiscardPile[PokerCard]): Boolean =
+    private def isDiscardPileBetter(discardPile: DiscardPile[PokerCard]): Boolean =
       if(discardPile.size == 0){
         return false
       }
       //val discardPileCopy = discardPile.clone()   //TODO fare la copia della pila
       val topDiscardPileCard: PokerCard = discardPile.draw().get
       discardPile.put(topDiscardPileCard)
-      if(checkIfHigherValue(cards(higherKnownCard), topDiscardPileCard)) {
+      if(isHigherValue(cards(higherKnownCard), topDiscardPileCard)) {
         return true
       }
       false
@@ -161,7 +137,7 @@ object Bots:
       case DrawMethods.Deck => true
       case DrawMethods.Pile => false
       case DrawMethods.RandomDeck => scala.util.Random.nextBoolean()
-      case DrawMethods.PileSmartly => checkIfDiscardPileIsBetter(discardPile)
+      case DrawMethods.PileSmartly => isDiscardPileBetter(discardPile)
 
     override def discardWithMalus(cardIndex: Int): PokerCard = ???
 
