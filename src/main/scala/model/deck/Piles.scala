@@ -80,7 +80,7 @@ object Piles:
       _cards = _cards.drop(1)
       returnCard
 
-    override def put(card: PokerCard): DiscardPile[PokerCard] = PokerPile(card +: cards)
+    override def put(card: PokerCard): PokerPile = PokerPile(card +: cards)
 
     override def empty(): DiscardPile[PokerCard] = PokerPile()
 
