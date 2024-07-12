@@ -43,7 +43,7 @@ object Decks:
      * @param pile the discard pile to take the cards from.
      * @return new deck with the cards unshuffled.
      */
-    def reset(pile: DiscardPile[C]): Deck[C]
+    def resetWithPile(pile: DiscardPile[C]): Deck[C]
 
     /**
      * Restore the deck with the initial cards.
@@ -56,30 +56,29 @@ object Decks:
    * @param shuffled if `true` the deck is initially shuffled, if `false` it is not.
    * @tparam C type of the drawn item. C needs to be at least a [[Card]].
    */
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   abstract class AbstractDeck[C <: Card](shuffled: Boolean) extends Deck[C]:
     private val INITIAL_HEAD_VALUE: Int = -1
     private var head: Int               = INITIAL_HEAD_VALUE
     private lazy val _cards: List[C] = shuffled match
       case true => Random.shuffle(inputCards)
       case _    => inputCards
-    protected val inputCards: List[C] = List()
+    protected val inputCards: List[C] = List[C]()
 
     override def draw(): Option[C] =
       head match
         case n if n < _cards.size - 1 => head = head + 1; Some(cards(head))
-        case _                        => Option.empty
+        case _                        => Option.empty[C]
 
     override def size: Int      = cards.size - head - 1
     override def cards: List[C] = _cards
-    override def reset(pile: DiscardPile[C]): Deck[C] =
+    override def resetWithPile(pile: DiscardPile[C]): Deck[C] =
       head = INITIAL_HEAD_VALUE
       createDeck(pile.cards.reverse)
 
     override def reset(): Deck[C] =
       val discardPile: DiscardPile[C] = pile
       cards.foreach(card => discardPile.put(card))
-      reset(discardPile)
+      resetWithPile(discardPile)
 
     /**
      * Creates a specific deck, depending on the class implementing it.

@@ -80,8 +80,7 @@ trait Game:
   def calculateScores(players: List[Player]): Scores
 
 /** Cactus game implementation. */
-@SuppressWarnings(Array("org.wartremover.warts.Var"))
-case class CactusGame() extends Game:
+class CactusGame() extends Game:
   /** Deck with the cards to draw. */
   val deck: Deck[PokerCard] = PokerDeck(shuffled = true)
 
@@ -92,7 +91,6 @@ case class CactusGame() extends Game:
   export deck.{size => deckSize}
 //  export discardPile.{draw => drawFromDiscardPile}
 
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   override def setupGame(playersNumber: Int): List[Player] =
     (1 to playersNumber).toList
       .map(p => CactusPlayer(s"Player $p", (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get)))

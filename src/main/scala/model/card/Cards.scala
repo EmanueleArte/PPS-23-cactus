@@ -57,7 +57,6 @@ object Cards:
     require(value <= 13, "Card value cannot be greater than 13")
 
   /** Represents a card that can be covered and uncovered. */
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   trait Coverable:
     private var _covered = true
 

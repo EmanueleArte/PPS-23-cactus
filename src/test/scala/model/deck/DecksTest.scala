@@ -12,7 +12,6 @@ import org.scalatest.matchers.must.Matchers
 
 import scala.collection.immutable.List
 
-@SuppressWarnings(Array("org.wartremover.warts.All"))
 class DecksTest extends AnyFlatSpec:
   type Deck = model.deck.Decks.Deck[PokerCard]
   val cardsList: List[PokerCard] = List(
@@ -79,7 +78,7 @@ class DecksTest extends AnyFlatSpec:
     firstCardOption shouldBe defined
     firstCardAfterResetOption shouldBe defined
     firstCardOption.fold(Nil)(card => card) should be
-      (firstCardAfterResetOption.fold(Nil)(card => card))
+      firstCardAfterResetOption.fold(Nil)(card => card)
 
   "Drawing cards" should "reduce deck's size" in:
     val deck: Deck = PokerDeck()

@@ -18,18 +18,16 @@ class LogicTest extends AnyFlatSpec:
   val nPlayers: Int = 3
 
   /** Simple player implementation for testing. */
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   case class PlayerImpl(name: String) extends Player:
     override type CardType = Card
 
-    var cards: List[Card] = List()
+    var cards: List[Card] = List[Card]()
 
     override def draw(deck: Drawable[CardType]): Unit = None
 
     override def discard(cardIndex: Int): Card = 2 of Spades
 
   /** Simple game logic implementation for testing. */
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   class TestLogic(nPlayers: Int) extends Logic:
     type Score = Int
 

@@ -10,7 +10,6 @@ object Iterators:
    * @tparam A
    *   the type of the elements in the iterator.
    */
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   class PeekableIterator[A](iterator: Iterator[A]) extends Iterator[A]:
     private var lookahead: Option[A] = None
 
