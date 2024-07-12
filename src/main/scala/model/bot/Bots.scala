@@ -108,8 +108,11 @@ object Bots:
       removeFromKnownCards(discardedCard)
       discardedCard
 
+    private def isRedKing(c: PokerCard): Boolean =
+      c.value == PokerCardName.King && (c.suit == PokerSuit.Hearts || c.suit == PokerSuit.Diamonds)
+
     private def checkIfHigherValue(c1: PokerCard, c2: PokerCard): Boolean =
-      if(c1.value == PokerCardName.King && (c1.suit == PokerSuit.Hearts || c1.suit == PokerSuit.Diamonds)){
+      if (isRedKing(c1)) {
         return false
       }
       if(c1.value > c2.value){
@@ -146,6 +149,7 @@ object Bots:
       if(discardPile.size == 0){
         return false
       }
+      //val discardPileCopy = discardPile.clone()   //TODO fare la copia della pila
       val topDiscardPileCard: PokerCard = discardPile.draw().get
       discardPile.put(topDiscardPileCard)
       if(checkIfHigherValue(cards(higherKnownCard), topDiscardPileCard)) {
@@ -162,7 +166,13 @@ object Bots:
     override def discardWithMalus(cardIndex: Int): PokerCard = ???
 
     private def totKnownValue: Int =
-      _knownCards.map(c => c.value).sum //TODO non è considerato che il re rosso vale 0
+      _knownCards.map(c => {
+        if (isRedKing(c)){
+          0
+        } else {
+          c.value
+        }
+      }).sum
 
     override def callCactus(): Boolean =
       cards.length <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)
