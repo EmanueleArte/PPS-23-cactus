@@ -9,4 +9,4 @@ trait ModelModule:
 
   /** Provider for a [[Model]]. */
   trait Provider:
-    val model: ModelType
+    lazy val model: ModelType
