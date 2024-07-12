@@ -1,13 +1,16 @@
 package model.bot
 
-object BotsData {
+object CactusBotsData {
 
+  /** Represents the type of draw methods of a cactus bot. */
   enum DrawMethods:
     case Deck, Pile, RandomDeck, PileSmartly
 
+  /** Represents the type of discard methods of a cactus bot. */
   enum DiscardMethods:
     case Unknown, Known, Random
 
+  /** Represents the type of memories of a cactus bot. */
   enum Memory(val lossPercentage: Double):
     require(lossPercentage <= 1)
     require(lossPercentage >= 0)

@@ -1,10 +1,10 @@
 package model.bot
 
-import model.bot.BotsData.{DiscardMethods, DrawMethods, Memory}
+import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.PokerCard
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.card.CardsData.PokerSuit.Clubs
-import model.deck.Piles.DiscardPile
+import model.deck.Piles.{DiscardPile, PokerPile}
 import model.player.Players.CactusPlayer
 
 /** The bots of the game */
@@ -34,7 +34,7 @@ object Bots:
      * @param discardPile the [[DiscardPile]] of the game
      * @return true if the bot should draw from the deck, false if it should draw from the discard pile
      */
-    def chooseDraw(discardPile: DiscardPile[PokerCard]): Boolean
+    def chooseDraw(discardPile: PokerPile): Boolean
 
     /** Discards a card from the player's hand.
      * @param cardIndex the index of the card in the list to discard
@@ -121,19 +121,15 @@ object Bots:
       case DiscardMethods.Known => higherKnownCard
       case DiscardMethods.Random => scala.util.Random.nextInt(cards.length)
 
-    private def isDiscardPileBetter(discardPile: DiscardPile[PokerCard]): Boolean =
+    private def isDiscardPileBetter(discardPile: PokerPile): Boolean =
       if(discardPile.size == 0){
         return false
       }
-      //val discardPileCopy = discardPile.clone()   //TODO fare la copia della pila
-      val topDiscardPileCard: PokerCard = discardPile.draw().get
-      discardPile.put(topDiscardPileCard)
-      if(isHigherValue(cards(higherKnownCard), topDiscardPileCard)) {
-        return true
-      }
-      false
+      val discardPileCopy: PokerPile = discardPile.copy(discardPile.cards)
+      val topDiscardPileCard: PokerCard = discardPileCopy.draw().get
+      isHigherValue(cards(higherKnownCard), topDiscardPileCard)
 
-    override def chooseDraw(discardPile: DiscardPile[PokerCard]): Boolean = _drawMethod match
+    override def chooseDraw(discardPile: PokerPile): Boolean = _drawMethod match
       case DrawMethods.Deck => true
       case DrawMethods.Pile => false
       case DrawMethods.RandomDeck => scala.util.Random.nextBoolean()
@@ -156,7 +152,3 @@ object Bots:
     override def chooseOwnCard(cardIndex: Int): PokerCard = ???
 
     override def choosePlayer(players: List[CactusPlayer]): CactusPlayer = ???
-
-  /** Companion object of [[CactusBotImpl]]. */
-  /*object CactusBotImpl:
-    def apply(cards: List[Card]): CactusBotImpl = CactusBotImpl(cards)*/
