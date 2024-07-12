@@ -67,56 +67,40 @@ object Bots:
 
     override def knownCards: List[PokerCard] = _knownCards
 
-    override def seeCard(cardIndex: Int): Unit =
-      if (cards.isEmpty) {
-        throw new UnsupportedOperationException()
-      }
-      val random = scala.util.Random.nextDouble()
-      if (random >= _memory.lossPercentage) {
-        _knownCards = _knownCards :+ cards(cardIndex)
-      }
+    override def seeCard(cardIndex: Int): Unit = cards match
+      case c if c.isEmpty => throw new UnsupportedOperationException()
+      case _ =>
+        scala.util.Random.nextDouble() match
+          case r if r >= _memory.lossPercentage => _knownCards = _knownCards ++ List(cards(cardIndex))
 
     private def removeFromKnownCards(card: PokerCard): Unit =
-      _knownCards = _knownCards.filterNot(c => c == card)
+      _knownCards = _knownCards.filterNot(c => c.equals(card))
 
     override def discard(cardIndex: Int): PokerCard =
       val discardedCard = super.discard(cardIndex)
       removeFromKnownCards(discardedCard)
       discardedCard
 
-    private def isRedKing(c: PokerCard): Boolean =
-      c.value == PokerCardName.King && (c.suit == PokerSuit.Hearts || c.suit == PokerSuit.Diamonds)
+    private def isRedKing(c: PokerCard): Boolean = c.value match
+      case PokerCardName.King => c.suit == PokerSuit.Hearts || c.suit == PokerSuit.Diamonds
+      case _ => false
 
-    private def isHigherValue(c1: PokerCard, c2: PokerCard): Boolean =
-      if (isRedKing(c1)) {
-        return false
-      }
-      if(isRedKing(c2)){
-        return true
-      }
-      if(c1.value > c2.value){
-        return true
-      }
-      false
+    private def isHigherValue(c1: PokerCard, c2: PokerCard): Boolean = c1 match
+      case c1 if isRedKing(c1) => false
+      case c1 if isRedKing(c2) || c1.value > c2.value => true
+      case _ => false
 
     private def higherKnownCardIndex: Int =
       var higherValueCard: PokerCard = PokerCard(PokerCardName.Ace, Clubs)
-      for (i <- _knownCards.indices) {
-        if (isHigherValue(_knownCards(i), higherValueCard) || i == 0) {
+      _knownCards.zipWithIndex.foreach((c, i) => {
+        if (isHigherValue(c, higherValueCard) || i == 0){
           higherValueCard = _knownCards(i)
         }
-      }
+      })
       cards.zipWithIndex.filter((c, _) => c.equals(higherValueCard)).map((_, i) => i).head
 
     private def unknownCard: Int =
-      if (_knownCards.isEmpty) {
-        scala.util.Random.nextInt(cards.length)
-      }
-      val diff: List[PokerCard] = cards.diff(_knownCards)
-      if (diff.isEmpty) {
-        higherKnownCardIndex
-      }
-      val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => diff.contains(c)).map((_, i) => i)
+      val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => cards.diff(_knownCards).contains(c)).map((_, i) => i)
       indexes(scala.util.Random.nextInt(indexes.length))
 
     override def chooseDiscard(): Int = _discardMethod match
@@ -124,12 +108,10 @@ object Bots:
       case DiscardMethods.Known => higherKnownCardIndex
       case DiscardMethods.Random => scala.util.Random.nextInt(cards.length)
 
-    private def isDiscardPileBetter(discardPile: PokerPile): Boolean =
-      if(discardPile.size == 0){
-        return false
-      }
-      val discardPileCopy: PokerPile = discardPile.copy(discardPile.cards)
-      isHigherValue(cards(higherKnownCardIndex), discardPileCopy.draw().get)
+    private def isDiscardPileBetter(discardPile: PokerPile): Boolean = discardPile match
+      case discardPile if discardPile.size == 0 => false
+      case _ => isHigherValue(cards(higherKnownCardIndex), discardPile.copy(discardPile.cards).draw().get)
+
 
     override def chooseDraw(discardPile: PokerPile): Boolean = _drawMethod match
       case DrawMethods.Deck => true
@@ -140,13 +122,10 @@ object Bots:
     override def discardWithMalus(cardIndex: Int): PokerCard = ???
 
     private def totKnownValue: Int =
-      _knownCards.map(c => {
-        if (isRedKing(c)){
-          0
-        } else {
-          c.value
-        }
-      }).sum
+      _knownCards.map {
+        case c if isRedKing(c) => 0
+        case c => c.value
+      }.sum
 
     override def callCactus(): Boolean =
       cards.length <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)

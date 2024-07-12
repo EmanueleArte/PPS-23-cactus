@@ -48,7 +48,7 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.seeCard(0)
     cactusBot.chooseDiscard() shouldBe 1
 
-  "Bot  " should "draw from pile" in :
+  "Bot " should "draw from pile" in :
     val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
     var discardPile: PokerPile = PokerPile()
     cactusBot.draw(deck)
@@ -57,6 +57,14 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.seeCard(0)
     discardPile = discardPile.put(cactusBot.discard(2))
     cactusBot.chooseDraw(discardPile) shouldBe true
+
+  "Bot  " should "call cactus" in :
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
+    cactusBot.draw(deck)
+    cactusBot.draw(deck)
+    cactusBot.seeCard(0)
+    cactusBot.seeCard(1)
+    cactusBot.callCactus() shouldBe true
 
   "Bot " should "be created" in:
     val cactusBot = "Bot" drawing DrawMethods.Deck discarding DiscardMethods.Known withMemory model.bot.CactusBotsData.Memory.Good

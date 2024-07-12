@@ -1,6 +1,6 @@
 package model.bot
 
-object CactusBotsData {
+object CactusBotsData:
 
   /** Represents the type of draw methods of a cactus bot. */
   enum DrawMethods:
@@ -20,5 +20,3 @@ object CactusBotsData {
     case Good extends Memory(0.25)
     case VeryGood extends Memory(0.1)
     case Optimal extends Memory(0)
-
-}
