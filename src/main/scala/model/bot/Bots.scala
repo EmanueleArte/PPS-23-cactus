@@ -91,12 +91,15 @@ object Bots:
       if (isRedKing(c1)) {
         return false
       }
+      if(isRedKing(c2)){
+        return true
+      }
       if(c1.value > c2.value){
         return true
       }
       false
 
-    private def higherKnownCard: Int =
+    private def higherKnownCardIndex: Int =
       var higherValueCard: PokerCard = PokerCard(PokerCardName.Ace, Clubs)
       for (i <- _knownCards.indices) {
         if (isHigherValue(_knownCards(i), higherValueCard) || i == 0) {
@@ -111,14 +114,14 @@ object Bots:
       }
       val diff: List[PokerCard] = cards.diff(_knownCards)
       if (diff.isEmpty) {
-        higherKnownCard
+        higherKnownCardIndex
       }
       val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => diff.contains(c)).map((_, i) => i)
       indexes(scala.util.Random.nextInt(indexes.length))
 
     override def chooseDiscard(): Int = _discardMethod match
       case DiscardMethods.Unknown => unknownCard
-      case DiscardMethods.Known => higherKnownCard
+      case DiscardMethods.Known => higherKnownCardIndex
       case DiscardMethods.Random => scala.util.Random.nextInt(cards.length)
 
     private def isDiscardPileBetter(discardPile: PokerPile): Boolean =
@@ -126,8 +129,7 @@ object Bots:
         return false
       }
       val discardPileCopy: PokerPile = discardPile.copy(discardPile.cards)
-      val topDiscardPileCard: PokerCard = discardPileCopy.draw().get
-      isHigherValue(cards(higherKnownCard), topDiscardPileCard)
+      isHigherValue(cards(higherKnownCardIndex), discardPileCopy.draw().get)
 
     override def chooseDraw(discardPile: PokerPile): Boolean = _drawMethod match
       case DrawMethods.Deck => true
