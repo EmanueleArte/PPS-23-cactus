@@ -20,8 +20,10 @@ object ControllerModule:
 
   trait Component:
     class ScalaFXController extends Controller:
-      private def cards: List[PokerCard] = (1 to 10).map(_ of Diamonds).toList
-      override def players: List[Player] = (1 to 3).toList.map(i => CactusPlayer(s"Bot$i", cards))
+      import scala.util.Random
+      import model.card.CardsData.PokerSuit
+      private def cards: List[PokerCard] = (1 to Random.nextInt(9) + 1).map(_ of PokerSuit.values(Random.nextInt(4))).toList
+      override def players: List[Player] = (1 to 5).toList.map(i => CactusPlayer(s"Bot$i", cards))
 
   trait Interface extends Provider with Component
 
@@ -38,15 +40,15 @@ object ViewModule:
       override def show: Unit = ScalaFXWindow.main(Array.empty)
 
       object ScalaFXWindow extends JFXApp3:
-        def width: Int = 1800
+        def width: Int = 1200
 
-        def height: Int = 900
+        def height: Int = 800
 
         override def start(): Unit =
           stage = new JFXApp3.PrimaryStage:
             title.value = "Cactus"
             scene = new Scene(ScalaFXWindow.width, ScalaFXWindow.height):
-              content = List(MainPane(context).pane)
+              content = List(MainPane(context).pane, AsidePane(context).pane)
 
   trait Interface extends Provider with Component:
     self: Requirements =>
@@ -57,5 +59,3 @@ object MVC extends ViewModule.Interface with ControllerModule.Interface:
 
   @main def main(): Unit =
     view.show
-    val pile: PokerPile = PokerPile()
-    val clonedPile: PokerPile = pile.co
