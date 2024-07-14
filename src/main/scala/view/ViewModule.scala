@@ -1,6 +1,5 @@
 package view
 
-
 import model.card.CardBuilder.PokerDSL.of
 import model.card.Cards.PokerCard
 import model.card.CardsData.PokerSuit.*
@@ -14,7 +13,11 @@ import scalafx.scene.text.Text
 
 object ControllerModule:
   trait Controller:
-    def players: List[Player]
+    def players: List[CactusPlayer]
+    def deck: PokerDeck
+    def pile: PokerPile
+    def playerDiscards(player: CactusPlayer, index: Int): Unit
+
   trait Provider:
     val controller: Controller
 
@@ -22,8 +25,24 @@ object ControllerModule:
     class ScalaFXController extends Controller:
       import scala.util.Random
       import model.card.CardsData.PokerSuit
-      private def cards: List[PokerCard] = (1 to Random.nextInt(9) + 1).map(_ of PokerSuit.values(Random.nextInt(4))).toList
-      override def players: List[Player] = (1 to 5).toList.map(i => CactusPlayer(s"Bot$i", cards))
+      var _deck: PokerDeck = PokerDeck(true)
+      var _pile: PokerPile = PokerPile()
+      val _players: List[CactusPlayer] = CactusPlayer("Player", cards) +: (1 to 4).toList.map(i => CactusPlayer(s"Bot$i", cards))
+      private def cards: List[PokerCard] =
+        (1 to Random.nextInt(9) + 1).map(_ of PokerSuit.values(Random.nextInt(4))).toList
+      override def players: List[CactusPlayer] = _players
+      override def deck: PokerDeck = _deck
+      override def pile: PokerPile = _pile
+
+      override def playerDiscards(player: CactusPlayer, index: Int): Unit =
+//        println("Prima")
+//        println(_pile.cards)
+//        println(players(0).cards)
+        val discardedCard: PokerCard = player.discard(index)
+        _pile = pile.put(discardedCard)
+//        println("Dopo")
+//        println(_pile.cards)
+//        println(players(0).cards)
 
   trait Interface extends Provider with Component
 
@@ -40,9 +59,9 @@ object ViewModule:
       override def show: Unit = ScalaFXWindow.main(Array.empty)
 
       object ScalaFXWindow extends JFXApp3:
-        def width: Int = 1200
+        def width: Int = Panes.windowWidth
 
-        def height: Int = 800
+        def height: Int = Panes.windowHeight
 
         override def start(): Unit =
           stage = new JFXApp3.PrimaryStage:
