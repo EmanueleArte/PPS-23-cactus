@@ -13,7 +13,7 @@ import scalafx.scene.control.{Button, Label}
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{GridPane, HBox, Pane, Priority, VBox}
 import scalafx.scene.paint.Color
-import scalafx.scene.shape.Circle
+import scalafx.scene.shape.{Circle, Rectangle}
 import scalafx.scene.text.{Font, Text}
 
 import scala.io.BufferedSource
@@ -75,6 +75,7 @@ object CardsPane:
   def frontsFolderPath: String = cardsFolderPath + "/fronts"
 
 class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
+  import context.controller
   override def paneWidth: Int         = Panes.mainPaneWidth
   override def paneHeight: Int        = Panes.mainPaneHeight
   override def position: ViewPosition = ViewPosition(0, 0)
@@ -88,8 +89,9 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
     prefWidth = paneWidth
     prefHeight = paneHeight
     style = "-fx-background-color: lime;"
-    children = context.controller.players.zipWithIndex
+    children = controller.players.zipWithIndex
       .map((player, index) => new PlayerPane(player, calculatePosition(index)).pane)
+      ++ List(new TableCenterPane().pane)
 
   def calculatePosition(i: Int): ViewPosition =
     val theta: Double = 2 * Math.PI / context.controller.players.length
@@ -122,21 +124,19 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
     val cardsContainer: Pane = new Pane:
       layoutX = 0
       layoutY = 0
-      children = player.cards.zipWithIndex.map((card, index) => new CardPane(card, cardPosition(index)).pane)
+      children = player.cards.zipWithIndex.map((card, index) => new PlayerCardPane(card, cardPosition(index)).pane)
 
     def cardPosition(i: Int): ViewPosition = ViewPosition(
       (i % PlayersPane.cardsPerLine) * CardsPane.paneWidth + CardsPane.margin,
       (i / PlayersPane.cardsPerLine) * CardsPane.paneHeight
     )
 
-
     def handleCardClick(card: Pane, name: String): Unit =
       println(name)
       println(player.cards)
       cardsContainer.children.clear()
-      player.cards
-        .zipWithIndex
-        .map((card, index) => new CardPane(card, cardPosition(index)).pane)
+      player.cards.zipWithIndex
+        .map((card, index) => new PlayerCardPane(card, cardPosition(index)).pane)
         .foreach(pane => cardsContainer.children.add(pane))
 
     override def position: ViewPosition = _position
@@ -153,7 +153,7 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
 
     override def paneHeight: Int = PlayersPane.paneHeight
 
-    class CardPane(card: Card, _position: ViewPosition) extends ScalaFXPane:
+    class PlayerCardPane(card: Card, _position: ViewPosition) extends ScalaFXPane:
       override def position: ViewPosition = _position
 
       override def pane: Pane = new Pane:
@@ -178,6 +178,55 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
         new ImageView(new Image(getClass.getResourceAsStream(CardsPane.frontsFolderPath + s"/${fileName}.png"))):
           fitWidth = CardsPane.paneWidth - CardsPane.margin
           preserveRatio = true
+
+  class CardPane(card: Option[PokerCard], _position: ViewPosition) extends ScalaFXPane:
+    override def paneWidth: Int = CardsPane.paneWidth
+
+    override def paneHeight: Int = CardsPane.paneHeight
+
+    override def position: ViewPosition = _position
+
+    override def pane: Pane = new Pane:
+      layoutX = position.x
+      layoutY = position.y
+      prefWidth = paneWidth
+      prefHeight = paneHeight
+      children = List(if card.isDefined then imageView else rectangle)
+
+    def imageView: ImageView =
+      new ImageView(CardsPane.backsFolderPath + "/red.png"):
+        fitWidth = CardsPane.paneWidth - CardsPane.margin
+        preserveRatio = true
+
+    def rectangle: Rectangle = new Rectangle:
+      width = CardsPane.paneWidth
+      height = CardsPane.paneHeight
+      fill = Color.SlateBlue
+  class TableCenterPane() extends ScalaFXPane:
+    override def paneWidth: Int = CardsPane.paneWidth * 2
+
+    override def paneHeight: Int = CardsPane.paneHeight
+
+    override def position: ViewPosition = center - ViewPosition(paneWidth / 2, paneHeight / 2)
+
+    override def pane: Pane = new Pane:
+      layoutX = position.x
+      layoutY = position.y
+      prefWidth = paneWidth
+      prefHeight = paneHeight
+      children = List(deckPane, pilePane)
+
+    val deckPane: Pane = new Pane:
+      layoutX = 0
+      layoutY = 0
+      children = List(new CardPane(controller.deck.cards.headOption, ViewPosition(0, 0)).pane)
+      onMouseClicked = _ => println("Draw from deck")
+
+    val pilePane: Pane = new Pane:
+      layoutX = CardsPane.paneWidth
+      layoutY = 0
+      children = List(new CardPane(controller.pile.cards.headOption, ViewPosition(0, 0)).pane)
+      onMouseClicked = _ => println("Draw from pile")
 
 class AsidePane(context: ControllerModule.Provider) extends ScalaFXPane:
   override def paneWidth: Int = 200
