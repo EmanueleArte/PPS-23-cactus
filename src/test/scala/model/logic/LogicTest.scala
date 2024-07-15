@@ -9,7 +9,7 @@ import model.game.Scores.toMap
 import model.logic.Logics.*
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
-import player.Players.Player
+import model.player.Players.Player
 
 /** Tests for basic game logic. */
 class LogicTest extends AnyFlatSpec:

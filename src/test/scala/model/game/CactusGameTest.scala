@@ -10,7 +10,8 @@ import model.game.Scores
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{be, empty, have, not}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
-import player.Players.{CactusPlayer, Player}
+import model.player.Players.Player
+import model.player.Players.CactusPlayer
 
 class CactusGameTest extends AnyFlatSpec:
   type Players = List[Player]

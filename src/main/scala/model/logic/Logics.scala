@@ -3,8 +3,8 @@ package model.logic
 import model.card.Cards.PokerCard
 import model.deck.Drawable
 import model.game.{CactusGame, Game, Scores}
+import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
-import player.Players.{CactusPlayer, Player}
 
 /** Logic of a game. */
 object Logics:
