@@ -14,3 +14,11 @@ Gli obiettivi del terzo sprint sono quelli di:
 ### Deadline
 
 La durata dello sprint è di una settimana, quindi termina il giorno 14/07/2024.
+
+## Sprint review
+
+Gli obiettivi prefissati sono stati raggiunti.
+
+## Sprint retrospective
+
+L'organizzazione del lavoro è migliorata rispetto agli sprint precedenti.
