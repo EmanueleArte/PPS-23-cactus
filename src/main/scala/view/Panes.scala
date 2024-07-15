@@ -85,11 +85,8 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
   private def center: ViewPosition    = (ViewPosition(paneWidth, paneHeight) / 2)
 
   val pileCardsProperty: ObjectProperty[List[PokerCard]] = ObjectProperty(context.controller.pile.cards)
-  pileCardsProperty.onChange((_, oldValue, newValue) =>
-    println(s"From view: new size of pile is ${newValue.size}")
-  )
-
-
+  //pileCardsProperty.onChange((_, oldValue, newValue) => println(s"From view: new size of pile is ${newValue.size}"))
+  val playerCardsProperty: ObjectProperty[List[PokerCard]] = ObjectProperty(context.controller.currentPlayer.cards)
   def pileHandler(): Unit =
     pileCardsProperty.setValue(context.controller.pile.cards)
 
@@ -111,8 +108,21 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
     ViewPosition(x, y)
 
   class PlayerPane(player: CactusPlayer, _position: ViewPosition) extends ScalaFXPane: // with PlayersPane:
-    def playerCards: ObjectProperty[CactusPlayer] = ObjectProperty(this, "cards", player)
-    playerCards.onChange((_, oldValue, newValue) => println(s"Cards changed: ${newValue}"))
+
+//    pileCardsProperty.onChange((_, oldValue, newValue) =>
+//      if (oldValue.sizeIs > newValue.size) {
+//        cardsContainer.children.clear()
+//        player.cards.zipWithIndex
+//          .map((card, index) => new PlayerCardPane(card, cardPosition(index)).pane)
+//          .foreach(pane => cardsContainer.children.add(pane))
+//      }
+//    )
+    playerCardsProperty.onChange((_, oldValue, newValue) =>
+      cardsContainer.children.clear()
+      player.cards.zipWithIndex
+        .map((card, index) => new PlayerCardPane(card, cardPosition(index)).pane)
+        .foreach(pane => cardsContainer.children.add(pane))
+    )
 
     def header: HBox =
       val nameText: Text = new Text:
@@ -216,7 +226,7 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
   class TableCenterPane() extends ScalaFXPane:
     pileCardsProperty.onChange((_, oldValue, newValue) =>
       pilePane.children.clear()
-      pilePane.children.add(new CardPane(newValue.headOption, ViewPosition(0,0), false).pane)
+      pilePane.children.add(new CardPane(newValue.headOption, ViewPosition(0, 0), false).pane)
     )
     override def paneWidth: Int = CardsPane.paneWidth * 2
 
@@ -235,14 +245,18 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
       layoutX = 0
       layoutY = 0
       children = List(new CardPane(controller.deck.cards.headOption, ViewPosition(0, 0), true).pane)
-      onMouseClicked = _ => println("Draw from deck")
+      onMouseClicked = _ =>
+        context.controller.playerDrawFromDeck(context.controller.currentPlayer)
+//        pileHandler()
+        playerCardsProperty.setValue(context.controller.currentPlayer.cards)
 
     val pilePane: Pane = new Pane:
       layoutX = CardsPane.paneWidth
       layoutY = 0
       children = List(new CardPane(controller.pile.cards.headOption, ViewPosition(0, 0), false).pane)
       onMouseClicked = _ =>
-        val card: Option[PokerCard] = context.controller.pile.draw()
+        context.controller.playerDrawFromPile(context.controller.currentPlayer)
+        playerCardsProperty.setValue(context.controller.currentPlayer.cards)
         pileHandler()
 
 class AsidePane(context: ControllerModule.Provider) extends ScalaFXPane:
