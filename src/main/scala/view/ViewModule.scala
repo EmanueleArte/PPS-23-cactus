@@ -17,6 +17,7 @@ object ControllerModule:
     def deck: PokerDeck
     def pile: PokerPile
     def playerDiscards(player: CactusPlayer, index: Int): Unit
+    def drawFromPile: Option[PokerCard]
 
   trait Provider:
     val controller: Controller
@@ -35,14 +36,12 @@ object ControllerModule:
       override def pile: PokerPile = _pile
 
       override def playerDiscards(player: CactusPlayer, index: Int): Unit =
-//        println("Prima")
-//        println(_pile.cards)
-//        println(players(0).cards)
         val discardedCard: PokerCard = player.discard(index)
         _pile = pile.put(discardedCard)
-//        println("Dopo")
-//        println(_pile.cards)
-//        println(players(0).cards)
+        println(pile.size)
+
+      override def drawFromPile: Option[PokerCard] =
+        pile.draw()
 
   trait Interface extends Provider with Component
 

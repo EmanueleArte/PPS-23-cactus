@@ -76,12 +76,22 @@ object CardsPane:
 
 class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
   import context.controller
+
   override def paneWidth: Int         = Panes.mainPaneWidth
   override def paneHeight: Int        = Panes.mainPaneHeight
   override def position: ViewPosition = ViewPosition(0, 0)
   private def dispositionRadius: Int  = paneHeight / 2 - PlayersPane.paneHeight / 2
   private def horizontalRatio: Double = paneWidth.toDouble / paneHeight.toDouble
   private def center: ViewPosition    = (ViewPosition(paneWidth, paneHeight) / 2)
+
+  val pileCardsProperty: ObjectProperty[List[PokerCard]] = ObjectProperty(context.controller.pile.cards)
+  pileCardsProperty.onChange((_, oldValue, newValue) =>
+    println(s"From view: new size of pile is ${newValue.size}")
+  )
+
+
+  def pileHandler(): Unit =
+    pileCardsProperty.setValue(context.controller.pile.cards)
 
   override def pane: Pane = new Pane:
     layoutX = position.x
@@ -132,8 +142,6 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
     )
 
     def handleCardClick(card: Pane, name: String): Unit =
-      println(name)
-      println(player.cards)
       cardsContainer.children.clear()
       player.cards.zipWithIndex
         .map((card, index) => new PlayerCardPane(card, cardPosition(index)).pane)
@@ -167,6 +175,7 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
           val index: Int = player.cards.indexOf(card)
           context.controller.playerDiscards(player, index)
           handleCardClick(this, s"${card.value.toString} of ${card.suit.toString}")
+          pileHandler()
 
       override def paneWidth: Int = CardsPane.paneWidth
 
@@ -179,7 +188,7 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
           fitWidth = CardsPane.paneWidth - CardsPane.margin
           preserveRatio = true
 
-  class CardPane(card: Option[PokerCard], _position: ViewPosition) extends ScalaFXPane:
+  class CardPane(card: Option[PokerCard], _position: ViewPosition, covered: Boolean) extends ScalaFXPane:
     override def paneWidth: Int = CardsPane.paneWidth
 
     override def paneHeight: Int = CardsPane.paneHeight
@@ -193,8 +202,10 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
       prefHeight = paneHeight
       children = List(if card.isDefined then imageView else rectangle)
 
+    def fileName: String = s"/${card.get.suit.toString.toLowerCase()}_${card.get.value.toString}.png"
+
     def imageView: ImageView =
-      new ImageView(CardsPane.backsFolderPath + "/red.png"):
+      new ImageView(if covered then CardsPane.backsFolderPath + "/red.png" else CardsPane.frontsFolderPath + fileName):
         fitWidth = CardsPane.paneWidth - CardsPane.margin
         preserveRatio = true
 
@@ -203,6 +214,10 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
       height = CardsPane.paneHeight
       fill = Color.SlateBlue
   class TableCenterPane() extends ScalaFXPane:
+    pileCardsProperty.onChange((_, oldValue, newValue) =>
+      pilePane.children.clear()
+      pilePane.children.add(new CardPane(newValue.headOption, ViewPosition(0,0), false).pane)
+    )
     override def paneWidth: Int = CardsPane.paneWidth * 2
 
     override def paneHeight: Int = CardsPane.paneHeight
@@ -219,14 +234,16 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
     val deckPane: Pane = new Pane:
       layoutX = 0
       layoutY = 0
-      children = List(new CardPane(controller.deck.cards.headOption, ViewPosition(0, 0)).pane)
+      children = List(new CardPane(controller.deck.cards.headOption, ViewPosition(0, 0), true).pane)
       onMouseClicked = _ => println("Draw from deck")
 
     val pilePane: Pane = new Pane:
       layoutX = CardsPane.paneWidth
       layoutY = 0
-      children = List(new CardPane(controller.pile.cards.headOption, ViewPosition(0, 0)).pane)
-      onMouseClicked = _ => println("Draw from pile")
+      children = List(new CardPane(controller.pile.cards.headOption, ViewPosition(0, 0), false).pane)
+      onMouseClicked = _ =>
+        val card: Option[PokerCard] = context.controller.pile.draw()
+        pileHandler()
 
 class AsidePane(context: ControllerModule.Provider) extends ScalaFXPane:
   override def paneWidth: Int = 200
