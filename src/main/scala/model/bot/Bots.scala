@@ -92,11 +92,10 @@ object Bots:
 
     private def higherKnownCardIndex: Int =
       var higherValueCard: PokerCard = PokerCard(PokerCardName.Ace, Clubs)
-      _knownCards.zipWithIndex.foreach((c, i) => {
-        if (isHigherValue(c, higherValueCard) || i == 0){
+      _knownCards.zipWithIndex.foreach((c, i) =>
+        if (isHigherValue(c, higherValueCard) || i == 0) then
           higherValueCard = _knownCards(i)
-        }
-      })
+      )
       cards.zipWithIndex.filter((c, _) => c.equals(higherValueCard)).map((_, i) => i).head
 
     private def unknownCard: Int =
