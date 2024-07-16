@@ -3,7 +3,7 @@ package model.game
 import model.card.Cards.{Card, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
-import player.Players.{CactusPlayer, Player}
+import model.player.Players.{CactusPlayer, Player}
 
 /**
  * An opaque type representing the scores of players in a game.
