@@ -3,7 +3,7 @@ package view.module
 import control.module.ControllerModule
 
 /** Represents the view component. */
-object ViewModule:
+trait ViewModule:
   /** Type representing the view of the game. */
   type ViewType
 
@@ -13,10 +13,4 @@ object ViewModule:
 
   /** Dependencies for the view. */
   type Requirements
-  
-  /** Represents the view component for the Cactus game. */
-  trait Component:
-    context: Requirements =>
 
-  /** Interface of the view module of game. */
-  trait Interface extends Provider

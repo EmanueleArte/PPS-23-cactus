@@ -6,7 +6,7 @@ import view.module.ViewModule
 
 /** Represents the controller module for the Cactus game. */
 object CactusControllerModule extends ControllerModule:
-  override type Requirements = CactusModelModule.Provider with ViewModule.Provider
+  override type Requirements = CactusModelModule.Provider //with ViewModule.Provider
 
   /** Represents the controller component for the Cactus game. */
   trait Component:

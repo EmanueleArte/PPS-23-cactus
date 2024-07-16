@@ -9,8 +9,8 @@ import view.module.ViewModule
 object CactusMVC
     extends MVC
     with CactusModelModule.Interface
-    with CactusControllerModule.Interface
-    with ViewModule.Interface:
+    with CactusControllerModule.Interface:
+    //with ViewModule.Interface:
 
   override type ModelType      = CactusLogic
   override type ControllerType = CactusController
