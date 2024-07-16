@@ -13,6 +13,8 @@ import scalafx.scene.layout.{HBox, VBox}
 import scalafx.stage.Screen
 import view.module.ViewModule
 
+import scala.util.Random
+
 /** Represents the view module for the menu. */
 object MainMenuViewModule extends ViewModule:
   override type ViewType = JFXApp3
@@ -50,18 +52,24 @@ object MainMenuViewModule extends ViewModule:
               items = ObservableBuffer.from(CactusBotsData.DrawMethods.values.map(_.toString))
               promptText = "Select a draw method"
               prefWidth = 200
+              value =
+                CactusBotsData.DrawMethods.values(Random.nextInt(CactusBotsData.DrawMethods.values.length)).toString
             ,
             new Label("Discard method:"),
             new ComboBox[String]:
               items = ObservableBuffer.from(CactusBotsData.DiscardMethods.values.map(_.toString))
               promptText = "Select a discard method"
               prefWidth = 200
+              value = CactusBotsData.DiscardMethods
+                .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length))
+                .toString
             ,
             new Label("Memory:"),
             new ComboBox[String]:
               items = ObservableBuffer.from(CactusBotsData.Memory.values.map(_.toString))
               promptText = "Select a memory quality"
               prefWidth = 200
+              value = CactusBotsData.Memory.values(Random.nextInt(CactusBotsData.Memory.values.length)).toString
           )
 
       override def start(): Unit =
