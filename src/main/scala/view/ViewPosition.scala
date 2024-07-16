@@ -18,9 +18,7 @@ trait ViewPosition:
   def y: Int
 private final case class ViewPositionImpl(x: Int, y: Int) extends ViewPosition
 
-/**
- * Companion object of [[ViewPosition]]
- */
+/** Companion object of [[ViewPosition]] */
 object ViewPosition:
   /**
    * Creates a new [[ViewPosition]].

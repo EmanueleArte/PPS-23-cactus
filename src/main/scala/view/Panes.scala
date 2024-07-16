@@ -38,136 +38,6 @@ trait ScalaFXPane:
    */
   def pane: Pane
 
-/** Contains the basic parameters for the application's panes. */
-object Panes:
-  /**
-   * Width of the application's window.
-   * @return width of the application's window.
-   */
-  def windowWidth: Int = 1200
-
-  /**
-   * Height of the application's window.
-   * @return height of the application's window.
-   */
-  def windowHeight: Int = 800
-
-  /**
-   * Width of the main pane.
-   * @return width of the main pane.
-   */
-  def mainPaneWidth: Int = 1000
-
-  /**
-   * Height of the main pane.
-   * @return height of the main pane.
-   */
-  def mainPaneHeight: Int = windowHeight
-
-  /**
-   * Width of the side pane.
-   * @return width of the side pane.
-   */
-  def asidePaneWidth: Int = windowWidth - mainPaneWidth
-
-  /**
-   * Height of the side pane.
-   * @return height of the side pane.
-   */
-  def asidePaneHeight: Int = windowHeight
-
-/** Contains the basic parameters for the player's panes. */
-object PlayersPane:
-  /**
-   * Width of the player's pane.
-   * @return width of the player's pane.
-   */
-  def paneWidth: Int = CardsPane.paneWidth * maxCardsPerLine
-
-  /**
-   * Height of the player's pane.
-   * @return height of the player's pane.
-   */
-  def paneHeight: Int = CardsPane.paneHeight * maxCardsLines + 18
-
-  /**
-   * Font size of the texts in the pane.
-   * @return font size.
-   */
-  def fontSize: Int = 18
-
-  /**
-   * Radius of the circle representing the turn indicator.
-   * @return radius of turn indicator.
-   */
-  def turnIndicatorRadius: Int = 5
-
-  /**
-   * Color of the turn indicator.
-   * @return color of the turn indicator.
-   */
-  def turnIndicatorColor: Color = Color.Red
-
-  /**
-   * Maximum number of cards disposable on a line.
-   * @return number of cards per line.
-   */
-  def maxCardsPerLine: Int = 4
-
-  /**
-   * Maximum number of lines.
-   * @return number of lines.
-   */
-  def maxCardsLines: Int = 3
-
-/** Contains the basic parameters for the card's panes. */
-object CardsPane:
-  private def aspectRatio: Double = 3.0 / 2.0
-
-  /**
-   * Width of the card's pane.
-   * @return width of the card's pane.
-   */
-  def paneWidth: Int = 50 + margin
-
-  /**
-   * Height of the card's pane.
-   * @return height of the card's pane.
-   */
-  def paneHeight: Int = (paneWidth.toDouble * aspectRatio).toInt + margin
-
-  /**
-   * Space between each card, both horizontal and vertical.
-   * @return margin between the cards.
-   */
-  def margin: Int = 5
-
-  private def cardsFolderPath: String = "/cards"
-
-  /**
-   * Path for the folder of card's backs.
-   * @return path for card's backs folder.
-   */
-  def backsFolderPath: String = cardsFolderPath + "/backs"
-
-  /**
-   * Path for the folder of card's fronts.
-   * @return path for card's fronts folder.
-   */
-  def frontsFolderPath: String = cardsFolderPath + "/fronts"
-
-  /**
-   * Default back for the cards.
-   * @return filename of the default back.
-   */
-  def defaultBack: String = "/red.png"
-
-  /**
-   * Placeholder color to put when a card is not present.
-   * @return placeholder color.
-   */
-  def placeholderColor: Color = Color.SlateBlue
-
 /** Basic structure of a card's pane. */
 trait CardPane:
   /**
@@ -188,12 +58,17 @@ trait CardPane:
  * @param context of the application, containing the controller.
  */
 class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
-  override def paneWidth: Int                                    = Panes.mainPaneWidth
-  override def paneHeight: Int                                   = Panes.mainPaneHeight
-  override def position: ViewPosition                            = ViewPosition(0, 0)
-  private def dispositionRadius: Int                             = paneHeight / 2 - PlayersPane.paneHeight / 2
-  private def horizontalRatio: Double                            = paneWidth.toDouble / paneHeight.toDouble
-  private def center: ViewPosition                               = (ViewPosition(paneWidth, paneHeight) / 2)
+  override def paneWidth: Int         = Panes.mainPaneWidth
+  override def paneHeight: Int        = Panes.mainPaneHeight
+  override def position: ViewPosition = topLeftCorner
+  private def dispositionRadius: Int  = paneHeight / 2 - PlayersPane.paneHeight / 2
+  private def horizontalRatio: Double = paneWidth.toDouble / paneHeight.toDouble
+
+  private val topPosition: Int = 0
+
+  private val leftPosition: Int                                  = 0
+  private val topLeftCorner: ViewPosition                        = ViewPosition(topPosition, leftPosition)
+  private def center: ViewPosition                               = ViewPosition(paneWidth, paneHeight) / 2
   private val pileCardsProperty: ObjectProperty[List[PokerCard]] = ObjectProperty(context.controller.pile.cards)
   private val playerCardsProperty: ObjectProperty[List[PokerCard]] = ObjectProperty(
     context.controller.currentPlayer.cards
@@ -204,7 +79,7 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
     layoutY = position.y
     prefWidth = paneWidth
     prefHeight = paneHeight
-    style = "-fx-background-color: lime;"
+    style = s"-fx-background-color: ${Panes.mainPaneColor};"
     children = context.controller.players.zipWithIndex
       .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)).pane)
       ++ List(new TableCenterPane().pane)
@@ -255,8 +130,8 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
         children = List(turnIndicator, nameText)
 
     private val cardsContainer: Pane = new Pane:
-      layoutX = 0
-      layoutY = 0
+      layoutX = leftPosition
+      layoutY = topPosition
       children = player.buildCardsPane
 
     private def cardPosition(i: Int): ViewPosition = ViewPosition(
@@ -347,14 +222,14 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
   private class TableCenterPane() extends ScalaFXPane:
     pileCardsProperty.onChange((_, oldValue, newValue) =>
       pilePane.children.clear()
-      pilePane.children.add(new BasicCardPane(newValue.headOption, ViewPosition(0, 0), false).pane)
+      pilePane.children.add(new BasicCardPane(newValue.headOption, topLeftCorner, false).pane)
     )
 
     override def paneWidth: Int = CardsPane.paneWidth * 2
 
     override def paneHeight: Int = CardsPane.paneHeight
 
-    override def position: ViewPosition = center - ViewPosition(paneWidth / 2, paneHeight / 2)
+    override def position: ViewPosition = center - ViewPosition(paneWidth, paneHeight) / 2
 
     override def pane: Pane = new Pane:
       layoutX = position.x
@@ -364,17 +239,17 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
       children = List(deckPane, pilePane)
 
     private val deckPane: Pane = new Pane:
-      layoutX = 0
-      layoutY = 0
-      children = List(new BasicCardPane(context.controller.deck.cards.headOption, ViewPosition(0, 0), true).pane)
+      layoutX = leftPosition
+      layoutY = topPosition
+      children = List(new BasicCardPane(context.controller.deck.cards.headOption, topLeftCorner, true).pane)
       onMouseClicked = _ =>
         context.controller.playerDrawFromDeck(context.controller.currentPlayer)
         updatePlayersCards()
 
     private val pilePane: Pane = new Pane:
       layoutX = CardsPane.paneWidth
-      layoutY = 0
-      children = List(new BasicCardPane(context.controller.pile.cards.headOption, ViewPosition(0, 0), false).pane)
+      layoutY = topPosition
+      children = List(new BasicCardPane(context.controller.pile.cards.headOption, topLeftCorner, false).pane)
       onMouseClicked = _ =>
         context.controller.playerDrawFromPile(context.controller.currentPlayer)
         updatePlayersCards()
@@ -386,16 +261,16 @@ class MainPane(context: ControllerModule.Provider) extends ScalaFXPane:
  * @param context of the application, containing the controller.
  */
 class AsidePane(context: ControllerModule.Provider) extends ScalaFXPane:
-  override def paneWidth: Int = 200
+  override def paneWidth: Int = Panes.asidePaneWidth
 
-  override def paneHeight: Int = 800
+  override def paneHeight: Int = Panes.asidePaneHeight
 
-  override def position: ViewPosition = ViewPosition(MainPane(context).paneWidth, 0)
+  override def position: ViewPosition = ViewPosition(Panes.mainPaneWidth, 0)
 
   override def pane: Pane = new Pane:
     layoutX = position.x
     layoutY = position.y
     prefWidth = paneWidth
     prefHeight = paneHeight
-    style = "-fx-background-color: red;"
+    style = s"-fx-background-color: ${Panes.asidePaneColor};"
     children = List(new Button("Hello"))
