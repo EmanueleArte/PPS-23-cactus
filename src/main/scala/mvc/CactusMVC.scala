@@ -1,8 +1,8 @@
 package mvc
 
-import control.module.CactusControllerModule
+import control.module.cactus.CactusControllerModule
 import model.logic.Logics.CactusLogic
-import model.module.CactusModelModule
+import model.module.cactus.CactusModelModule
 import view.module.ViewModule
 
 /** Represents the main module for the Cactus game. */

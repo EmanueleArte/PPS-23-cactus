@@ -1,6 +1,7 @@
-package control.module
+package control.module.cactus
 
-import model.module.CactusModelModule
+import control.module.ControllerModule
+import model.module.cactus.CactusModelModule
 import view.module.ViewModule
 
 /** Represents the controller module for the Cactus game. */

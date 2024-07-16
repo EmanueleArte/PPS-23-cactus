@@ -1,6 +1,7 @@
-package model.module
+package model.module.cactus
 
 import model.logic.Logics.CactusLogic
+import model.module.ModelModule
 
 /** Represents the model module for the Cactus game. */
 object CactusModelModule extends ModelModule:
