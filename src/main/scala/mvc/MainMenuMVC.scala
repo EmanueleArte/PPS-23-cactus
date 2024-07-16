@@ -16,7 +16,7 @@ object MainMenuMVC
 
   override lazy val model: ModelType      = MainMenuModelImpl()
   override val controller: ControllerType = MainMenuControllerImpl()
-  override val view: ViewType             = MainMenuView()
+  override val view: ViewType             = MainMenuFxView()
 
   override def setup(nPlayers: Int): Unit =
     nPlayers match
