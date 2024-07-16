@@ -1,11 +1,13 @@
 package view.module
 
-import control.module.ControllerModule
-
-/** Represents the view component. */
-object ViewModule:
+/** Represents the view module. */
+trait ViewModule:
   /** Type representing the view of the game. */
-  type ViewType
+  type ViewType <: View
+
+  /** View of the game. */
+  trait View:
+    def show(): Unit
 
   /** Provider for a [[View]]. */
   trait Provider:
@@ -13,10 +15,3 @@ object ViewModule:
 
   /** Dependencies for the view. */
   type Requirements
-  
-  /** Represents the view component for the Cactus game. */
-  trait Component:
-    context: Requirements =>
-
-  /** Interface of the view module of game. */
-  trait Interface extends Provider

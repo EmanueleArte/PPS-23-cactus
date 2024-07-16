@@ -1,18 +1,25 @@
 package control.module
 
 import model.module.CactusModelModule
-import view.module.ViewModule
+import view.module.ScalaFXViewModule
 
 /** Represents the controller module for the Cactus game. */
 object CactusControllerModule extends ControllerModule:
-  override type Requirements = CactusModelModule.Provider with ViewModule.Provider
+  override type ControllerType = CactusController
+  override type Requirements = CactusModelModule.Provider with ScalaFXViewModule.Provider
+
+  trait CactusController extends Controller:
+    def continue(): Unit
+    def draw(fromDeck: Boolean): Unit
+    def discard(cardIndex: Int): Unit
+    def discardWithMalus(cardIndex: Int): Unit
 
   /** Represents the controller component for the Cactus game. */
   trait Component:
     context: Requirements =>
 
     /** Represents the controller for the Cactus game. */
-    class CactusController extends Controller:
+    class CactusControllerImpl extends CactusController:
 
       /** Continue to the next step. */
       def continue(): Unit = context.model.continue()
