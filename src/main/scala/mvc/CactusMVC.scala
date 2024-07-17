@@ -15,10 +15,6 @@ object CactusMVC
     with CactusControllerModule.Interface
     with ScalaFXViewModule.Interface:
 
-//  override type ModelType      = CactusLogic
-//  override type ControllerType = CactusControllerImpl
-//  override type ViewType       = ScalaFXViewImpl
-
   override lazy val model: ModelType      = CactusLogic(nPlayers)
   override val controller: ControllerType = CactusControllerImpl()
   override val view: ViewType             = ScalaFXViewImpl()
