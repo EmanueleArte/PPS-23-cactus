@@ -7,13 +7,16 @@ import view.{AsidePane, MainPane, Panes}
 
 /** Represents the view component. */
 object ScalaFXViewModule extends ViewModule:
+  override type ViewType     = ScalaFXView
   override type Requirements = CactusControllerModule.Provider
-  
+
+  trait ScalaFXView extends View
+
   /** Represents the view component for the Cactus game. */
   trait Component:
     context: Requirements =>
 
-    class ScalaFXView extends View:
+    class ScalaFXViewImpl extends ScalaFXView:
       override def show(): Unit = ScalaFXWindow.main(Array.empty)
 
       object ScalaFXWindow extends JFXApp3:
@@ -26,7 +29,6 @@ object ScalaFXViewModule extends ViewModule:
             title.value = "Cactus"
             scene = new Scene(ScalaFXWindow.width, ScalaFXWindow.height):
               content = List(MainPane(context.controller).pane, AsidePane(context).pane)
-
 
   /** Interface of the view module of game. */
   trait Interface extends Provider with Component:

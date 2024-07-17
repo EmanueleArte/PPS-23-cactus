@@ -2,9 +2,10 @@ package view
 
 import control.module.CactusControllerModule
 import control.module.CactusControllerModule.CactusController
+import model.card.CardBuilder.PokerDSL
 import model.card.Cards.{Card, PokerCard}
 import model.deck.Drawable
-import player.Players.CactusPlayer
+import player.Players.{CactusPlayer, Player}
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
@@ -71,9 +72,11 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   private val leftPosition: Int                                  = 0
   private val topLeftCorner: ViewPosition                        = ViewPosition(topPosition, leftPosition)
   private def center: ViewPosition                               = ViewPosition(paneWidth, paneHeight) / 2
-  private val pileCardsProperty: ObjectProperty[List[PokerCard]] = ObjectProperty(controller.pile.cards)
-  private val playerCardsProperty: ObjectProperty[List[PokerCard]] = ObjectProperty(
-    controller.currentPlayer.cards
+  private val currentPlayer: Player = controller.players(0)
+  // TODO: check only the first card of the pile, maybe with an `Option`
+  private val pileCardsProperty: ObjectProperty[Option[PokerCard]] = ObjectProperty(controller.pilesHead)
+  private val playerCardsProperty: ObjectProperty[List[Card]] = ObjectProperty(
+    currentPlayer.cards//.map(card => PokerCard(card.value.##, card.suit))
   )
 
   override def pane: Pane = new Pane:
@@ -85,8 +88,8 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     children = controller.players.zipWithIndex
       .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)).pane)
       ++ List(new TableCenterPane().pane)
-  private def updateDiscardPile(): Unit  = pileCardsProperty.setValue(controller.pile.cards)
-  private def updatePlayersCards(): Unit = playerCardsProperty.setValue(controller.currentPlayer.cards)
+  private def updateDiscardPile(): Unit  = pileCardsProperty.setValue(controller.pilesHead)
+  private def updatePlayersCards(): Unit = playerCardsProperty.setValue(currentPlayer.cards)
   private def calculatePlayerPosition(i: Int): ViewPosition =
     val theta: Double = 2 * Math.PI / controller.players.length
     val x: Int =
@@ -100,7 +103,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
    * @param player represented by the pane.
    * @param position of the pane.
    */
-  private class PlayerPane(player: CactusPlayer, override val position: ViewPosition)
+  private class PlayerPane(player: Player, override val position: ViewPosition)
       extends ScalaFXPane: // with PlayersPane:
     playerCardsProperty.onChange((_, oldValue, newValue) => updatePlayerCards())
     override def paneWidth: Int  = PlayersPane.paneWidth
@@ -145,7 +148,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       cardsContainer.children.clear()
       player.buildCardsPane.foreach(pane => cardsContainer.children.add(pane))
 
-    extension (player: CactusPlayer)
+    extension (player: Player)
       private def buildCardsPane: List[Pane] =
         player.cards.zipWithIndex.map((card, index) => new PlayerCardPane(card, cardPosition(index)).pane)
 
@@ -168,7 +171,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         onMouseClicked = _ =>
           // TODO: use player.isHuman or something similar
           val index: Int = player.cards.indexOf(card)
-          controller.playerDiscards(player, index)
+          controller.discard(index)//playerDiscards(player, index)
           updatePlayerCards()
           updateDiscardPile()
       override def filename: String = s"${card.suit.toString.toLowerCase()}_${card.value}"
@@ -198,7 +201,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       layoutY = position.y
       prefWidth = paneWidth
       prefHeight = paneHeight
-      children = List(if card.isDefined then imageView else rectangle)
+      children = List(if covered || card.isDefined then imageView else rectangle)
 
     override def filename: String = s"/${card.get.suit.toString.toLowerCase()}_${card.get.value.toString}.png"
 
@@ -224,7 +227,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   private class TableCenterPane() extends ScalaFXPane:
     pileCardsProperty.onChange((_, oldValue, newValue) =>
       pilePane.children.clear()
-      pilePane.children.add(new BasicCardPane(newValue.headOption, topLeftCorner, false).pane)
+      pilePane.children.add(new BasicCardPane(newValue, topLeftCorner, false).pane)
     )
 
     override def paneWidth: Int = CardsPane.paneWidth * 2
@@ -243,7 +246,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private val deckPane: Pane = new Pane:
       layoutX = leftPosition
       layoutY = topPosition
-      children = List(new BasicCardPane(controller.deck.cards.headOption, topLeftCorner, true).pane)
+      children = List(new BasicCardPane(Option.empty, topLeftCorner, true).pane)
       onMouseClicked = _ =>
         controller.draw(true) //(controller.currentPlayer)
         updatePlayersCards()
@@ -251,7 +254,8 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private val pilePane: Pane = new Pane:
       layoutX = CardsPane.paneWidth
       layoutY = topPosition
-      children = List(new BasicCardPane(controller.pile.cards.headOption, topLeftCorner, false).pane)
+      // controller.discardPilesTop: Option[Card]
+      children = List(new BasicCardPane(controller.pilesHead, topLeftCorner, false).pane)
       onMouseClicked = _ =>
         controller.draw(false) //(controller.currentPlayer)
         updatePlayersCards()
