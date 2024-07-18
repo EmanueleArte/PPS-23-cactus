@@ -256,7 +256,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private val pilePane: Pane = new Pane:
       layoutX = CardsPane.paneWidth
       layoutY = topPosition
-      // controller.discardPilesTop: Option[Card]
       children = List(new BasicCardPane(controller.pilesHead, topLeftCorner, false).pane)
       onMouseClicked = _ =>
         controller.draw(false) // (controller.currentPlayer)
