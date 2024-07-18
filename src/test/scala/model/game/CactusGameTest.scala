@@ -16,22 +16,26 @@ import model.player.Players.CactusPlayer
 class CactusGameTest extends AnyFlatSpec:
   type Players = List[Player]
   val playersNumber: Int = 3
-  val game: Game = CactusGame()
+  val game: Game         = CactusGame()
   val nonCactusPlayer: Player = new Player:
     override type CardType = Card
-    
+
     override val name: String = "Player"
 
     var cards: List[CardType] = List(Card(1, Spades), Card(2, Spades))
 
     override def draw(drawable: Drawable[CardType]): Unit = drawable.draw() match
       case Some(card) => cards = cards ::: card :: Nil
-      case _ => ()
+      case _          => ()
 
     override def discard(cardIndex: Int): CardType = cards(cardIndex)
 
+    override def isEqualsTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
+      this.cards.diff(anotherPlayer.cards).isEmpty &&
+      anotherPlayer.cards.diff(this.cards).isEmpty
+
   "Game setup " should "return the players" in:
-    val game: Game = CactusGame()
+    val game: Game       = CactusGame()
     val players: Players = game.setupGame(playersNumber)
     players should have size playersNumber
 
@@ -46,20 +50,20 @@ class CactusGameTest extends AnyFlatSpec:
     players1 should not be players2
 
   "Drawn cards from players" should "not be in the deck anymore" in:
-    val game: CactusGame = CactusGame()
-    val players: Players = game.setupGame(playersNumber)
+    val game: CactusGame       = CactusGame()
+    val players: Players       = game.setupGame(playersNumber)
     val drawnCards: List[Card] = players.flatMap(player => player.cards)
     game.deck.cards should not contain drawnCards
 
   "The discard pile" should "be empty" in:
-    val game: CactusGame = CactusGame()
-    val cardOption: Option[Card] = game.discardPile.draw() //game.drawFromDiscardPile()
+    val game: CactusGame         = CactusGame()
+    val cardOption: Option[Card] = game.discardPile.draw() // game.drawFromDiscardPile()
     cardOption shouldBe empty
 
   "After player initialization deck " should " have less cards" in:
     val game: CactusGame = CactusGame()
     game.setupGame(playersNumber)
-    game.deckSize should be (52 - playersNumber * game.initialPlayerCardsNumber)
+    game.deckSize should be(52 - playersNumber * game.initialPlayerCardsNumber)
 
   "Each card" should "score points equal to their value" in:
     val players: Players = (1 to 13)
@@ -69,19 +73,19 @@ class CactusGameTest extends AnyFlatSpec:
       .toList
     val scores: Scores = CactusGame().calculateScores(players)
     for (i <- 1 to 13)
-      scores.get(players(i - 1)) should be (Some(i))
+      scores.get(players(i - 1)) should be(Some(i))
 
   "The sum of the cards of player" should "be consistent with their values" in:
     val player: CactusPlayer = CactusPlayer("", List(Ace of Spades, 2 of Spades, 3 of Spades))
-    val scores: Scores = CactusGame().calculateScores(List(player))
-    scores.get(player) should be (Some(Ace + 2 + 3))
+    val scores: Scores       = CactusGame().calculateScores(List(player))
+    scores.get(player) should be(Some(Ace + 2 + 3))
 
   "If no players are passed it" should "return an empty map" in:
     val scores: Scores = CactusGame().calculateScores(List[Player]())
-    scores.isEmpty should be (true)
+    scores.isEmpty should be(true)
 
   "Calculate scores of player with non poker cards" should "return empty score" in:
-    CactusGame().calculateScores(List(nonCactusPlayer)).isEmpty should be (true)
+    CactusGame().calculateScores(List(nonCactusPlayer)).isEmpty should be(true)
 
   "Calculate scores of players with some of them having non poker cards" should "return scores for only the players with poker cards" in:
     val players: Players = List(
@@ -90,7 +94,7 @@ class CactusGameTest extends AnyFlatSpec:
       CactusPlayer("", List(10 of Clubs, 10 of Spades))
     )
     val scores: Scores = CactusGame().calculateScores(players)
-    scores.size should be (2)
-    scores.get(players(0)) should be (Some(Ace + 2))
-    scores.get(players(2)) should be (Some(10 + 10))
+    scores.size should be(2)
+    scores.get(players(0)) should be(Some(Ace + 2))
+    scores.get(players(2)) should be(Some(10 + 10))
     scores.players should not contain nonCactusPlayer

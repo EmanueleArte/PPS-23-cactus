@@ -36,6 +36,13 @@ object Players:
      */
     def discard(cardIndex: Int): CardType
 
+    /**
+     * Compares two players, returning `true` if they are equal.
+     * @param anotherPlayer to compare with the player.
+     * @return `true` if the players are equal, `false` otherwise.
+     */
+    def isEqualsTo(anotherPlayer: Player): Boolean
+
   case class CactusPlayer(name: String, private var _cards: List[PokerCard]) extends Player:
     override type CardType = PokerCard
 
@@ -48,6 +55,10 @@ object Players:
       val cardToRemove: CardType = cards(cardIndex)
       _cards = _cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
       cardToRemove
+
+    override def isEqualsTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
+        this.cards.diff(anotherPlayer.cards).isEmpty &&
+        anotherPlayer.cards.diff(this.cards).isEmpty
 
   /** Companion object of [[Player]]. */
   object Player
