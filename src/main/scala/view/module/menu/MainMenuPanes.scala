@@ -88,6 +88,10 @@ class MainMenuPane(
       spacing = 50
       margin = new scalafx.geometry.Insets(Insets(0, 0, 30, 0))
 
+    private var _drawMethods: Seq[ComboBox[String]]    = Seq.empty
+    private var _discardMethods: Seq[ComboBox[String]] = Seq.empty
+    private var _memory: Seq[ComboBox[String]]         = Seq.empty
+
     override def pane: Pane = new StackPane:
       children = List(_playersBox)
 
@@ -113,9 +117,14 @@ class MainMenuPane(
     def updatePlayersDisplay(players: Seq[VBox], diff: Int): Unit =
       _playersBox.children.clear()
       _players = diff match
-        case diff if diff < 0 => _players.dropRight(-diff)
-        case _                => _players ++ players
+        case diff if diff < 0 =>
+          _drawMethods = _drawMethods.dropRight(-diff)
+          _discardMethods = _discardMethods.dropRight(-diff)
+          _memory = _memory.dropRight(-diff)
+          _players.dropRight(-diff)
+        case _ => _players ++ players
       _playersBox.children = _players
+      println(_drawMethods)
 
     /**
      * Creates a box with the input fields for a bot.
@@ -124,31 +133,35 @@ class MainMenuPane(
      */
     @SuppressWarnings(Array("org.wartremover.warts.All"))
     def createBotBox(name: String): VBox =
+      val drawMethod = new ComboBox[String]:
+        items = ObservableBuffer.from(CactusBotsData.DrawMethods.values.map(_.toString))
+        promptText = "Select a draw method"
+        prefWidth = 200
+        value = CactusBotsData.DrawMethods.values(Random.nextInt(CactusBotsData.DrawMethods.values.length)).toString
+      _drawMethods :+= drawMethod
+      val discardMethod = new ComboBox[String]:
+        items = ObservableBuffer.from(CactusBotsData.DiscardMethods.values.map(_.toString))
+        promptText = "Select a discard method"
+        prefWidth = 200
+        value = CactusBotsData.DiscardMethods
+          .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length))
+          .toString
+      _discardMethods :+= discardMethod
+      val memory = new ComboBox[String]:
+        items = ObservableBuffer.from(CactusBotsData.Memory.values.map(_.toString))
+        promptText = "Select a memory quality"
+        prefWidth = 200
+        value = CactusBotsData.Memory.values(Random.nextInt(CactusBotsData.Memory.values.length)).toString
+      _memory :+= memory
       new VBox:
         alignment = Pos.Center
         spacing = 10
         children = Seq(
           new Label(s"$name (Bot)"),
           new Label("Draw method:"),
-          new ComboBox[String]:
-            items = ObservableBuffer.from(CactusBotsData.DrawMethods.values.map(_.toString))
-            promptText = "Select a draw method"
-            prefWidth = 200
-            value = CactusBotsData.DrawMethods.values(Random.nextInt(CactusBotsData.DrawMethods.values.length)).toString
-          ,
+          drawMethod,
           new Label("Discard method:"),
-          new ComboBox[String]:
-            items = ObservableBuffer.from(CactusBotsData.DiscardMethods.values.map(_.toString))
-            promptText = "Select a discard method"
-            prefWidth = 200
-            value = CactusBotsData.DiscardMethods
-              .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length))
-              .toString
-          ,
+          discardMethod,
           new Label("Memory:"),
-          new ComboBox[String]:
-            items = ObservableBuffer.from(CactusBotsData.Memory.values.map(_.toString))
-            promptText = "Select a memory quality"
-            prefWidth = 200
-            value = CactusBotsData.Memory.values(Random.nextInt(CactusBotsData.Memory.values.length)).toString
+          memory
         )
