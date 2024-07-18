@@ -3,17 +3,31 @@ package control.module.cactus
 import control.module.ControllerModule
 import model.module.cactus.CactusModelModule
 import view.module.ViewModule
+import model.card.Cards.{Card, PokerCard}
+import model.logic.Logics.Players
+import model.module.CactusModelModule
+import player.Players.{CactusPlayer, Player}
+import view.module.ScalaFXViewModule
 
 /** Represents the controller module for the Cactus game. */
 object CactusControllerModule extends ControllerModule:
-  override type Requirements = CactusModelModule.Provider //with ViewModule.Provider
+  override type ControllerType = CactusController
+  override type Requirements = CactusModelModule.Provider with ScalaFXViewModule.Provider
+
+  trait CactusController extends Controller:
+    def continue(): Unit
+    def draw(fromDeck: Boolean): Unit
+    def discard(cardIndex: Int): Unit
+    def discardWithMalus(cardIndex: Int): Unit
+    def players: Players
+    def pilesHead: Option[PokerCard]
 
   /** Represents the controller component for the Cactus game. */
   trait Component:
     context: Requirements =>
 
     /** Represents the controller for the Cactus game. */
-    class CactusController extends Controller:
+    class CactusControllerImpl extends CactusController:
 
       /** Continue to the next step. */
       def continue(): Unit = context.model.continue()
@@ -32,6 +46,12 @@ object CactusControllerModule extends ControllerModule:
        */
       def discard(cardIndex: Int): Unit = context.model.discard(cardIndex)
 
+      override def players: Players = context.model.players
+
+      override def pilesHead: Option[PokerCard] =
+        val cardOption = context.model.game.discardPile.draw()
+        cardOption.foreach(context.model.game.discardPile.put(_))
+        cardOption
       /**
        * Make player to discard a card but with a malus if the card does not match the discard criteria.
        *

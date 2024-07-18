@@ -3,7 +3,7 @@ package control.module
 import model.logic.Logics.CactusLogic
 import model.module.ModelModule
 import org.scalactic.Requirements
-import view.module.ViewModule
+import view.module.ScalaFXViewModule
 
 /** Represents the controller module. */
 trait ControllerModule:
