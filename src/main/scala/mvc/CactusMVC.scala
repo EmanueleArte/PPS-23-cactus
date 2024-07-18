@@ -5,8 +5,8 @@ import control.module.cactus.CactusControllerModule.ControllerType
 import model.logic.Logics.CactusLogic
 import model.module.cactus.CactusModelModule
 import model.module.cactus.CactusModelModule.ModelType
-import view.module.ScalaFXViewModule
-import view.module.ScalaFXViewModule.ViewType
+import view.module.cactus.ScalaFXViewModule.ViewType
+import view.module.cactus.ScalaFXViewModule
 
 /** Represents the main module for the Cactus game. */
 object CactusMVC

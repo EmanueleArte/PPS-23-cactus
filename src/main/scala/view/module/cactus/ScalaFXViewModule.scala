@@ -1,9 +1,10 @@
-package view.module
+package view.module.cactus
 
 import control.module.ControllerModule
 import control.module.cactus.CactusControllerModule
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
+import view.module.ViewModule
 import view.{AsidePane, MainPane, Panes}
 
 /** Represents the view component. */
