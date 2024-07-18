@@ -2,6 +2,7 @@ package view.module.menu
 
 import control.module.menu.MainMenuControllerModule.MainMenuController
 import model.bot.CactusBotsData
+import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.game.GamesList
 import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyDoubleProperty
@@ -41,6 +42,11 @@ class MainMenuPane(
   private def hCenter: ViewPosition    = ViewPosition(paneWidth / 2, 0)
   private val playersPane: PlayersPane = new PlayersPane(position)
 
+  private val gameSelected: ComboBox[String] = new ComboBox[String]:
+    items = ObservableBuffer.from(GamesList.games)
+    promptText = "Select a game"
+    prefWidth = 200
+
   override def pane: Pane = new CustomStackPane(sceneWidth, sceneHeight):
     children = Seq(
       new VBox:
@@ -51,11 +57,7 @@ class MainMenuPane(
             style = "-fx-font-size: 60pt; -fx-font-weight: bold; -fx-text-alignment: center;"
             margin = new scalafx.geometry.Insets(Insets(50, 0, 50, 0))
           ,
-          new ComboBox[String]:
-            items = ObservableBuffer.from(GamesList.games)
-            promptText = "Select a game"
-            prefWidth = 200
-          ,
+          gameSelected,
           new HBox:
             alignment = Pos.Center
             spacing = 10
@@ -73,7 +75,9 @@ class MainMenuPane(
           playersPane.pane,
           new Button:
             text = "Start game"
-            onAction = _ => Platform.exit()
+            onAction = _ =>
+              controller.selectGame(gameSelected.value.value)
+              controller.startGame(2)
         )
     )
 
@@ -88,9 +92,9 @@ class MainMenuPane(
       spacing = 50
       margin = new scalafx.geometry.Insets(Insets(0, 0, 30, 0))
 
-    private var _drawMethods: Seq[ComboBox[String]]    = Seq.empty
-    private var _discardMethods: Seq[ComboBox[String]] = Seq.empty
-    private var _memory: Seq[ComboBox[String]]         = Seq.empty
+    private var _drawMethods: Seq[ComboBox[DrawMethods]]       = Seq.empty
+    private var _discardMethods: Seq[ComboBox[DiscardMethods]] = Seq.empty
+    private var _memory: Seq[ComboBox[Memory]]                 = Seq.empty
 
     override def pane: Pane = new StackPane:
       children = List(_playersBox)
@@ -124,7 +128,6 @@ class MainMenuPane(
           _players.dropRight(-diff)
         case _ => _players ++ players
       _playersBox.children = _players
-      println(_drawMethods)
 
     /**
      * Creates a box with the input fields for a bot.
@@ -133,25 +136,24 @@ class MainMenuPane(
      */
     @SuppressWarnings(Array("org.wartremover.warts.All"))
     def createBotBox(name: String): VBox =
-      val drawMethod = new ComboBox[String]:
-        items = ObservableBuffer.from(CactusBotsData.DrawMethods.values.map(_.toString))
+      val drawMethod = new ComboBox[DrawMethods]:
+        items = ObservableBuffer.from(CactusBotsData.DrawMethods.values)
         promptText = "Select a draw method"
         prefWidth = 200
-        value = CactusBotsData.DrawMethods.values(Random.nextInt(CactusBotsData.DrawMethods.values.length)).toString
+        value = CactusBotsData.DrawMethods.values(Random.nextInt(CactusBotsData.DrawMethods.values.length))
       _drawMethods :+= drawMethod
-      val discardMethod = new ComboBox[String]:
-        items = ObservableBuffer.from(CactusBotsData.DiscardMethods.values.map(_.toString))
+      val discardMethod = new ComboBox[DiscardMethods]:
+        items = ObservableBuffer.from(CactusBotsData.DiscardMethods.values)
         promptText = "Select a discard method"
         prefWidth = 200
         value = CactusBotsData.DiscardMethods
           .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length))
-          .toString
       _discardMethods :+= discardMethod
-      val memory = new ComboBox[String]:
-        items = ObservableBuffer.from(CactusBotsData.Memory.values.map(_.toString))
+      val memory = new ComboBox[Memory]:
+        items = ObservableBuffer.from(CactusBotsData.Memory.values)
         promptText = "Select a memory quality"
         prefWidth = 200
-        value = CactusBotsData.Memory.values(Random.nextInt(CactusBotsData.Memory.values.length)).toString
+        value = CactusBotsData.Memory.values(Random.nextInt(CactusBotsData.Memory.values.length))
       _memory :+= memory
       new VBox:
         alignment = Pos.Center
