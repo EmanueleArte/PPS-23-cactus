@@ -39,7 +39,9 @@ object MainMenuViewModule extends ViewModule:
           stage = new PrimaryStage:
             title.value = "Main Menu"
             scene = new Scene(primaryScreenBounds.width.toInt, primaryScreenBounds.height.toInt):
-              content = List(MainMenuPane(context.controller).pane)
+              minWidth = AppPane.windowWidth
+              minHeight = AppPane.windowHeight
+              content = List(MainMenuPane(context.controller, this.width, this.height).pane)
 
   /** Interface of the view module of the menu. */
   trait Interface extends Provider with Component:

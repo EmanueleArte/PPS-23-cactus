@@ -16,7 +16,7 @@ object MainMenuMVC
 
   override lazy val model: ModelType      = MainMenuModelImpl()
   override val controller: ControllerType = MainMenuControllerImpl()
-  override val view: ViewType             = MainMenuFxView()
+  override val view: ViewType             = MainMenuScalaFxView()
 
   override def setup(nPlayers: Int): Unit =
     nPlayers match
@@ -24,4 +24,4 @@ object MainMenuMVC
       case _ if nPlayers > _maxPlayers => super.setup(_maxPlayers)
       case _                           => super.setup(nPlayers)
 
-  @main def main(): Unit = view.main(Array.empty)
+  @main def main(): Unit = view.show()
