@@ -1,11 +1,11 @@
 package view.module.cactus
 
-import control.module.ControllerModule
 import control.module.cactus.CactusControllerModule
 import scalafx.application.JFXApp3
+import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.scene.Scene
+import view.AppPane
 import view.module.ViewModule
-import view.{AsidePane, MainPane, Panes}
 
 /** Represents the view component. */
 object ScalaFXViewModule extends ViewModule:
@@ -22,12 +22,12 @@ object ScalaFXViewModule extends ViewModule:
       override def show(): Unit = ScalaFXWindow.main(Array.empty)
 
       object ScalaFXWindow extends JFXApp3:
-        def width: Int = Panes.windowWidth
+        def width: Int = AppPane.windowWidth
 
-        def height: Int = Panes.windowHeight
+        def height: Int = AppPane.windowHeight
 
         override def start(): Unit =
-          stage = new JFXApp3.PrimaryStage:
+          stage = new PrimaryStage:
             title.value = "Cactus"
             scene = new Scene(ScalaFXWindow.width, ScalaFXWindow.height):
               content = List(MainPane(context.controller).pane, AsidePane(context).pane)
