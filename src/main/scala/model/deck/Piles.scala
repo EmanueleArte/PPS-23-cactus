@@ -69,11 +69,10 @@ object Piles:
 
   /**
    * Specific pile for french-suited cards.
-   * @param inputCards
+   * @param _cards
    *   list of cards.
    */
-  case class PokerPile(inputCards: List[PokerCard]) extends AbstractPile[PokerCard]:
-    var _cards: List[PokerCard] = inputCards
+  case class PokerPile(private var _cards: List[PokerCard]) extends AbstractPile[PokerCard]:
 
     override def draw(): Option[PokerCard] =
       val returnCard: Option[PokerCard] = _cards.headOption

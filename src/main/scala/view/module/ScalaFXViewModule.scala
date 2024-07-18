@@ -28,7 +28,7 @@ object ScalaFXViewModule extends ViewModule:
           stage = new JFXApp3.PrimaryStage:
             title.value = "Cactus"
             scene = new Scene(ScalaFXWindow.width, ScalaFXWindow.height):
-              content = List(MainPane(context.controller).pane, AsidePane(context).pane)
+              content = List(MainPane(context.controller).pane, AsidePane(context.controller).pane)
 
   /** Interface of the view module of game. */
   trait Interface extends Provider with Component:
