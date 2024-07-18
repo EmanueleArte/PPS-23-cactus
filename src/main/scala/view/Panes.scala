@@ -1,11 +1,11 @@
 package view
 
-import control.module.CactusControllerModule
-import control.module.CactusControllerModule.CactusController
+import control.module.cactus.CactusControllerModule
+import control.module.cactus.CactusControllerModule.CactusController
 import model.card.CardBuilder.PokerDSL
 import model.card.Cards.{Card, PokerCard}
 import model.deck.Drawable
-import player.Players.{CactusPlayer, Player}
+import model.player.Players.{CactusPlayer, Player}
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}

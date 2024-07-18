@@ -1,10 +1,10 @@
 package mvc
 
-import control.module.CactusControllerModule
-import control.module.CactusControllerModule.ControllerType
+import control.module.cactus.CactusControllerModule
+import control.module.cactus.CactusControllerModule.ControllerType
 import model.logic.Logics.CactusLogic
-import model.module.CactusModelModule
-import model.module.CactusModelModule.ModelType
+import model.module.cactus.CactusModelModule
+import model.module.cactus.CactusModelModule.ModelType
 import view.module.ScalaFXViewModule
 import view.module.ScalaFXViewModule.ViewType
 

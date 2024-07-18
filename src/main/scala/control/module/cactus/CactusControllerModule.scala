@@ -5,8 +5,8 @@ import model.module.cactus.CactusModelModule
 import view.module.ViewModule
 import model.card.Cards.{Card, PokerCard}
 import model.logic.Logics.Players
-import model.module.CactusModelModule
-import player.Players.{CactusPlayer, Player}
+import model.module.cactus.CactusModelModule
+import model.player.Players.{CactusPlayer, Player}
 import view.module.ScalaFXViewModule
 
 /** Represents the controller module for the Cactus game. */
