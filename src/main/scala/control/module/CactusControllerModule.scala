@@ -3,7 +3,7 @@ package control.module
 import model.card.Cards.{Card, PokerCard}
 import model.logic.Logics.Players
 import model.module.CactusModelModule
-import player.Players.{CactusPlayer, Player}
+import model.player.Players.{CactusPlayer, Player}
 import view.module.ScalaFXViewModule
 
 /** Represents the controller module for the Cactus game. */

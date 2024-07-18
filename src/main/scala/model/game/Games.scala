@@ -1,5 +1,7 @@
 package model.game
 
+import model.bot.Bots.CactusBotImpl
+import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.{Card, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
@@ -89,11 +91,17 @@ class CactusGame() extends Game:
   val initialPlayerCardsNumber: Int       = 4
 
   export deck.{size => deckSize}
-//  export discardPile.{draw => drawFromDiscardPile}
 
   override def setupGame(playersNumber: Int): List[Player] =
-    (1 to playersNumber).toList
-      .map(p => CactusPlayer(s"Player $p", (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get)))
+    CactusPlayer("Player", (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get)) +:
+    (1 until playersNumber).toList
+      .map(index => CactusBotImpl(
+        s"Bot-$index",
+        (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get),
+        DrawMethods.Deck,
+        DiscardMethods.Random,
+        Memory.Normal
+      ))
 
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex
