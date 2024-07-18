@@ -1,12 +1,13 @@
 package view
 
+import scalafx.scene.control.ComboBox
 import scalafx.scene.paint.Color
 
 /** Contains utility methods for the view. */
 object Utils:
 
-  val topPosition: Int = 0
-  val leftPosition: Int = 0
+  val topPosition: Int            = 0
+  val leftPosition: Int           = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
 
   /**
@@ -24,3 +25,11 @@ object Utils:
       s"rgb($red, $green, $blue)"
     else
       s"rgba($red, $green, $blue, $alpha%.2f)"
+
+  /**
+   * Gets the value of the combo box.
+   *
+   * @param comboBox the combo box.
+   * @return the value of the combo box.
+   */
+  def value[A](comboBox: ComboBox[A]): A = comboBox.value.value
