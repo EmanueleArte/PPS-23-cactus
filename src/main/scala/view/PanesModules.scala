@@ -4,7 +4,7 @@ import scalafx.scene.paint.Color
 import view.Utils.colorToRgb
 
 /** Contains the basic parameters for the application's panes. */
-object Panes:
+object AppPane:
   /**
    * Width of the application's window.
    * @return width of the application's window.
