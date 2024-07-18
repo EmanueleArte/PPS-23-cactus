@@ -1,18 +1,18 @@
 package view.module.menu
 
 import control.module.menu.MainMenuControllerModule.MainMenuController
+import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
 import model.bot.CactusBotsData
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.game.GamesList
-import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.collections.ObservableBuffer
-import scalafx.geometry.{Insets, Pos, Rectangle2D}
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.{Button, ComboBox, Label, Spinner}
 import scalafx.scene.layout.{HBox, Pane, StackPane, VBox}
-import scalafx.stage.Screen
 import view.{AppPane, ViewPosition}
 import view.Panes.ScalaFXPane
+import view.Utils.value
 
 import scala.util.Random
 
@@ -76,8 +76,12 @@ class MainMenuPane(
           new Button:
             text = "Start game"
             onAction = _ =>
-              controller.selectGame(gameSelected.value.value)
-              controller.startGame(2)
+              controller.selectGame(value(gameSelected))
+              controller.startGame(
+                playersPane.drawMethods.map(value),
+                playersPane.discardMethods.map(value),
+                playersPane.memoryList.map(value)
+              )
         )
     )
 
@@ -92,9 +96,9 @@ class MainMenuPane(
       spacing = 50
       margin = new scalafx.geometry.Insets(Insets(0, 0, 30, 0))
 
-    private var _drawMethods: Seq[ComboBox[DrawMethods]]       = Seq.empty
-    private var _discardMethods: Seq[ComboBox[DiscardMethods]] = Seq.empty
-    private var _memory: Seq[ComboBox[Memory]]                 = Seq.empty
+    var drawMethods: Seq[ComboBox[DrawMethods]]       = Seq.empty
+    var discardMethods: Seq[ComboBox[DiscardMethods]] = Seq.empty
+    var memoryList: Seq[ComboBox[Memory]]             = Seq.empty
 
     override def pane: Pane = new StackPane:
       children = List(_playersBox)
@@ -122,9 +126,9 @@ class MainMenuPane(
       _playersBox.children.clear()
       _players = diff match
         case diff if diff < 0 =>
-          _drawMethods = _drawMethods.dropRight(-diff)
-          _discardMethods = _discardMethods.dropRight(-diff)
-          _memory = _memory.dropRight(-diff)
+          drawMethods = drawMethods.dropRight(-diff)
+          discardMethods = discardMethods.dropRight(-diff)
+          memoryList = memoryList.dropRight(-diff)
           _players.dropRight(-diff)
         case _ => _players ++ players
       _playersBox.children = _players
@@ -141,20 +145,20 @@ class MainMenuPane(
         promptText = "Select a draw method"
         prefWidth = 200
         value = CactusBotsData.DrawMethods.values(Random.nextInt(CactusBotsData.DrawMethods.values.length))
-      _drawMethods :+= drawMethod
+      drawMethods :+= drawMethod
       val discardMethod = new ComboBox[DiscardMethods]:
         items = ObservableBuffer.from(CactusBotsData.DiscardMethods.values)
         promptText = "Select a discard method"
         prefWidth = 200
         value = CactusBotsData.DiscardMethods
           .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length))
-      _discardMethods :+= discardMethod
+      discardMethods :+= discardMethod
       val memory = new ComboBox[Memory]:
         items = ObservableBuffer.from(CactusBotsData.Memory.values)
         promptText = "Select a memory quality"
         prefWidth = 200
         value = CactusBotsData.Memory.values(Random.nextInt(CactusBotsData.Memory.values.length))
-      _memory :+= memory
+      memoryList :+= memory
       new VBox:
         alignment = Pos.Center
         spacing = 10
