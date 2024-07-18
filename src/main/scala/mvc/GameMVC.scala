@@ -4,7 +4,7 @@ import model.logic.Logics.Players
 
 /** Represents the main module for a game. */
 trait GameMVC:
-  private var _players: Players = _
+  private var _players: Players = List.empty
   private var _nPlayers: Int    = 2
   private val _minPlayers       = 2
   private val _maxPlayers       = 6
@@ -35,3 +35,6 @@ trait GameMVC:
    * @param players the players
    */
   def setup(players: Players): Unit = _players = players
+
+  /** Runs the game. */
+  def run(): Unit

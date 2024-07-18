@@ -15,8 +15,8 @@ object CactusMVC
     with CactusControllerModule.Interface
     with ScalaFXViewModule.Interface:
 
-  override lazy val model: ModelType      = CactusLogic(nPlayers)
+  override lazy val model: ModelType      = if players.isEmpty then CactusLogic(nPlayers) else CactusLogic(players)
   override val controller: ControllerType = CactusControllerImpl()
   override val view: ViewType             = ScalaFXViewImpl()
 
-//  @main def main(): Unit = view.show()
+  def run(): Unit = view.show()
