@@ -48,10 +48,7 @@ object CactusControllerModule extends ControllerModule:
 
       override def players: Players = context.model.players
 
-      override def pilesHead: Option[PokerCard] =
-        val cardOption = context.model.game.discardPile.draw()
-        cardOption.foreach(context.model.game.discardPile.put(_))
-        cardOption
+      override def pilesHead: Option[PokerCard] = context.model.game.discardPile.cards.headOption
       /**
        * Make player to discard a card but with a malus if the card does not match the discard criteria.
        *

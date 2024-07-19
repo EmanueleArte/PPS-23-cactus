@@ -8,9 +8,9 @@ import model.card.CardsData.PokerCardName.Ace
 import model.deck.Decks.{Deck, PokerDeck}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
-import model.player.Players.CactusPlayer
+import model.player.Players.{CactusPlayer, Player}
 
-class PlayerTest extends AnyFlatSpec {
+class PlayerTest extends AnyFlatSpec:
 
   "Player " should "be a CactusPlayer" in:
     val player: CactusPlayer = CactusPlayer("", List.empty[PokerCard])
@@ -41,4 +41,27 @@ class PlayerTest extends AnyFlatSpec {
     val player: CactusPlayer = CactusPlayer("", List(PokerCard(9, CardsData.PokerSuit.Spades), PokerCard(7, CardsData.PokerSuit.Clubs)))
     val discardedCard = player.discard(0)
     discardedCard shouldBe PokerCard(9, CardsData.PokerSuit.Spades)
-}
+
+  "Players with same name and same cards" should "be equal" in:
+    val player1: Player = CactusPlayer("Mario", List(PokerCard(1, Spades)))
+    val player2: Player = CactusPlayer("Mario", List(PokerCard(1, Spades)))
+    player1.isEqualsTo(player2) should be (true)
+
+  "Players with same name and different cards" should "not be equal" in :
+    val player1: Player = CactusPlayer("Mario", List(PokerCard(1, Spades)))
+    val player2: Player = CactusPlayer("Mario", List(PokerCard(2, Spades)))
+    player1.isEqualsTo(player2) should be (false)
+
+  "Players with same name and different number of cards" should "not be equal" in :
+    val player1: Player = CactusPlayer("Mario", List(PokerCard(1, Spades)))
+    val player2: Player = CactusPlayer("Mario", List(PokerCard(1, Spades), PokerCard(2, Spades)))
+    player1.isEqualsTo(player2) should be (false)
+
+  "Players with different name and same cards" should "not be equal" in :
+    val player1: Player = CactusPlayer("Mario", List(PokerCard(1, Spades)))
+    val player2: Player = CactusPlayer("Luigi", List(PokerCard(1, Spades)))
+    player1.isEqualsTo(player2) should be (false)
+
+  "Player" should "be equal to himself" in:
+    val player: Player = CactusPlayer("Mario", List(PokerCard(1, Spades), PokerCard(2, Spades)))
+    player.isEqualsTo(player) should be (true)
