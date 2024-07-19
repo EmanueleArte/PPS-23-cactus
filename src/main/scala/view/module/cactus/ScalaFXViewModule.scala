@@ -22,6 +22,8 @@ object ScalaFXViewModule extends ViewModule:
         ScalaFXStageManager.setScene(
           new Scene(windowWidth, windowHeight):
             content = List(MainPane(context.controller).pane, AsidePane(context.controller).pane)
+          ,
+          true
         )
 
   /** Interface of the view module of game. */

@@ -25,6 +25,8 @@ object MainMenuViewModule extends ViewModule:
           ScalaFXStageManager.setScene(
             new Scene(windowWidth, windowHeight):
               content = List(MainMenuPane(context.controller, this.width, this.height).pane)
+            ,
+            false
           )
         ScalaFXStageManager.show()
 
