@@ -11,7 +11,7 @@ import scalafx.scene.layout.{HBox, Pane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Circle, Rectangle}
 import scalafx.scene.text.{Font, Text}
-import view.Panes.ScalaFXPane
+import view.ScalaFXPane
 import view.Utils.{leftPosition, topLeftCorner, topPosition}
 import view.{AppPane, CardsPane, PlayersPane, ViewPosition}
 
@@ -236,7 +236,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
  * Contains the buttons to continue the game and to call "Cactus".
  * @param controller controller of the application.
  */
-class AsidePane(controller: CactusControllerModule.Provider) extends ScalaFXPane:
+class AsidePane(controller: CactusController) extends ScalaFXPane:
   override def paneWidth: Int = AppPane.asidePaneWidth
 
   override def paneHeight: Int = AppPane.asidePaneHeight

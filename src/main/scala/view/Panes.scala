@@ -1,8 +1,8 @@
 package view
 
 import scalafx.scene.layout.Pane
-import control.module.CactusControllerModule
-import control.module.CactusControllerModule.CactusController
+import control.module.cactus.CactusControllerModule
+import control.module.cactus.CactusControllerModule.CactusController
 import model.card.CardBuilder.PokerDSL
 import model.card.Cards.{Card, PokerCard}
 import model.deck.Drawable
@@ -15,6 +15,7 @@ import scalafx.scene.layout.{HBox, Pane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Circle, Rectangle}
 import scalafx.scene.text.{Font, Text}
+import view.AppPane.{asidePaneColor, asidePaneHeight, asidePaneWidth, mainPaneColor, mainPaneHeight, mainPaneWidth}
 
 /** Basic interface for a pane used in a ScalaFX application. */
 trait ScalaFXPane:
@@ -60,11 +61,11 @@ trait CardPane:
 /**
  * Representation of the main portion of the view of the application.
  * Contains the representation of the table game, with the panes for the players, the deck and the discard pile.
- * @param context of the application, containing the controller.
+ * @param controller the controller of the application.
  */
 class MainPane(controller: CactusController) extends ScalaFXPane:
-  override def paneWidth: Int         = Panes.mainPaneWidth
-  override def paneHeight: Int        = Panes.mainPaneHeight
+  override def paneWidth: Int         = mainPaneWidth
+  override def paneHeight: Int        = mainPaneHeight
   override def position: ViewPosition = topLeftCorner
   private def dispositionRadius: Int  = paneHeight / 2 - PlayersPane.paneHeight / 2
   private def horizontalRatio: Double = paneWidth.toDouble / paneHeight.toDouble
@@ -86,7 +87,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     layoutY = position.y
     prefWidth = paneWidth
     prefHeight = paneHeight
-    style = s"-fx-background-color: ${Panes.mainPaneColor};"
+    style = s"-fx-background-color: $mainPaneColor;"
     children = controller.players.zipWithIndex
       .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)).pane)
       ++ List(new TableCenterPane().pane)
@@ -183,7 +184,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         preserveRatio = true
 
       private def image: Image = new Image(
-        getClass.getResourceAsStream(CardsPane.frontsFolderPath + s"/${filename}.png")
+        getClass.getResourceAsStream(CardsPane.frontsFolderPath + s"/$filename.png")
       )
 
   /**
@@ -227,7 +228,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
    * Representation of the center of the table.
    * It consists in a deck and a discard pile.
    */
-  private class TableCenterPane() extends ScalaFXPane:
+  private class TableCenterPane extends ScalaFXPane:
     pileCardsProperty.onChange((_, oldValue, newValue) =>
       pilePane.children.clear()
       pilePane.children.add(new BasicCardPane(newValue, topLeftCorner, false).pane)
@@ -266,14 +267,14 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 /**
  * Representation of the lateral portion of the view.
  * Contains the buttons to continue the game and to call "Cactus".
- * @param context of the application, containing the controller.
+ * @param controller the controller of the application.
  */
 class AsidePane(controller: CactusController) extends ScalaFXPane:
-  override def paneWidth: Int = Panes.asidePaneWidth
+  override def paneWidth: Int = asidePaneWidth
 
-  override def paneHeight: Int = Panes.asidePaneHeight
+  override def paneHeight: Int = asidePaneHeight
 
-  override def position: ViewPosition = ViewPosition(Panes.mainPaneWidth, 0)
+  override def position: ViewPosition = ViewPosition(mainPaneWidth, 0)
 
   private val nextButton: Button = new Button:
     text = "Continue"
@@ -296,5 +297,5 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     layoutY = position.y
     prefWidth = paneWidth
     prefHeight = paneHeight
-    style = s"-fx-background-color: ${Panes.asidePaneColor};"
+    style = s"-fx-background-color: $asidePaneColor;"
     children = List(nextButton, cactusButton)

@@ -11,7 +11,7 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.{Button, ComboBox, Label, Spinner}
 import scalafx.scene.layout.{HBox, Pane, StackPane, VBox}
 import view.{AppPane, ViewPosition}
-import view.Panes.ScalaFXPane
+import view.ScalaFXPane
 import view.Utils.value
 
 import scala.util.Random
