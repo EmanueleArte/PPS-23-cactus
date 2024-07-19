@@ -77,11 +77,12 @@ class MainMenuPane(
             text = "Start game"
             onAction = _ =>
               controller.selectGame(value(gameSelected))
-              controller.startGame(
-                playersPane.drawMethods.map(value),
-                playersPane.discardMethods.map(value),
-                playersPane.memoryList.map(value)
-              )
+              controller.startGame(4)
+//              controller.startGame(
+//                playersPane.drawMethods.map(value),
+//                playersPane.discardMethods.map(value),
+//                playersPane.memoryList.map(value)
+//              )
         )
     )
 
