@@ -4,6 +4,7 @@ import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.logic.Logics.Players
 import model.module.ModelModule
+import model.player.Players.CactusPlayer
 import view.Utils.value
 
 /** Represents the model module for the menu. */
@@ -29,7 +30,7 @@ object MainMenuModelModule extends ModelModule:
     /** Implementation of [[MainMenuModel]]. */
     class MainMenuModelImpl extends MainMenuModel:
       def createPlayers(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Players =
-        drawings
+        CactusPlayer("Player", List.empty) :: drawings
           .lazyZip(discardings)
           .lazyZip(memories)
           .zipWithIndex
