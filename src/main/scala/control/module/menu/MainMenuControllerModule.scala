@@ -2,7 +2,6 @@ package control.module.menu
 
 import control.module.ControllerModule
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
-import model.logic.Logics.Players
 import model.module.menu.MainMenuModelModule
 import mvc.CactusMVC
 import view.module.menu.MainMenuViewModule
