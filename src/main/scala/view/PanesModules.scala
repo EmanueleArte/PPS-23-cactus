@@ -1,7 +1,7 @@
 package view
 
 import scalafx.scene.paint.Color
-import view.Utils.colorToRgb
+import view.Utils.toRgbString
 
 /** Contains the basic parameters for the application's panes. */
 object Panes:
@@ -33,7 +33,7 @@ object Panes:
    * Background color of the main pane, expressed in rgb foramt.
    * @return background rgb color.
    */
-  def mainPaneColor: String = colorToRgb(Color.DarkOliveGreen)
+  def mainPaneColor: Color = Color.DarkGreen
 
   /**
    * Width of the side pane.
@@ -51,7 +51,7 @@ object Panes:
    * Background color of the side pane.
    * @return background color.
    */
-  def asidePaneColor: String = colorToRgb(Color.Red)
+  def asidePaneColor: Color = mainPaneColor
 
 /** Contains the basic parameters for the player's panes. */
 object PlayersPane:
@@ -144,3 +144,10 @@ object CardsPane:
    * @return placeholder color.
    */
   def placeholderColor: Color = Color.Transparent
+
+object Buttons:
+  def margin: Int = 20
+  def buttonWidth: Int     = Panes.asidePaneWidth - margin * 2
+  def buttonHeight: Int    = 50
+  def buttonBgColor: Color = Color.FloralWhite
+  def buttonColor: Color   = Color.DarkSlateGray
