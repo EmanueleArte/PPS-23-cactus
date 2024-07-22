@@ -1,5 +1,6 @@
 package model.logic
 
+import model.bot.Bots.BotParamsType
 import model.card.Cards.PokerCard
 import model.deck.Drawable
 import model.game.{CactusGame, Game, Scores}
@@ -80,19 +81,27 @@ object Logics:
      */
     def setup(nPlayers: Int): Players = game.setupGame(nPlayers)
 
+    /**
+     * Setup the game with bots.
+     *
+     * @param botsParams parameters to setup the bots.
+     * @return the list of players obtained after the setup.
+     */
+    def setupWithBots(botsParams: BotParamsType): Players = game.setupGameWithBots(botsParams)
+
   /**
    * Logic of the Cactus game.
    *
    * @param playersInput can be either number of players or the collection of players in the game.
    */
-  class CactusLogic(playersInput: Either[Int, Players]) extends Logic with GameLogic:
+  class CactusLogic(playersInput: Either[Int, BotParamsType]) extends Logic with GameLogic:
     override type Score      = Int
     override type PlayerType = CactusPlayer
 
     override lazy val game: CactusGame = CactusGame()
     override val _players: Players = playersInput match
       case Left(nPlayers) => setup(nPlayers)
-      case _              => players
+      case Right(players) => setupWithBots(players)
     private var turnsRemaining: Int = playersInput match
       case Left(nPlayers) => nPlayers
       case _              => players.length
@@ -149,12 +158,12 @@ object Logics:
      * @param nPlayers number of players in the game.
      * @return a new instance of [[CactusLogic]].
      */
-    def apply(nPlayers: Int): CactusLogic = new CactusLogic(Left(nPlayers): Either[Int, Players])
+    def apply(nPlayers: Int): CactusLogic = new CactusLogic(Left(nPlayers): Either[Int, BotParamsType])
 
     /**
      * Factory method for [[CactusLogic]].
      *
-     * @param players collection of players in the game.
+     * @param botsParams parameters of the bots in the game.
      * @return a new instance of [[CactusLogic]].
      */
-    def apply(players: Players): CactusLogic = new CactusLogic(Right(players): Either[Int, Players])
+    def apply(botsParams: BotParamsType): CactusLogic = new CactusLogic(Right(botsParams): Either[Int, BotParamsType])
