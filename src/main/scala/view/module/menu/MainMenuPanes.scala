@@ -4,7 +4,7 @@ import control.module.menu.MainMenuControllerModule.MainMenuController
 import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
 import model.bot.CactusBotsData
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
-import model.game.GamesList
+import mvc.PlayableGame
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.geometry.{Insets, Pos}
@@ -42,8 +42,8 @@ class MainMenuPane(
   private def hCenter: ViewPosition    = ViewPosition(paneWidth / 2, 0)
   private val playersPane: PlayersPane = new PlayersPane(position)
 
-  private val gameSelected: ComboBox[String] = new ComboBox[String]:
-    items = ObservableBuffer.from(GamesList.games)
+  private val gameSelected: ComboBox[PlayableGame] = new ComboBox[PlayableGame]:
+    items = ObservableBuffer.from(PlayableGame.values)
     promptText = "Select a game"
     prefWidth = 200
 
@@ -77,12 +77,11 @@ class MainMenuPane(
             text = "Start game"
             onAction = _ =>
               controller.selectGame(value(gameSelected))
-              controller.startGame(4)
-//              controller.startGame(
-//                playersPane.drawMethods.map(value),
-//                playersPane.discardMethods.map(value),
-//                playersPane.memoryList.map(value)
-//              )
+              controller.startGameWithBots(
+                playersPane.drawMethods.map(value),
+                playersPane.discardMethods.map(value),
+                playersPane.memoryList.map(value)
+              )
         )
     )
 
