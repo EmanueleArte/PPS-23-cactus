@@ -1,13 +1,15 @@
 package mvc
 
+import model.bot.Bots.BotParamsType
 import model.logic.Logics.Players
 
 /** Represents the main module for a game. */
 trait GameMVC:
-  private var _players: Players = List.empty
-  private var _nPlayers: Int    = 2
-  private val _minPlayers       = 2
-  private val _maxPlayers       = 6
+  private var _botsParamsSet: Boolean    = false
+  private var _botsParams: BotParamsType = (1, 2)
+  private var _nPlayers: Int             = 2
+  private val _minPlayers                = 2
+  private val _maxPlayers                = 6
 
   /**
    * Getter for the number of players.
@@ -21,7 +23,14 @@ trait GameMVC:
    *
    * @return the players.
    */
-  protected def players: Players = _players
+  protected def botsParams: BotParamsType = _botsParams
+
+  /**
+   * Checks if the bots parameters are set.
+   *
+   * @return `true` if the bots parameters are set, `false` otherwise.
+   */
+  protected def areBotsParamsSet: Boolean = _botsParamsSet
 
   /**
    * Sets the number of players for the game. If the number of players is not acceptable, it will be set
@@ -35,11 +44,13 @@ trait GameMVC:
     case _                           => nPlayers
 
   /**
-   * Sets the players for the game.
+   * Sets the bots parameters for the game.
    *
-   * @param players the players.
+   * @param botsParams the parameters of the bots.
    */
-  def setup(players: Players): Unit = _players = players
+  def setupWithBots(botsParams: BotParamsType): Unit =
+    _botsParamsSet = true
+    _botsParams = botsParams
 
   /** Runs the game. */
   def run(): Unit
