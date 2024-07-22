@@ -1,6 +1,6 @@
 package view
 
-import scalafx.scene.control.Button
+import scalafx.scene.control.{Button, Tooltip}
 import view.Utils.toRgbString
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
@@ -11,6 +11,7 @@ import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.Pane
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
+import scalafx.scene.text.{Font, Text}
 
 /**
  * DSL for creating view elements in a more agile way.
@@ -37,6 +38,9 @@ object ViewDSL:
    * @return new card's pane.
    */
   def Card: Pane = new Pane().long(CardsPane.paneWidth).tall(CardsPane.paneHeight)
+
+  def Text: Text = new Text():
+    font = Font.font(PlayersPane.fontSize)
 
   extension [T <: Node] (node: T)
 
@@ -168,6 +172,27 @@ object ViewDSL:
     def doing(handler: EventHandler[ActionEvent]): T =
       button.setOnAction(handler)
       button
+
+  extension [T <: Text] (text: T)
+    /**
+     * Sets the text of a [[Text]].
+     * @param message to display.
+     * @return [[Text]] with the text set.
+     */
+    def telling(message: String): T =
+      text.setText(message)
+      text
+
+    /**
+     * Display a message when the element is hovered.
+     * @param message to display when hovered.
+     * @return [[Text]] with the tooltip set.
+     */
+    def whenHovered(message: String): T =
+      val tooltip: Tooltip = new Tooltip(message)
+      text.setOnMouseMoved(e => if !tooltip.isShowing then tooltip.show(text, e.getScreenX + 10, e.getScreenY + 10))
+      text.onMouseExited = _ => if tooltip.isShowing then tooltip.hide()
+      text
 
   private def imageView(filepath: String): ImageView = new ImageView(
     new Image(getClass.getResourceAsStream(filepath))

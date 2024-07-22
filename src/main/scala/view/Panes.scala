@@ -7,13 +7,13 @@ import model.card.Cards.{Card, PokerCard}
 import model.player.Players.Player
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.ScrollPane.ScrollBarPolicy
-import scalafx.scene.control.{Button, ScrollPane}
+import scalafx.scene.control.{Button, ScrollPane, Tooltip}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{HBox, Pane, VBox}
+import scalafx.scene.layout.{BorderPane, HBox, Pane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.{Font, Text}
-import view.ViewDSL.{at, colored, containing, covered, doing, long, reacting, saying, showing, tall, Button as ButtonPane, Card as CardPaneDSL}
+import view.ViewDSL.{at, colored, containing, covered, doing, long, reacting, saying, showing, tall, telling, whenHovered, Button as ButtonPane, Card as CardPaneDSL, Text as TextElement}
 
 import scala.language.postfixOps
 
@@ -74,7 +74,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
   private val leftPosition: Int                                    = 0
   private val topLeftCorner: ViewPosition                          = ViewPosition(topPosition, leftPosition)
-  private def center: ViewPosition                                 = ViewPosition(paneWidth, paneHeight) / 2
+  private def paneCenter: ViewPosition                                 = ViewPosition(paneWidth, paneHeight) / 2
   private val currentPlayer: Player                                = controller.players(0)
   private val pileCardsProperty: ObjectProperty[Option[PokerCard]] = ObjectProperty(controller.pilesHead)
   private val playerCardsProperty: ObjectProperty[List[Card]] = ObjectProperty(
@@ -97,8 +97,8 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   private def calculatePlayerPosition(i: Int): ViewPosition =
     val theta: Double = 2 * Math.PI / controller.players.length
     val x: Int =
-      (Math.sin(theta * i) * dispositionRadius * horizontalRatio).toInt + center.x - PlayersPane.paneWidth / 2
-    val y: Int = (Math.cos(theta * i) * dispositionRadius).toInt + center.y - PlayersPane.paneHeight / 2
+      (Math.sin(theta * i) * dispositionRadius * horizontalRatio).toInt + paneCenter.x - PlayersPane.paneWidth / 2
+    val y: Int = (Math.cos(theta * i) * dispositionRadius).toInt + paneCenter.y - PlayersPane.paneHeight / 2
     ViewPosition(x, y)
 
   /**
@@ -118,24 +118,25 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .containing(header)
       .containing(cardsContainer)
 
+    private def cardsNumberText: Text = TextElement
+      .telling(player.cards.size.toString)
+      .whenHovered("Number of cards in player's hand")
 
-    private val header: HBox =
-      val nameText: Text = new Text:
-        text = player.name
-        x = position.x + PlayersPane.turnIndicatorRadius * 3
-        y = position.y
-        font = Font.font(PlayersPane.fontSize)
+    private val header: BorderPane =
+      val nameText: Text = TextElement telling player.name
 
       val turnIndicator: Circle = new Circle:
         centerX = position.x + PlayersPane.turnIndicatorRadius
         centerY = position.y - PlayersPane.turnIndicatorRadius
         radius = PlayersPane.turnIndicatorRadius
-        fill = Color.Transparent
+        fill = if currentPlayer.isEqualsTo(player) then PlayersPane.turnIndicatorColor else Color.Transparent
         stroke = PlayersPane.turnIndicatorColor
 
-      new HBox:
-        children = List(turnIndicator, nameText)
-
+      new BorderPane():
+        prefWidth = paneWidth
+        left = turnIndicator
+        center = nameText
+        right = cardsNumberText
 
     private val cardsContainer: ScrollPane = new ScrollPane():
       layoutX = leftPosition
@@ -168,7 +169,9 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       (i / PlayersPane.maxCardsPerLine) * CardsPane.paneHeight
     )
 
-    private def updatePlayerCards(): Unit = cardsContainer.content = playerHand
+    private def updatePlayerCards(): Unit =
+      cardsContainer.content = playerHand
+      header.right = cardsNumberText
 
   /**
    * Representation of the center of the table.
@@ -184,7 +187,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
     override def paneHeight: Int = CardsPane.paneHeight
 
-    override def position: ViewPosition = center - ViewPosition(paneWidth, paneHeight) / 2
+    override def position: ViewPosition = paneCenter - ViewPosition(paneWidth, paneHeight) / 2
 
     override def pane: Pane = new Pane()
       .at(position)
