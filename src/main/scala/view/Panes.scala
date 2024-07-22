@@ -1,18 +1,19 @@
 package view
 
+import view.Utils.toRgbString
 import control.module.CactusControllerModule
 import control.module.CactusControllerModule.CactusController
 import model.card.Cards.{Card, PokerCard}
 import model.player.Players.Player
 import scalafx.beans.property.ObjectProperty
-import scalafx.scene.control.Button
+import scalafx.scene.control.ScrollPane.ScrollBarPolicy
+import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{HBox, Pane}
+import scalafx.scene.layout.{HBox, Pane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.{Font, Text}
-import view.ViewDSL.{Card as CardPane, Button as ButtonPane}
-import view.ViewDSL.*
+import view.ViewDSL.{at, colored, containing, covered, doing, long, reacting, saying, showing, tall, Button as ButtonPane, Card as CardPaneDSL}
 
 import scala.language.postfixOps
 
@@ -135,30 +136,39 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       new HBox:
         children = List(turnIndicator, nameText)
 
-    private val cardsContainer: Pane = new Pane()
-      .at((leftPosition, topPosition + PlayersPane.fontSize * 2))
-      .containing(player.buildCardsPane)
+
+    private val cardsContainer: ScrollPane = new ScrollPane():
+      layoutX = leftPosition
+      layoutY = topPosition + PlayersPane.fontSize * 2
+      style = s"-fx-background-color: transparent;"
+      maxHeight = CardsPane.paneHeight * PlayersPane.maxCardsLines
+      prefWidth = (CardsPane.paneWidth + CardsPane.margin) * PlayersPane.maxCardsPerLine
+      hbarPolicy = ScrollBarPolicy.Never
+      content = playerHand
+
+    private def playerHand: VBox = new VBox():
+      style = s"-fx-background-color: ${Panes.mainPaneColor.toRgbString};"
+      prefWidth = (CardsPane.paneWidth + CardsPane.margin) * PlayersPane.maxCardsPerLine
+      children = player.cards
+        .map(card => CardPaneDSL showing card reacting (_ =>
+            if player.isEqualsTo(currentPlayer) then
+              val index: Int = player.cards.indexOf(card)
+              controller.discard(index)
+              updatePlayerCards()
+              updateDiscardPile()
+          ))
+        .grouped(PlayersPane.maxCardsPerLine)
+        .toList
+        .map(pack => new HBox():
+          children = pack
+        )
 
     private def cardPosition(i: Int): ViewPosition = ViewPosition(
       (i % PlayersPane.maxCardsPerLine) * CardsPane.paneWidth + CardsPane.margin,
       (i / PlayersPane.maxCardsPerLine) * CardsPane.paneHeight
     )
 
-    private def updatePlayerCards(): Unit =
-      cardsContainer.children.clear()
-      player.buildCardsPane.foreach(pane => cardsContainer.children.add(pane))
-
-    extension (player: Player)
-      private def buildCardsPane: List[Pane] =
-        player.cards.zipWithIndex.map((card, index) =>
-          CardPane at cardPosition(index) showing card reacting (_ =>
-            if player.isEqualsTo(currentPlayer) then
-              val index: Int = player.cards.indexOf(card)
-              controller.discard(index)
-              updatePlayerCards()
-              updateDiscardPile()
-          )
-        )
+    private def updatePlayerCards(): Unit = cardsContainer.content = playerHand
 
   /**
    * Representation of the center of the table.
@@ -167,7 +177,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   private class TableCenterPane() extends ScalaFXPane:
     pileCardsProperty.onChange((_, oldValue, newValue) =>
       pilePane.children.clear()
-      pilePane.children.add(CardPane at topLeftCorner showing newValue)
+      pilePane.children.add(CardPaneDSL at topLeftCorner showing newValue)
     )
 
     override def paneWidth: Int = CardsPane.paneWidth * 2
@@ -185,7 +195,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
     private val deckPane: Pane = new Pane()
       .at((leftPosition, topPosition))
-      .containing(CardPane at topLeftCorner covered)
+      .containing(CardPaneDSL at topLeftCorner covered)
       .reacting(_ =>
         controller.draw(true)
         updatePlayersCards()
@@ -193,7 +203,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
     private val pilePane: Pane = new Pane()
       .at((CardsPane.paneWidth, topPosition))
-      .containing(CardPane at topLeftCorner showing controller.pilesHead)
+      .containing(CardPaneDSL at topLeftCorner showing controller.pilesHead)
       .reacting(_ =>
         if controller.pilesHead.isDefined then
           controller.draw(false)

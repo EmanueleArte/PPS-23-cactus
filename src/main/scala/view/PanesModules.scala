@@ -65,7 +65,7 @@ object PlayersPane:
    * Height of the player's pane.
    * @return height of the player's pane.
    */
-  def paneHeight: Int = CardsPane.paneHeight * maxCardsLines + 18
+  def paneHeight: Int = (CardsPane.paneHeight * maxCardsLines).toInt + fontSize
 
   /**
    * Font size of the texts in the pane.
@@ -95,7 +95,7 @@ object PlayersPane:
    * Maximum number of lines.
    * @return number of lines.
    */
-  def maxCardsLines: Int = 3
+  def maxCardsLines: Double = 2.3
 
 /** Contains the basic parameters for the card's panes. */
 object CardsPane:
