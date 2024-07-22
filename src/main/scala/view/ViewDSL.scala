@@ -1,14 +1,15 @@
 package view
 
-import scalafx.scene.control.{Button, Tooltip}
+import scalafx.scene.control.{Button, ScrollPane, Tooltip}
 import view.Utils.toRgbString
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
+import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.MouseEvent
 import model.card.Cards.Card
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.Pane
+import scalafx.scene.layout.{Pane, Region}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.{Font, Text}
@@ -42,7 +43,7 @@ object ViewDSL:
   def Text: Text = new Text():
     font = Font.font(PlayersPane.fontSize)
 
-  extension [T <: Node] (node: T)
+  extension [T <: Region](node: T)
 
     /**
      * Sets the position of a [[Node]], using a couple of [[Int]].
@@ -79,33 +80,68 @@ object ViewDSL:
       node.style = node.style() + s";-fx-background-color: ${color.toRgbString};"
       node
 
-  extension [T <: Pane] (pane: T)
-
     /**
-     * Sets the width of a [[Pane]].
+     * Sets the preferred width of a [[Pane]].
      * @param width to set for the pane.
      * @return pane with the width set.
      */
-    def long(width: Int): T =
-      pane.setPrefWidth(width)
-      pane
+    def long(width: Double): T =
+      node.setPrefWidth(width)
+      node
 
     /**
-     * Sets the height of a [[Pane]].
-     * @param height to set for the pane.
-     * @return pane with the height set.
+     * Sets the maximum width of a [[Pane]].
+     * @param width to set for the pane.
+     * @return pane with the maximum width set.
      */
-    def tall(height: Int): T =
-      pane.setPrefHeight(height)
-      pane
+    def longAtMost(width: Double): T =
+      node.setMaxWidth(width)
+      node
+
+    /**
+     * Sets the minimum width of a [[Pane]].
+     * @param width to set for the pane.
+     * @return pane with the minimum width set.
+     */
+    def longAtLeast(width: Double): T =
+      node.setMinWidth(width)
+      node
+    
+    /**
+     * Sets the preferred height of a [[Pane]].
+     * @param height to set for the node.
+     * @return node with the height set.
+     */
+    def tall(height: Double): T =
+      node.setPrefHeight(height)
+      node
+
+    /**
+     * Sets the maximum height of a [[Pane]].
+     * @param height to set for the node.
+     * @return node with the maximum height set.
+     */
+    def tallAtMost(height: Double): T =
+      node.setMaxHeight(height)
+      node
+
+    /**
+     * Sets the minimum height of a [[Pane]].
+     * @param height to set for the node.
+     * @return node with the minimum height set.
+     */
+    def tallAtLeast(height: Double): T =
+      node.setMinHeight(height)
+      node
 
     /**
      * Sets both the width and height of a [[Pane]].
-     * @param dimensions to set for the pane, provided as a couple of [[Int]].
-     * @return pane with the dimensions set.
+     * @param dimensions to set for the node, provided as a couple of [[Int]].
+     * @return node with the dimensions set.
      */
-    def of(dimensions: (Int, Int)): T = pane.long(dimensions._1).tall(dimensions._2)
+    def of(dimensions: (Int, Int)): T = node.long(dimensions._1).tall(dimensions._2)
 
+  extension [T <: Pane] (pane: T)
     /**
      * Sets a child for a [[Pane]].
      * @param element to set as a child.
@@ -153,6 +189,24 @@ object ViewDSL:
       case _ if pane.children.isEmpty => pane.children.add(placeholder); pane
       case _ => pane
 
+  extension [T <: ScrollPane] (pane: T)
+    /**
+     * Adds the content for a [[ScrollPane]].
+     * @param element to add to the pane.
+     * @return pane with the element as content.
+     */
+    def containing(element: Node): T =
+      pane.setContent(element)
+      pane
+
+    /**
+     * Hides the vertical scrollbar.
+     * @return pane with the vertical scrllbar hidden.
+     */
+    def withoutVBar: T =
+      pane.setHbarPolicy(ScrollBarPolicy.NEVER)
+      pane
+  
   extension [T <: Button] (button: T)
 
     /**
