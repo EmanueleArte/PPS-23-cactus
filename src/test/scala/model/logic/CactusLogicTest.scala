@@ -15,7 +15,7 @@ class CactusLogicTest extends AnyFlatSpec:
   val deckSize: Int = 52
 
   /** Custom implementation of the CactusGame to make tests with an unshuffled deck. */
-  class TestCactusLogic(nPlayers: Int) extends CactusLogic(nPlayers) with GameLogic:
+  class TestCactusLogic(nPlayers: Int) extends CactusLogic(Left(nPlayers): Either[Int, Players]) with GameLogic:
     override lazy val game: CactusGame = new CactusGame():
       override val deck: Deck[PokerCard] = PokerDeck()
 
