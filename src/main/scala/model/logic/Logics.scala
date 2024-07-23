@@ -94,7 +94,7 @@ object Logics:
    *
    * @param playersInput can be either number of players or the collection of players in the game.
    */
-  class CactusLogic(playersInput: Either[Int, BotParamsType]) extends Logic with GameLogic:
+  class CactusLogic(playersInput: Either[Int, BotParamsType]) extends Logic with GameLogic with GameWithTurnPhases:
     override type Score      = Int
     override type PlayerType = CactusPlayer
 
@@ -106,6 +106,7 @@ object Logics:
       case Left(nPlayers) => nPlayers
       case _              => players.length
     private var lastRound: Boolean = false
+    _currentPhase = CactusTurnPhase.Draw
 
     override def continue(): Unit =
       val move = 1
@@ -122,30 +123,42 @@ object Logics:
      *
      * @param fromDeck if `true` the card is drawn from the deck, if `false` it is drawn from the discard pile.
      */
-    def draw(fromDeck: Boolean): Unit =
-      if fromDeck then currentPlayer.draw(game.deck)
-      else currentPlayer.draw(game.discardPile)
+    def draw(fromDeck: Boolean): Unit = currentPhase match
+      case CactusTurnPhase.Draw =>
+        if fromDeck then currentPlayer.draw(game.deck)
+        else currentPlayer.draw(game.discardPile)
+        currentPhase_=(CactusTurnPhase.Discard)
+      case _ => ()
 
     /**
      * Make the current player to discard a card.
      *
      * @param cardIndex index of the card in the player hand to discard.
      */
-    def discard(cardIndex: Int): Unit = game.discardPile = game.discardPile.put(currentPlayer.discard(cardIndex))
+    def discard(cardIndex: Int): Unit = currentPhase match
+      case CactusTurnPhase.Discard =>
+        game.discardPile = game.discardPile.put(currentPlayer.discard(cardIndex))
+        currentPhase_=(CactusTurnPhase.DiscardEquals)
+      case _ => ()
 
     /**
      * Make the current player to discard a card but with a malus if the card does not match the discard criteria.
      *
      * @param cardIndex index of the card in the player hand to discard.
      */
-    def discardWithMalus(cardIndex: Int): Unit = game.discardPile.draw() match
-      case Some(card) if card.value != currentPlayer.cards(cardIndex).value =>
-        currentPlayer.draw(game.deck)
-        game.discardPile = game.discardPile.put(card)
-      case Some(card) =>
-        game.discardPile = game.discardPile.put(card)
-        discard(cardIndex)
-      case _ => currentPlayer.draw(game.deck)
+    def discardWithMalus(cardIndex: Int): Unit = currentPhase match
+      case CactusTurnPhase.DiscardEquals =>
+        game.discardPile.draw() match
+          case Some(card) if card.value != currentPlayer.cards(cardIndex).value =>
+            currentPlayer.draw(game.deck)
+            game.discardPile = game.discardPile.put(card)
+          case Some(card) =>
+            game.discardPile = game.discardPile.put(card)
+            currentPhase_=(CactusTurnPhase.Discard)
+            discard(cardIndex)
+          case _ => currentPlayer.draw(game.deck)
+        currentPhase_=(BaseTurnPhase.End)
+      case _ => ()
 
     /** Make the current player to call Cactus. */
     def callCactus(): Unit = lastRound = true
