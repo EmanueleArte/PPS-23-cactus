@@ -1,11 +1,12 @@
 package model.logic
 
-import model.bot.Bots.BotParamsType
+import model.bot.Bots.{BotParamsType, CactusBot}
+import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.PokerCard
 import model.deck.Decks.{Deck, PokerDeck}
 import model.game.CactusGame
 import model.game.Scores.toMap
-import model.logic.Logics.{CactusLogic, GameLogic, Players}
+import model.logic.Logics.{CactusLogic, GameLogic}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
@@ -17,6 +18,10 @@ class CactusLogicTest extends AnyFlatSpec:
 
   /** Custom implementation of the CactusGame to make tests with an unshuffled deck. */
   class TestCactusLogic(nPlayers: Int) extends CactusLogic(Left(nPlayers): Either[Int, BotParamsType]) with GameLogic:
+    override lazy val game: CactusGame = new CactusGame():
+      override val deck: Deck[PokerCard] = PokerDeck()
+
+  class TestCactusLogicBots(botParamsType: BotParamsType) extends CactusLogic(Right(botParamsType): Either[Int, BotParamsType]) with GameLogic:
     override lazy val game: CactusGame = new CactusGame():
       override val deck: Deck[PokerCard] = PokerDeck()
 
@@ -78,7 +83,6 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = TestCactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Discard)
     logic.discard(1)
-    println(logic.game.discardPile)
     for _ <- 1 to 3 do logic.nextPlayer
     logic.discardWithMalus(2)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber - 1)
@@ -106,4 +110,38 @@ class CactusLogicTest extends AnyFlatSpec:
       logic.callCactus()
       logic.nextPlayer
       logic.currentPhase_=(CactusTurnPhase.Draw)
+    for (_, score) <- toMap(logic.calculateScore) do score should be > 0
+
+  "A bot" should "discard a card in non-classic way if the head of the pile has the same value" in:
+    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
+    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
+    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
+    val logic = TestCactusLogicBots((drawings, discardings, memories))
+    logic.players.foreach {
+      case bot: CactusBot =>
+        (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
+      case _ =>
+    }
+    logic.draw(true)
+    logic.discard(0)
+    logic.continue()
+    logic.continue()
+    logic.continue()
+    logic.players(3).cards.size should be (logic.game.initialPlayerCardsNumber - 1)
+
+  "A game consisting on basic moves" should "be played with bots" in:
+    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
+    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
+    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
+    val logic = TestCactusLogicBots((drawings, discardings, memories))
+    while !logic.isGameOver do
+      logic.currentPlayer match
+        case bot: CactusBot =>
+          logic.continue()
+        case _ =>
+          logic.draw(true)
+          logic.discard(0)
+          logic.continue()
+          logic.callCactus()
+          logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
