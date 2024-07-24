@@ -1,11 +1,12 @@
 package model.logic
 
-import model.bot.Bots.BotParamsType
+import model.bot.Bots.{BotParamsType, CactusBot}
 import model.card.Cards.PokerCard
-import model.deck.Drawable
 import model.game.{CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
+
+import scala.annotation.tailrec
 
 /** Logic of a game. */
 object Logics:
@@ -49,7 +50,7 @@ object Logics:
      */
     def nextPlayer: Player = playerIterator.next()
 
-    /** Continue to the next step. */
+    /** Continue to the next step performing all necessary actions. */
     def continue(): Unit
 
     /**
@@ -108,8 +109,19 @@ object Logics:
     private var lastRound: Boolean = false
     _currentPhase = CactusTurnPhase.Draw
 
-    override def continue(): Unit =
-      val move = 1
+    override def continue(): Unit = currentPhase match
+      case CactusTurnPhase.DiscardEquals =>
+        currentPhase_=(CactusTurnPhase.CallCactus)
+      case CactusTurnPhase.CallCactus =>
+        if isBot(currentPlayer) then botTurn()
+        currentPhase_=(BaseTurnPhase.End)
+      case BaseTurnPhase.End =>
+        currentPhase_=(CactusTurnPhase.DiscardEquals)
+        iterateBots(botDiscardWithMalus)
+        nextPlayer
+        currentPhase_=(CactusTurnPhase.Draw)
+        if isBot(currentPlayer) then botTurn()
+      case _ =>
 
     override def isGameOver: Boolean = if lastRound then
       turnsRemaining -= 1
@@ -128,7 +140,7 @@ object Logics:
         if fromDeck then currentPlayer.draw(game.deck)
         else currentPlayer.draw(game.discardPile)
         currentPhase_=(CactusTurnPhase.Discard)
-      case _ => ()
+      case _ =>
 
     /**
      * Make the current player to discard a card.
@@ -139,7 +151,7 @@ object Logics:
       case CactusTurnPhase.Discard =>
         game.discardPile = game.discardPile.put(currentPlayer.discard(cardIndex))
         currentPhase_=(CactusTurnPhase.DiscardEquals)
-      case _ => ()
+      case _ =>
 
     /**
      * Make the current player to discard a card but with a malus if the card does not match the discard criteria.
@@ -157,11 +169,52 @@ object Logics:
             currentPhase_=(CactusTurnPhase.Discard)
             discard(cardIndex)
           case _ => currentPlayer.draw(game.deck)
-        currentPhase_=(BaseTurnPhase.End)
-      case _ => ()
+      case _ =>
 
     /** Make the current player to call Cactus. */
-    def callCactus(): Unit = lastRound = true
+    def callCactus(): Unit = currentPhase match
+      case CactusTurnPhase.CallCactus =>
+        lastRound = true
+        currentPhase_=(BaseTurnPhase.End)
+
+    @tailrec
+    private def botTurn(): Unit = currentPlayer match
+      case bot: CactusBot =>
+        currentPhase match
+          case CactusTurnPhase.Draw =>
+            draw(bot.chooseDraw(game.discardPile))
+            botTurn()
+          case CactusTurnPhase.Discard =>
+            discard(bot.chooseDiscard())
+            botTurn()
+          case CactusTurnPhase.DiscardEquals => botDiscardWithMalus(bot)
+          case CactusTurnPhase.CallCactus =>
+            if bot.callCactus() then callCactus()
+            else
+              currentPhase_=(BaseTurnPhase.End)
+              continue()
+          case _ => continue()
+      case _ =>
+
+    private def iterateBots(f: CactusBot => Unit): Unit =
+      (1 to players.length).foreach(_ =>
+        currentPlayer match
+          case bot: CactusBot => f(bot)
+          case _              =>
+        nextPlayer
+      )
+
+    private def isBot(player: Player): Boolean = player match
+      case _: CactusBot => true
+      case _            => false
+
+    @tailrec
+    private def botDiscardWithMalus(bot: CactusBot): Unit =
+      bot.chooseDiscardWithMalus(game.discardPile) match
+        case Some(i) =>
+          discardWithMalus(i)
+          botDiscardWithMalus(bot)
+        case _ =>
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:
