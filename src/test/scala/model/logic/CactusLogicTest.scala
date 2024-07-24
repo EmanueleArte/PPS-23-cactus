@@ -129,6 +129,29 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.continue()
     logic.players(3).cards.size should be (logic.game.initialPlayerCardsNumber - 1)
 
+  it should "call cactus if it has a good hand" in:
+    val maxPlayersNumber = 6
+    val drawings: Seq[DrawMethods] = Seq.fill(maxPlayersNumber - 1)(DrawMethods.Deck)
+    val discardings: Seq[DiscardMethods] = Seq.fill(maxPlayersNumber - 1)(DiscardMethods.Random)
+    val memories: Seq[Memory] = Seq.fill(maxPlayersNumber - 1)(Memory.Optimal)
+    val logic = TestCactusLogicBots((drawings, discardings, memories))
+    logic.players.foreach {
+      case bot: CactusBot =>
+        (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
+      case _ =>
+    }
+    while !logic.isGameOver do
+      logic.currentPlayer match
+        case bot: CactusBot =>
+          logic.continue()
+        case _ =>
+          logic.draw(true)
+          logic.discard(0)
+          logic.continue()
+          logic.continue()
+          logic.continue()
+    logic.isGameOver should be (true)
+
   "A game consisting on basic moves" should "be played with bots" in:
     val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
