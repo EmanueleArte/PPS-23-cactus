@@ -1,4 +1,4 @@
-package view
+package view.module.cactus
 
 import control.module.cactus.CactusControllerModule.CactusController
 import control.module.cactus.CactusControllerModule
@@ -12,9 +12,14 @@ import scalafx.scene.layout.{BorderPane, HBox, Pane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
-import view.AppPane.{asidePaneColor, asidePaneHeight, asidePaneWidth, mainPaneColor, mainPaneHeight, mainPaneWidth}
-import view.ModelPhases.{Discard, Draw}
+import view.module.cactus.ModelPhases.{Discard, Draw}
 import view.ViewDSL.{at, bold, colored, containing, covered, doing, long, reacting, saying, showing, tall, tallAtMost, telling, whenHovered, withoutVBar, wrapped, Button as ButtonElement, Card as CardElement, Text as TextElement}
+import view.ViewPosition
+import view.module.cactus.Buttons.*
+import view.module.cactus.CardsPane.*
+import view.module.cactus.PlayersPane.*
+import view.module.cactus.AppPane.*
+import view.module.cactus.Text.*
 
 import scala.language.postfixOps
 
@@ -140,7 +145,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         right = cardsNumberText
 
     private val cardsContainer: ScrollPane = new ScrollPane()
-      .at((leftPosition, topPosition + PlayersPane.normalFontSize * 2))
+      .at((leftPosition, topPosition + normalFontSize * 2))
       .long((CardsPane.paneWidth + CardsPane.margin) * PlayersPane.maxCardsPerLine)
       .tallAtMost(CardsPane.paneHeight * PlayersPane.maxCardsLines)
       .colored(Color.Transparent)

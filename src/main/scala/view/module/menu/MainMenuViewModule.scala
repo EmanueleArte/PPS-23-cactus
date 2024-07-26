@@ -3,8 +3,8 @@ package view.module.menu
 import control.module.menu.MainMenuControllerModule
 import scalafx.application.Platform
 import scalafx.scene.Scene
-import view.AppPane.{windowHeight, windowWidth}
-import view.{AppPane, ScalaFXStageManager}
+import view.module.cactus.AppPane.{windowHeight, windowWidth}
+import view.ScalaFXStageManager
 import view.module.ViewModule
 
 /** Represents the view module for the menu. */

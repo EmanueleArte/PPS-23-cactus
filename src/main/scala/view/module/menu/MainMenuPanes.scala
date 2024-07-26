@@ -10,8 +10,8 @@ import scalafx.collections.ObservableBuffer
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.{Button, ComboBox, Label, Spinner}
 import scalafx.scene.layout.{HBox, Pane, StackPane, VBox}
-import view.{AppPane, ViewPosition}
-import view.ScalaFXPane
+import view.module.cactus.{AppPane, ScalaFXPane}
+import view.ViewPosition
 import view.Utils.value
 
 import scala.util.Random

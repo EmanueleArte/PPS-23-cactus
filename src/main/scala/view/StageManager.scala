@@ -4,6 +4,7 @@ import scalafx.application.{JFXApp3, Platform}
 import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.stage.Stage
+import view.module.cactus.AppPane
 
 /** Represents the manager of the stages of the gui. */
 trait StageManager:

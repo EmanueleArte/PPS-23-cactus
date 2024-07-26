@@ -1,9 +1,9 @@
-package view
+package view.module.cactus
 
 import scalafx.geometry.Rectangle2D
 import scalafx.scene.paint.Color
 import scalafx.stage.Screen
-import view.Utils.toRgbString
+import view.module.cactus.Text.normalFontSize
 
 /** Contains the basic parameters for the application's panes. */
 object AppPane:
@@ -11,167 +11,168 @@ object AppPane:
 
   /**
    * Width of the application's window.
-   * @return width of the application's window.
    */
-  def windowWidth: Int = primaryScreenBounds.width.toInt
+  val windowWidth: Int = primaryScreenBounds.width.toInt
 
   /**
    * Height of the application's window.
-   * @return height of the application's window.
    */
-  def windowHeight: Int = primaryScreenBounds.height.toInt
-  
-  def panesRatio: Double = 0.8
+  val windowHeight: Int = primaryScreenBounds.height.toInt
+
+  /**
+   * Ratio of the main pane to the window.
+   * 
+   * @example if `panesRatio` is set to 0.6 it means that the main pane is 60% of the window, while the aside pane is 40%.
+   */
+  val mainPaneRatio: Double = 0.8
 
   /**
    * Width of the main pane.
-   * @return width of the main pane.
    */
-  def mainPaneWidth: Int = (windowWidth * panesRatio).toInt
+  val mainPaneWidth: Int = (windowWidth * mainPaneRatio).toInt
 
   /**
    * Height of the main pane.
-   * @return height of the main pane.
    */
-  def mainPaneHeight: Int = windowHeight
+  val mainPaneHeight: Int = windowHeight
 
   /**
-   * Background color of the main pane, expressed in rgb foramt.
-   * @return background rgb color.
+   * Background color of the main pane, expressed in rgb format.
    */
-  def mainPaneColor: Color = Color.DarkGreen
+  val mainPaneColor: Color = Color.DarkGreen
 
   /**
    * Width of the side pane.
-   * @return width of the side pane.
    */
-  def asidePaneWidth: Int = windowWidth - mainPaneWidth
+  val asidePaneWidth: Int = windowWidth - mainPaneWidth
 
   /**
    * Height of the side pane.
-   * @return height of the side pane.
    */
-  def asidePaneHeight: Int = windowHeight
+  val asidePaneHeight: Int = windowHeight
 
   /**
    * Background color of the side pane.
-   * @return background color.
    */
-  def asidePaneColor: Color = mainPaneColor
+  val asidePaneColor: Color = mainPaneColor
+
+/** Contains the basic parameters for the texts. */
+object Text:
+  /**
+   * Font size for small texts.
+   */
+  val smallFontSize: Int = 14
+
+  /**
+   * Font size of the texts in the pane.
+   */
+  val normalFontSize: Int = 18
+
+  /**
+   * Font size for big texts.
+   */
+  val bigFontSize: Int = 22
+
+  /**
+   * Color of the texts.
+   */
+  val textColor: Color = Color.GhostWhite
 
 /** Contains the basic parameters for the player's panes. */
 object PlayersPane:
   /**
-   * Width of the player's pane.
-   * @return width of the player's pane.
-   */
-  def paneWidth: Int = CardsPane.paneWidth * maxCardsPerLine
-
-  /**
-   * Height of the player's pane.
-   * @return height of the player's pane.
-   */
-  def paneHeight: Int = (CardsPane.paneHeight * maxCardsLines).toInt + normalFontSize
-
-  /**
-   * Font size for small texts.
-   * @return font size.
-   */
-  def smallFontSize: Int = 14
-
-  /**
-   * Font size of the texts in the pane.
-   * @return font size.
-   */
-  def normalFontSize: Int = 18
-
-  /**
-   * Font size for big texts.
-   * @return font size.
-   */
-  def bigFontSize: Int = 22
-
-  /**
-   * Color of the texts.
-   * @return text color.
-   */
-  def textColor: Color = Color.GhostWhite
-
-  /**
-   * Radius of the circle representing the turn indicator.
-   * @return radius of turn indicator.
-   */
-  def turnIndicatorRadius: Int = 5
-
-  /**
-   * Color of the turn indicator.
-   * @return color of the turn indicator.
-   */
-  def turnIndicatorColor: Color = Color.Red
-
-  /**
    * Maximum number of cards disposable on a line.
-   * @return number of cards per line.
    */
-  def maxCardsPerLine: Int = 4
+  val maxCardsPerLine: Int = 4
 
   /**
    * Maximum number of lines.
-   * @return number of lines.
    */
-  def maxCardsLines: Double = 2.3
+  val maxCardsLines: Double = 2.3
+  
+  /**
+   * Width of the player's pane.
+   */
+  val paneWidth: Int = CardsPane.paneWidth * maxCardsPerLine
+
+  /**
+   * Height of the player's pane.
+   */
+  val paneHeight: Int = (CardsPane.paneHeight * maxCardsLines).toInt + normalFontSize
+
+  /**
+   * Radius of the circle representing the turn indicator.
+   */
+  val turnIndicatorRadius: Int = 5
+
+  /**
+   * Color of the turn indicator.
+   */
+  val turnIndicatorColor: Color = Color.Red
 
 /** Contains the basic parameters for the card's panes. */
 object CardsPane:
-  private def aspectRatio: Double = 3.0 / 2.0
-
-  /**
-   * Width of the card's pane.
-   * @return width of the card's pane.
-   */
-  def paneWidth: Int = 50 + margin
-
-  /**
-   * Height of the card's pane.
-   * @return height of the card's pane.
-   */
-  def paneHeight: Int = (paneWidth.toDouble * aspectRatio).toInt + margin
+  private val aspectRatio: Double = 3.0 / 2.0
+  private val cardsFolderPath: String = "/cards"
 
   /**
    * Space between each card, both horizontal and vertical.
-   * @return margin between the cards.
    */
-  def margin: Int = 5
+  val margin: Int = 5
 
-  private def cardsFolderPath: String = "/cards"
+  /**
+   * Width of the card's pane.
+   */
+  val paneWidth: Int = 50 + margin
+
+  /**
+   * Height of the card's pane.
+   */
+  val paneHeight: Int = (paneWidth.toDouble * aspectRatio).toInt + margin
 
   /**
    * Path for the folder of card's backs.
-   * @return path for card's backs folder.
    */
-  def backsFolderPath: String = cardsFolderPath + "/backs"
+  val backsFolderPath: String = cardsFolderPath + "/backs"
 
   /**
    * Path for the folder of card's fronts.
-   * @return path for card's fronts folder.
    */
-  def frontsFolderPath: String = cardsFolderPath + "/fronts"
+  val frontsFolderPath: String = cardsFolderPath + "/fronts"
 
   /**
-   * Default back for the cards.
-   * @return filename of the default back.
+   * valault back for the cards.
    */
-  def defaultBack: String = "/red.png"
+  val defaultBack: String = "/red.png"
 
   /**
    * Placeholder color to put when a card is not present.
-   * @return placeholder color.
    */
-  def placeholderColor: Color = Color.Transparent
+  val placeholderColor: Color = Color.Transparent
 
+/** Contains the basic parameters for the buttons. */
 object Buttons:
-  def margin: Int = 20
-  def buttonWidth: Int     = AppPane.asidePaneWidth - margin * 2
-  def buttonHeight: Int    = 50
-  def buttonBgColor: Color = Color.FloralWhite
-  def buttonColor: Color   = Color.DarkSlateGray
+  /**
+   * Margins around a button.
+   */
+  val margin: Int = 20
+
+  /**
+   * Width of a button in the game screen.
+   */
+  val buttonWidth: Int     = AppPane.asidePaneWidth - margin * 2
+
+  /**
+   * Height of a button in the game screen.
+   */
+  val buttonHeight: Int    = 50
+
+  /**
+   * Background color of a button in the game screen.
+   */
+  val buttonBgColor: Color = Color.FloralWhite
+
+  /**
+   * Foreground color of a button in the game screen.
+   */
+  val buttonColor: Color   = Color.DarkSlateGray

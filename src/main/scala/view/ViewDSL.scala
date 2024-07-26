@@ -14,6 +14,8 @@ import scalafx.scene.layout.{Pane, Region}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.{Font, FontWeight, Text}
+import view.module.cactus.{AppPane, Buttons, CardsPane, PlayersPane}
+import view.module.cactus.Text.*
 
 /**
  * DSL for creating view elements in a more agile way.
@@ -43,8 +45,8 @@ object ViewDSL:
   def Card: Pane = new Pane().long(CardsPane.paneWidth).tall(CardsPane.paneHeight)
 
   def Text: Text = new Text():
-    font = Font.font(PlayersPane.normalFontSize)
-    fill = PlayersPane.textColor
+    font = Font.font(normalFontSize)
+    fill = textColor
 
   extension [T <: Region](node: T)
     
@@ -277,7 +279,7 @@ object ViewDSL:
      * @return [[Text]] with the font size updated.
      */
     def small: T =
-      text.setFont(Font.font(PlayersPane.smallFontSize))
+      text.setFont(Font.font(smallFontSize))
       text
 
     /**
@@ -285,7 +287,7 @@ object ViewDSL:
      * @return [[Text]] with the font size updated.
      */
     def normal: T =
-      text.setFont(Font.font(PlayersPane.normalFontSize))
+      text.setFont(Font.font(normalFontSize))
       text
 
     /**
@@ -293,7 +295,7 @@ object ViewDSL:
      * @return [[Text]] with the font size updated.
      */
     def big: T =
-      text.setFont(Font.font(PlayersPane.bigFontSize))
+      text.setFont(Font.font(bigFontSize))
       text
 
     /**

@@ -2,8 +2,8 @@ package view.module.cactus
 
 import control.module.cactus.CactusControllerModule
 import scalafx.scene.Scene
-import view.AppPane.{windowHeight, windowWidth}
-import view.{AppPane, AsidePane, MainPane, ScalaFXStageManager}
+import view.module.cactus.AppPane._
+import view.ScalaFXStageManager
 import view.module.ViewModule
 
 /** Represents the view component. */
