@@ -20,12 +20,14 @@ object AppPane:
    * @return height of the application's window.
    */
   def windowHeight: Int = primaryScreenBounds.height.toInt
+  
+  def panesRatio: Double = 0.8
 
   /**
    * Width of the main pane.
    * @return width of the main pane.
    */
-  def mainPaneWidth: Int = 1000
+  def mainPaneWidth: Int = (windowWidth * panesRatio).toInt
 
   /**
    * Height of the main pane.
@@ -169,7 +171,7 @@ object CardsPane:
 
 object Buttons:
   def margin: Int = 20
-  def buttonWidth: Int     = Panes.asidePaneWidth - margin * 2
+  def buttonWidth: Int     = AppPane.asidePaneWidth - margin * 2
   def buttonHeight: Int    = 50
   def buttonBgColor: Color = Color.FloralWhite
   def buttonColor: Color   = Color.DarkSlateGray

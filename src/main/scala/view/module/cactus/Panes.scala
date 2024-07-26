@@ -1,26 +1,20 @@
 package view
 
-import scalafx.scene.layout.Pane
-import control.module.cactus.CactusControllerModule
 import control.module.cactus.CactusControllerModule.CactusController
-import model.card.CardBuilder.PokerDSL
-import view.Utils.toRgbString
-import control.module.CactusControllerModule
-import control.module.CactusControllerModule.CactusController
+import control.module.cactus.CactusControllerModule
 import model.card.Cards.{Card, PokerCard}
 import model.player.Players.Player
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.Pos
-import scalafx.scene.control.ScrollPane.ScrollBarPolicy
-import scalafx.scene.control.{Button, ScrollPane, TextArea, TitledPane, Tooltip}
+import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, HBox, Pane, Region, VBox}
+import scalafx.scene.layout.{BorderPane, HBox, Pane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
-import scalafx.scene.text.{Font, Text}
+import scalafx.scene.text.Text
 import view.AppPane.{asidePaneColor, asidePaneHeight, asidePaneWidth, mainPaneColor, mainPaneHeight, mainPaneWidth}
 import view.ModelPhases.{Discard, Draw}
-import view.ViewDSL.{bold, wrapped, at, colored, containing, covered, doing, long, reacting, saying, showing, small, tall, tallAtMost, telling, whenHovered, withoutVBar, Button as ButtonElement, Card as CardElement, Text as TextElement}
+import view.ViewDSL.{at, bold, colored, containing, covered, doing, long, reacting, saying, showing, tall, tallAtMost, telling, whenHovered, withoutVBar, wrapped, Button as ButtonElement, Card as CardElement, Text as TextElement}
 
 import scala.language.postfixOps
 
@@ -67,7 +61,7 @@ trait CardPane:
 
 /**
  * Representation of the main portion of the view of the application.
- * Contains the representation of the table game, with the panes for the players, the deck and the discard pile.
+ * Contains the representation of the table game, with the AppPane for the players, the deck and the discard pile.
  * @param controller of the application.
  */
 class MainPane(controller: CactusController) extends ScalaFXPane:
@@ -92,7 +86,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     .at(position)
     .tall(paneHeight)
     .long(paneWidth)
-    .colored(Panes.mainPaneColor)
+    .colored(AppPane.mainPaneColor)
     .containing(
       controller.players.zipWithIndex
         .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)).pane)
@@ -154,7 +148,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .withoutVBar
 
     private def playerHand: VBox = new VBox()
-      .colored(Panes.mainPaneColor)
+      .colored(AppPane.mainPaneColor)
       .long((CardsPane.paneWidth + CardsPane.margin) * PlayersPane.maxCardsPerLine)
       .containing(player.cards
             .map(card => CardElement showing card reacting (_ => cardClickHandler(card)))
@@ -173,10 +167,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private def cardPosition(i: Int): ViewPosition = ViewPosition(
       (i % PlayersPane.maxCardsPerLine) * CardsPane.paneWidth + CardsPane.margin,
       (i / PlayersPane.maxCardsPerLine) * CardsPane.paneHeight
-    )
-
-    private def image: Image = new Image(
-      getClass.getResourceAsStream(CardsPane.frontsFolderPath + s"/$filename.png")
     )
 
     private def updatePlayerCards(): Unit =
@@ -231,7 +221,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
  */
 class AsidePane(controller: CactusController) extends ScalaFXPane:
   private val currentPhase: Phases = phaseBuilder(controllerPhase)
-  override def paneWidth: Int = Panes.asidePaneWidth
+  override def paneWidth: Int = AppPane.asidePaneWidth
 
   override def paneHeight: Int = asidePaneHeight
 
@@ -256,7 +246,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     .at(position)
     .long(paneWidth)
     .tall(paneHeight)
-    .colored(Panes.asidePaneColor)
+    .colored(AppPane.asidePaneColor)
     .containing(phaseText)
     .containing(phaseDescription)
     .containing(nextButton)
