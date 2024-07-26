@@ -6,14 +6,16 @@ import control.module.CactusControllerModule.CactusController
 import model.card.Cards.{Card, PokerCard}
 import model.player.Players.Player
 import scalafx.beans.property.ObjectProperty
+import scalafx.geometry.Pos
 import scalafx.scene.control.ScrollPane.ScrollBarPolicy
-import scalafx.scene.control.{Button, ScrollPane, Tooltip}
+import scalafx.scene.control.{Button, ScrollPane, TextArea, TitledPane, Tooltip}
 import scalafx.scene.image.ImageView
 import scalafx.scene.layout.{BorderPane, HBox, Pane, Region, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.{Font, Text}
-import view.ViewDSL.{at, colored, containing, covered, doing, long, reacting, saying, showing, tall, telling, whenHovered, tallAtMost, withoutVBar, Button as ButtonElement, Card as CardElement, Text as TextElement}
+import view.ModelPhases.{Discard, Draw}
+import view.ViewDSL.{bold, wrapped, at, colored, containing, covered, doing, long, reacting, saying, showing, small, tall, tallAtMost, telling, whenHovered, withoutVBar, Button as ButtonElement, Card as CardElement, Text as TextElement}
 
 import scala.language.postfixOps
 
@@ -116,7 +118,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     override def pane: Pane = new Pane()
       .at(position)
       .containing(header)
-      .containing(cardsContainer)
+      .containing(cardsContainer)(player.cards.nonEmpty)
 
     private def cardsNumberText: Text = TextElement
       .telling(player.cards.size.toString)
@@ -139,7 +141,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         right = cardsNumberText
 
     private val cardsContainer: ScrollPane = new ScrollPane()
-      .at((leftPosition, topPosition + PlayersPane.fontSize * 2))
+      .at((leftPosition, topPosition + PlayersPane.normalFontSize * 2))
       .long((CardsPane.paneWidth + CardsPane.margin) * PlayersPane.maxCardsPerLine)
       .tallAtMost(CardsPane.paneHeight * PlayersPane.maxCardsLines)
       .colored(Color.Transparent)
@@ -153,7 +155,8 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
             .map(card => CardElement showing card reacting (_ => cardClickHandler(card)))
             .grouped(PlayersPane.maxCardsPerLine)
             .toList
-            .map(pack => new HBox() containing pack))
+            .map(pack => new HBox() containing pack)
+      )
 
     private def cardClickHandler(card: Card): Unit =
       if player.isEqualsTo(currentPlayer) then
@@ -218,22 +221,50 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
  * @param controller of the application.
  */
 class AsidePane(controller: CactusController) extends ScalaFXPane:
+  private val currentPhase: Phases = phaseBuilder(controllerPhase)
   override def paneWidth: Int = Panes.asidePaneWidth
 
   override def paneHeight: Int = Panes.asidePaneHeight
 
   override def position: ViewPosition = ViewPosition(Panes.mainPaneWidth, 0)
 
-  private val nextButton: Button = ButtonElement at (0, 0) saying "Continue" doing (_ =>
+  private val nextButton: Button = ButtonElement saying "Continue" doing (_ =>
     println("Continue")
     controller.continue()
   )
-  private val cactusButton: Button = ButtonElement at (0, 100) saying "Cactus" doing (_ => println("Cactus!"))
+  private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => println("Cactus!"))
+  private val phaseText: HBox = new HBox()
+    .containing(TextElement telling "Current phase: " bold)
+    .containing(TextElement telling currentPhase.name)
+  phaseText.setAlignment(Pos.BaselineLeft)
 
-  override def pane: Pane = new Pane()
+  private val phaseDescription: VBox = new VBox()
+    .containing(TextElement telling "Phase description" bold)
+    .containing(TextElement telling currentPhase.description wrapped)
+
+
+  override def pane: Pane = new VBox()
     .at(position)
     .long(paneWidth)
     .tall(paneHeight)
     .colored(Panes.asidePaneColor)
+    .containing(phaseText)
+    .containing(phaseDescription)
     .containing(nextButton)
     .containing(cactusButton)
+
+enum ModelPhases:
+  case Draw, Discard, SpecialEffects
+
+def controllerPhase: ModelPhases = Discard
+
+def phaseBuilder(phase: ModelPhases): Phases = phase match
+  case ModelPhases.Draw => Phases.Draw
+  case ModelPhases.Discard => Phases.Discard
+
+enum Phases(phase: ModelPhases, _name: String, _description: String):
+  case Draw extends Phases(ModelPhases.Draw, "draw", "Click on the deck or on the discard pile to draw a card.")
+  case Discard extends Phases(ModelPhases.Discard, "discard", "Choose a card to put on the discard pile.")
+
+  def name: String = _name
+  def description: String = _description

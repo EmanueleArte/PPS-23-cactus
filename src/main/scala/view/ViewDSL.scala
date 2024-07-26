@@ -7,12 +7,13 @@ import javafx.event.EventHandler
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.MouseEvent
 import model.card.Cards.Card
+import scalafx.geometry.Insets
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{Pane, Region}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
-import scalafx.scene.text.{Font, Text}
+import scalafx.scene.text.{Font, FontWeight, Text}
 
 /**
  * DSL for creating view elements in a more agile way.
@@ -33,6 +34,7 @@ object ViewDSL:
     style = s"-fx-background-color: ${Buttons.buttonBgColor.toRgbString};" +
       s"-fx-text-color: ${Buttons.buttonColor.toRgbString};" +
       s"-fx-border-radius: 3px"
+    margin = Insets(10)
 
   /**
    * Creates a new card's pane with the dimension already set.
@@ -41,10 +43,11 @@ object ViewDSL:
   def Card: Pane = new Pane().long(CardsPane.paneWidth).tall(CardsPane.paneHeight)
 
   def Text: Text = new Text():
-    font = Font.font(PlayersPane.fontSize)
+    font = Font.font(PlayersPane.normalFontSize)
+    fill = PlayersPane.textColor
 
   extension [T <: Region](node: T)
-
+    
     /**
      * Sets the position of a [[Node]], using a couple of [[Int]].
      * @param position to place the node.
@@ -106,7 +109,7 @@ object ViewDSL:
     def longAtLeast(width: Double): T =
       node.setMinWidth(width)
       node
-    
+
     /**
      * Sets the preferred height of a [[Pane]].
      * @param height to set for the node.
@@ -161,6 +164,16 @@ object ViewDSL:
       pane
 
     /**
+     * Sets a child for a [[Pane]].
+     * @param element to set as a child.
+     * @param condition to be passed in order to add the element.
+     * @return pane with the element set as a child.
+     */
+    def containing(element: Node)(condition: Boolean): T =
+      if condition then pane.children.add(element)
+      pane
+
+    /**
      * Sets as child the image of a covered card.
      * @return pane with covered card image set as child.
      */
@@ -200,13 +213,24 @@ object ViewDSL:
       pane
 
     /**
+     * Adds the content for a [[ScrollPane]].
+     *
+     * @param element to add to the pane.
+     * @param condition to be passed in order to add the element.
+     * @return pane with the element as content.
+     */
+    def containing(element: Node)(condition: Boolean): T =
+      if condition then pane.setContent(element)
+      pane
+
+    /**
      * Hides the vertical scrollbar.
      * @return pane with the vertical scrllbar hidden.
      */
     def withoutVBar: T =
       pane.setHbarPolicy(ScrollBarPolicy.NEVER)
       pane
-  
+
   extension [T <: Button] (button: T)
 
     /**
@@ -246,6 +270,46 @@ object ViewDSL:
       val tooltip: Tooltip = new Tooltip(message)
       text.setOnMouseMoved(e => if !tooltip.isShowing then tooltip.show(text, e.getScreenX + 10, e.getScreenY + 10))
       text.onMouseExited = _ => if tooltip.isShowing then tooltip.hide()
+      text
+
+    /**
+     * Sets the font size at small size.
+     * @return [[Text]] with the font size updated.
+     */
+    def small: T =
+      text.setFont(Font.font(PlayersPane.smallFontSize))
+      text
+
+    /**
+     * Sets the font size at default size.
+     * @return [[Text]] with the font size updated.
+     */
+    def normal: T =
+      text.setFont(Font.font(PlayersPane.normalFontSize))
+      text
+
+    /**
+     * Sets the font size at big size.
+     * @return [[Text]] with the font size updated.
+     */
+    def big: T =
+      text.setFont(Font.font(PlayersPane.bigFontSize))
+      text
+
+    /**
+     * Makes the text wrappable.
+     * @return [[Text]] wrappable.
+     */
+    def wrapped: T =
+      text.wrappingWidth = Panes.asidePaneWidth
+      text
+
+    /**
+     * Sets text weight to bold.
+     * @return [[Text]] in bold.
+     */
+    def bold: T =
+      text.font = Font.font(text.font.value.getFamily, FontWeight.Bold, text.font.value.getSize)
       text
 
   private def imageView(filepath: String): ImageView = new ImageView(

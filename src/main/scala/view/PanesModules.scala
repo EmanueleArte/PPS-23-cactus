@@ -65,13 +65,31 @@ object PlayersPane:
    * Height of the player's pane.
    * @return height of the player's pane.
    */
-  def paneHeight: Int = (CardsPane.paneHeight * maxCardsLines).toInt + fontSize
+  def paneHeight: Int = (CardsPane.paneHeight * maxCardsLines).toInt + normalFontSize
 
+  /**
+   * Font size for small texts.
+   * @return font size.
+   */
+  def smallFontSize: Int = 14
+  
   /**
    * Font size of the texts in the pane.
    * @return font size.
    */
-  def fontSize: Int = 18
+  def normalFontSize: Int = 18
+
+  /**
+   * Font size for big texts.
+   * @return font size.
+   */
+  def bigFontSize: Int = 22
+
+  /**
+   * Color of the texts.
+   * @return text color.
+   */
+  def textColor: Color = Color.GhostWhite
 
   /**
    * Radius of the circle representing the turn indicator.
