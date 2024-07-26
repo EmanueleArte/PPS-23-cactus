@@ -1,6 +1,7 @@
 package model.game
 
-import model.bot.Bots.CactusBotImpl
+import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
+import model.bot.Bots.{BotParamsType, CactusBotImpl}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.{Card, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
@@ -75,6 +76,13 @@ trait Game:
   def setupGame(playersNumber: Int): List[Player]
 
   /**
+   * Setups method to call before start the game with bots.
+   * @param botsParams parameters to setup the bots.
+   * @return a list with the initialized players.
+   */
+  def setupGameWithBots(botsParams: BotParamsType): List[Player]
+
+  /**
    * Calculate the scores for each player.
    * @param players list of players to which calculate the scores.
    * @return a [[Scores]] with the scores for each player.
@@ -94,14 +102,33 @@ class CactusGame() extends Game:
 
   override def setupGame(playersNumber: Int): List[Player] =
     CactusPlayer("Player", (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get)) +:
-    (1 until playersNumber).toList
-      .map(index => CactusBotImpl(
-        s"Bot-$index",
-        (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get),
-        DrawMethods.Deck,
-        DiscardMethods.Random,
-        Memory.Normal
-      ))
+      (1 until playersNumber).toList
+        .map(index =>
+          CactusBotImpl(
+            s"Bot-$index",
+            (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get),
+            DrawMethods.Deck,
+            DiscardMethods.Random,
+            Memory.Normal
+          )
+        )
+
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
+  override def setupGameWithBots(botsParams: BotParamsType): List[Player] =
+    val (drawings, discardings, memories) =
+      botsParams.asInstanceOf[(Seq[DrawMethods], Seq[DiscardMethods], Seq[Memory])]
+    (CactusPlayer("Player", List.empty) :: drawings
+      .lazyZip(discardings)
+      .lazyZip(memories)
+      .zipWithIndex
+      .map { case ((drawMethod, discardMethod, memory), i) =>
+        s"Bot ${i + 1}" drawing drawMethod discarding discardMethod withMemory memory
+      }
+      .toList)
+      .map(p =>
+        (1 to initialPlayerCardsNumber).foreach(_ => p.draw(deck))
+        p
+      )
 
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex

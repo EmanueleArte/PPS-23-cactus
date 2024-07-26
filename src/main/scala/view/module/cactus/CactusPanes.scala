@@ -1,13 +1,9 @@
-package view
+package view.module.cactus
 
-import scalafx.scene.layout.Pane
 import control.module.cactus.CactusControllerModule
 import control.module.cactus.CactusControllerModule.CactusController
-import model.card.CardBuilder.PokerDSL
 import model.card.Cards.{Card, PokerCard}
-import model.deck.Drawable
-import model.player.Players.{CactusPlayer, Player}
-import org.scalactic.TypeCheckedTripleEquals.convertToCheckingEqualizer
+import model.player.Players.Player
 import scalafx.beans.property.ObjectProperty
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
@@ -15,34 +11,9 @@ import scalafx.scene.layout.{HBox, Pane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Circle, Rectangle}
 import scalafx.scene.text.{Font, Text}
-import view.AppPane.{asidePaneColor, asidePaneHeight, asidePaneWidth, mainPaneColor, mainPaneHeight, mainPaneWidth}
-
-/** Basic interface for a pane used in a ScalaFX application. */
-trait ScalaFXPane:
-  /**
-   * Width of the [[Pane]].
-   * @return width of the pane.
-   */
-  def paneWidth: Int
-
-  /**
-   * Height of the [[Pane]].
-   * @return height of the pane.
-   */
-  def paneHeight: Int
-
-  /**
-   * Position of the [[Pane]] in the container. The position refers to the top-left corner of the pane.
-   * If the pane is contained in an element, the position is relative to that element.
-   * @return position of the pane in the container.
-   */
-  def position: ViewPosition
-
-  /**
-   * Returns the [[Pane]] represented by the implementation.
-   * @return the [[Pane]] object.
-   */
-  def pane: Pane
+import view.ScalaFXPane
+import view.Utils.{leftPosition, topLeftCorner, topPosition}
+import view.{AppPane, CardsPane, PlayersPane, ViewPosition}
 
 /** Basic structure of a card's pane. */
 trait CardPane:
@@ -60,21 +31,17 @@ trait CardPane:
 
 /**
  * Representation of the main portion of the view of the application.
- * Contains the representation of the table game, with the panes for the players, the deck and the discard pile.
- * @param controller the controller of the application.
+ * Contains the representation of the table game, with the AppPane for the players, the deck and the discard pile.
+ * @param controller controller of the application.
  */
 class MainPane(controller: CactusController) extends ScalaFXPane:
-  override def paneWidth: Int         = mainPaneWidth
-  override def paneHeight: Int        = mainPaneHeight
+  override def paneWidth: Int         = AppPane.mainPaneWidth
+  override def paneHeight: Int        = AppPane.mainPaneHeight
   override def position: ViewPosition = topLeftCorner
   private def dispositionRadius: Int  = paneHeight / 2 - PlayersPane.paneHeight / 2
   private def horizontalRatio: Double = paneWidth.toDouble / paneHeight.toDouble
-
-  private val topPosition: Int = 0
-
-  private val leftPosition: Int           = 0
-  private val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
   private def center: ViewPosition        = ViewPosition(paneWidth, paneHeight) / 2
+  
   private val currentPlayer: Player       = controller.players(0)
   // TODO: check only the first card of the pile, maybe with an `Option`
   private val pileCardsProperty: ObjectProperty[Option[PokerCard]] = ObjectProperty(controller.pilesHead)
@@ -87,7 +54,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     layoutY = position.y
     prefWidth = paneWidth
     prefHeight = paneHeight
-    style = s"-fx-background-color: $mainPaneColor;"
+    style = s"-fx-background-color: ${AppPane.mainPaneColor};"
     children = controller.players.zipWithIndex
       .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)).pane)
       ++ List(new TableCenterPane().pane)
@@ -172,12 +139,11 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         prefHeight = paneHeight
         children = List(imageView)
         onMouseClicked = _ =>
-          if player.isEqualsTo(currentPlayer) then
-            val index: Int = player.cards.indexOf(card)
-            controller.discard(index) // playerDiscards(player, index)
-            updatePlayerCards()
-            updateDiscardPile()
-          else ()
+          // TODO: use player.isHuman or something similar
+          val index: Int = player.cards.indexOf(card)
+          controller.discard(index) // playerDiscards(player, index)
+          updatePlayerCards()
+          updateDiscardPile()
       override def filename: String = s"${card.suit.toString.toLowerCase()}_${card.value}"
       override def imageView: ImageView = new ImageView(image):
         fitWidth = CardsPane.paneWidth - CardsPane.margin
@@ -258,6 +224,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private val pilePane: Pane = new Pane:
       layoutX = CardsPane.paneWidth
       layoutY = topPosition
+      // controller.discardPilesTop: Option[Card]
       children = List(new BasicCardPane(controller.pilesHead, topLeftCorner, false).pane)
       onMouseClicked = _ =>
         controller.draw(false) // (controller.currentPlayer)
@@ -267,35 +234,19 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 /**
  * Representation of the lateral portion of the view.
  * Contains the buttons to continue the game and to call "Cactus".
- * @param controller the controller of the application.
+ * @param controller controller of the application.
  */
 class AsidePane(controller: CactusController) extends ScalaFXPane:
-  override def paneWidth: Int = asidePaneWidth
+  override def paneWidth: Int = AppPane.asidePaneWidth
 
-  override def paneHeight: Int = asidePaneHeight
+  override def paneHeight: Int = AppPane.asidePaneHeight
 
-  override def position: ViewPosition = ViewPosition(mainPaneWidth, 0)
-
-  private val nextButton: Button = new Button:
-    text = "Continue"
-    layoutX = 0
-    layoutY = 0
-    prefWidth = 100
-    prefHeight = 50
-    onAction = _ => controller.continue()
-
-  private val cactusButton: Button = new Button:
-    text = "Cactus!"
-    layoutX = 0
-    layoutY = 100
-    prefWidth = 200
-    prefHeight = 50
-    onAction = _ => println("Cactus")
+  override def position: ViewPosition = ViewPosition(AppPane.mainPaneWidth, 0)
 
   override def pane: Pane = new Pane:
     layoutX = position.x
     layoutY = position.y
     prefWidth = paneWidth
     prefHeight = paneHeight
-    style = s"-fx-background-color: $asidePaneColor;"
-    children = List(nextButton, cactusButton)
+    style = s"-fx-background-color: ${AppPane.asidePaneColor};"
+    children = List(new Button("Hello"))

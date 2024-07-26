@@ -9,6 +9,8 @@ import model.player.Players.CactusPlayer
 
 /** The bots of the game */
 object Bots:
+  /** Type alias for the parameters to setup the bots. */
+  type BotParamsType = Tuple
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   /** Represents a bot. */

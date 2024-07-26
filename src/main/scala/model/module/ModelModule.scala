@@ -5,7 +5,7 @@ import model.logic.Logics.Logic
 /** Represents the model component. */
 trait ModelModule:
   /** Type representing the model of the game. */
-  type ModelType <: Logic
+  type ModelType
 
   /** Provider for a [[Model]]. */
   trait Provider:
