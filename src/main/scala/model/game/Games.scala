@@ -95,7 +95,7 @@ class CactusGame() extends Game:
   val deck: Deck[PokerCard] = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  var discardPile: DiscardPile[PokerCard] = PokerPile()
+  var discardPile: PokerPile = PokerPile()
   val initialPlayerCardsNumber: Int       = 4
 
   export deck.{size => deckSize}
