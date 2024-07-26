@@ -1,5 +1,9 @@
 package view
 
+import scalafx.scene.layout.Pane
+import control.module.cactus.CactusControllerModule
+import control.module.cactus.CactusControllerModule.CactusController
+import model.card.CardBuilder.PokerDSL
 import view.Utils.toRgbString
 import control.module.CactusControllerModule
 import control.module.CactusControllerModule.CactusController
@@ -14,6 +18,7 @@ import scalafx.scene.layout.{BorderPane, HBox, Pane, Region, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.{Font, Text}
+import view.AppPane.{asidePaneColor, asidePaneHeight, asidePaneWidth, mainPaneColor, mainPaneHeight, mainPaneWidth}
 import view.ModelPhases.{Discard, Draw}
 import view.ViewDSL.{bold, wrapped, at, colored, containing, covered, doing, long, reacting, saying, showing, small, tall, tallAtMost, telling, whenHovered, withoutVBar, Button as ButtonElement, Card as CardElement, Text as TextElement}
 
@@ -66,8 +71,8 @@ trait CardPane:
  * @param controller of the application.
  */
 class MainPane(controller: CactusController) extends ScalaFXPane:
-  override def paneWidth: Int         = Panes.mainPaneWidth
-  override def paneHeight: Int        = Panes.mainPaneHeight
+  override def paneWidth: Int         = mainPaneWidth
+  override def paneHeight: Int        = mainPaneHeight
   override def position: ViewPosition = topLeftCorner
   private def dispositionRadius: Int  = paneHeight / 2 - PlayersPane.paneHeight / 2
   private def horizontalRatio: Double = paneWidth.toDouble / paneHeight.toDouble
@@ -170,6 +175,10 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       (i / PlayersPane.maxCardsPerLine) * CardsPane.paneHeight
     )
 
+    private def image: Image = new Image(
+      getClass.getResourceAsStream(CardsPane.frontsFolderPath + s"/$filename.png")
+    )
+
     private def updatePlayerCards(): Unit =
       cardsContainer.content = playerHand
       header.right = cardsNumberText
@@ -224,9 +233,9 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   private val currentPhase: Phases = phaseBuilder(controllerPhase)
   override def paneWidth: Int = Panes.asidePaneWidth
 
-  override def paneHeight: Int = Panes.asidePaneHeight
+  override def paneHeight: Int = asidePaneHeight
 
-  override def position: ViewPosition = ViewPosition(Panes.mainPaneWidth, 0)
+  override def position: ViewPosition = ViewPosition(mainPaneWidth, 0)
 
   private val nextButton: Button = ButtonElement saying "Continue" doing (_ =>
     println("Continue")

@@ -1,21 +1,25 @@
 package view
 
+import scalafx.geometry.Rectangle2D
 import scalafx.scene.paint.Color
+import scalafx.stage.Screen
 import view.Utils.toRgbString
 
 /** Contains the basic parameters for the application's panes. */
-object Panes:
+object AppPane:
+  private val primaryScreenBounds: Rectangle2D = Screen.primary.visualBounds
+
   /**
    * Width of the application's window.
    * @return width of the application's window.
    */
-  def windowWidth: Int = 1200
+  def windowWidth: Int = primaryScreenBounds.width.toInt
 
   /**
    * Height of the application's window.
    * @return height of the application's window.
    */
-  def windowHeight: Int = 800
+  def windowHeight: Int = primaryScreenBounds.height.toInt
 
   /**
    * Width of the main pane.
@@ -72,7 +76,7 @@ object PlayersPane:
    * @return font size.
    */
   def smallFontSize: Int = 14
-  
+
   /**
    * Font size of the texts in the pane.
    * @return font size.

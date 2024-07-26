@@ -7,6 +7,7 @@ trait ViewModule:
 
   /** View of the game. */
   trait View:
+    /** Shows the view. */
     def show(): Unit
 
   /** Provider for a [[View]]. */

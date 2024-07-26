@@ -301,7 +301,7 @@ object ViewDSL:
      * @return [[Text]] wrappable.
      */
     def wrapped: T =
-      text.wrappingWidth = Panes.asidePaneWidth
+      text.wrappingWidth = AppPane.asidePaneWidth
       text
 
     /**
