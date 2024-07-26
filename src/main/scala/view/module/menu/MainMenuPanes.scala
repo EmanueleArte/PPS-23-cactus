@@ -46,6 +46,7 @@ class MainMenuPane(
     items = ObservableBuffer.from(PlayableGame.values)
     promptText = "Select a game"
     prefWidth = 200
+    value = PlayableGame.values(0)
 
   override def pane: Pane = new CustomStackPane(sceneWidth, sceneHeight):
     children = Seq(
@@ -57,7 +58,14 @@ class MainMenuPane(
             style = "-fx-font-size: 60pt; -fx-font-weight: bold; -fx-text-alignment: center;"
             margin = new scalafx.geometry.Insets(Insets(50, 0, 50, 0))
           ,
-          gameSelected,
+          new HBox:
+            alignment = Pos.Center
+            spacing = 10
+            children = Seq(
+              new Label("Selected game:"),
+              gameSelected
+            )
+          ,
           new HBox:
             alignment = Pos.Center
             spacing = 10
