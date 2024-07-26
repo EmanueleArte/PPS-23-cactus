@@ -17,7 +17,7 @@ import view.Utils.value
 import scala.util.Random
 
 /**
- * Custom [[StackPane]] with basic parameters already set.
+ * Custom [[StackPane]] with basic parameters already set and responsive size.
  *
  * @param paneWidth width of the pane.
  * @param paneHeight height of the pane.
@@ -92,6 +92,8 @@ class MainMenuPane(
               )
         )
     )
+
+
 
   /** Creates a pane with the boxes for players. */
   private class PlayersPane(override val position: ViewPosition) extends ScalaFXPane:
