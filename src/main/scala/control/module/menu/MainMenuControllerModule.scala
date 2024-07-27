@@ -30,7 +30,7 @@ object MainMenuControllerModule extends ControllerModule:
      * @param discardings the discarding methods of the bots.
      * @param memories the memory options of the bots.
      */
-    def startGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit
+    def startCactusGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit
 
   /** Represents the controller component for the menu. */
   trait Component:
@@ -44,7 +44,7 @@ object MainMenuControllerModule extends ControllerModule:
         context.model.selectedGame.gameMVC.setup(nPlayers)
         context.model.selectedGame.gameMVC.run()
 
-      def startGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit =
+      def startCactusGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit =
         context.model.selectedGame.gameMVC.setupWithBots((drawings, discardings, memories))
         context.model.selectedGame.gameMVC.run()
 

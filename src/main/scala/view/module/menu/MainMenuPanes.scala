@@ -17,7 +17,7 @@ import view.Utils.value
 import scala.util.Random
 
 /**
- * Custom [[StackPane]] with basic parameters already set.
+ * Custom [[StackPane]] with basic parameters already set and responsive size.
  *
  * @param paneWidth width of the pane.
  * @param paneHeight height of the pane.
@@ -40,12 +40,18 @@ class MainMenuPane(
   override def paneHeight: Int         = AppPane.mainPaneHeight
   override def position: ViewPosition  = hCenter
   private def hCenter: ViewPosition    = ViewPosition(paneWidth / 2, 0)
-  private val playersPane: PlayersPane = new PlayersPane(position)
+  private var playersPane: PlayersPane = new CactusPlayersPane(position)
 
   private val gameSelected: ComboBox[PlayableGame] = new ComboBox[PlayableGame]:
     items = ObservableBuffer.from(PlayableGame.values)
     promptText = "Select a game"
     prefWidth = 200
+    value = PlayableGame.Cactus
+    onAction = _ => playersPane = createPlayersPane(view.Utils.value(this))
+
+  private def createPlayersPane(game: PlayableGame): PlayersPane = game match
+    case PlayableGame.Cactus => new CactusPlayersPane(position)
+    case _                   => new CactusPlayersPane(position)
 
   override def pane: Pane = new CustomStackPane(sceneWidth, sceneHeight):
     children = Seq(
@@ -57,7 +63,14 @@ class MainMenuPane(
             style = "-fx-font-size: 60pt; -fx-font-weight: bold; -fx-text-alignment: center;"
             margin = new scalafx.geometry.Insets(Insets(50, 0, 50, 0))
           ,
-          gameSelected,
+          new HBox:
+            alignment = Pos.Center
+            spacing = 10
+            children = Seq(
+              new Label("Selected game:"),
+              gameSelected
+            )
+          ,
           new HBox:
             alignment = Pos.Center
             spacing = 10
@@ -75,18 +88,39 @@ class MainMenuPane(
           playersPane.pane,
           new Button:
             text = "Start game"
-            onAction = _ =>
-              controller.selectGame(value(gameSelected))
-              controller.startGameWithBots(
-                playersPane.drawMethods.map(value),
-                playersPane.discardMethods.map(value),
-                playersPane.memoryList.map(value)
-              )
+            onAction = _ => startGame()
         )
     )
 
+  private def startGame(): Unit =
+    controller.selectGame(value(gameSelected))
+    playersPane match
+      case p: CactusPlayersPane =>
+        controller.startCactusGameWithBots(
+          p.drawMethods.map(value),
+          p.discardMethods.map(value),
+          p.memoryList.map(value)
+        )
+
+  private trait PlayersPane(override val position: ViewPosition) extends ScalaFXPane:
+    /**
+     * Creates a box with the input fields for a bot.
+     *
+     * @param name name of the bot.
+     * @return the bot box.
+     */
+    def createBotBox(name: String): VBox
+
+    /**
+     * Updates the players input forms.
+     *
+     * @param players players to add.
+     * @param diff    if positive, adds the players to the list, if negative, removes the last `-diff` players.
+     */
+    def updatePlayersDisplay(players: Seq[VBox], diff: Int): Unit
+
   /** Creates a pane with the boxes for players. */
-  private class PlayersPane(override val position: ViewPosition) extends ScalaFXPane:
+  private class CactusPlayersPane(override val position: ViewPosition) extends PlayersPane(position):
     override def paneWidth: Int  = AppPane.windowWidth
     override def paneHeight: Int = 250
 
@@ -117,12 +151,7 @@ class MainMenuPane(
 
     menuInit()
 
-    /**
-     * Updates the players input forms.
-     * @param players players to add.
-     * @param diff if positive, adds the players to the list, if negative, removes the last `-diff` players.
-     */
-    def updatePlayersDisplay(players: Seq[VBox], diff: Int): Unit =
+    override def updatePlayersDisplay(players: Seq[VBox], diff: Int): Unit =
       _playersBox.children.clear()
       _players = diff match
         case diff if diff < 0 =>
@@ -133,13 +162,8 @@ class MainMenuPane(
         case _ => _players ++ players
       _playersBox.children = _players
 
-    /**
-     * Creates a box with the input fields for a bot.
-     * @param name name of the bot.
-     * @return the bot box.
-     */
     @SuppressWarnings(Array("org.wartremover.warts.All"))
-    def createBotBox(name: String): VBox =
+    override def createBotBox(name: String): VBox =
       val drawMethod = new ComboBox[DrawMethods]:
         items = ObservableBuffer.from(CactusBotsData.DrawMethods.values)
         promptText = "Select a draw method"
