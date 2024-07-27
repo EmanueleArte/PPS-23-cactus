@@ -1,5 +1,6 @@
 package view
 
+import model.logic.{BaseTurnPhase, CactusTurnPhase, TurnPhase}
 import scalafx.scene.control.ComboBox
 import scalafx.scene.paint.Color
 
@@ -8,6 +9,16 @@ object Utils:
   val topPosition: Int = 0
   val leftPosition: Int = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
+
+  val turnPhaseDescription: Map[TurnPhase, (String, String)] = Map[TurnPhase, (String, String)](
+    CactusTurnPhase.Draw -> ("Draw", "Draw one card from the deck or from the discard pile, by clicking on it."),
+    CactusTurnPhase.Discard -> ("Discard", "Choose a card from your hand to discard."),
+    CactusTurnPhase.DiscardEquals -> ("Discard equals cards", "You can discard a card equals to the one on top of the discard pile."),
+    CactusTurnPhase.EffectActivation -> ("Effect activation", ""),
+    CactusTurnPhase.EffectResolution -> ("Effect resolution", ""),
+    CactusTurnPhase.CallCactus -> ("Cactus", "Call \"Cactus\" and end the game."),
+    BaseTurnPhase.End -> ("End", "The End.")
+  )
 
   /**
    * Converts a color to its RGB representation.

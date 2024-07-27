@@ -18,13 +18,17 @@ object ScalaFXViewModule extends ViewModule:
     context: Requirements =>
 
     class ScalaFXViewImpl extends ScalaFXView:
+      
+      val asidePane = AsidePane(context.controller)
       override def show(): Unit =
         ScalaFXStageManager.setScene(
           new Scene(windowWidth, windowHeight):
-            content = List(MainPane(context.controller).pane, AsidePane(context.controller).pane)
+            content = List(MainPane(context.controller).pane, asidePane.pane)
           ,
           true
         )
+
+      override def updateViewTurnPhase(): Unit = asidePane.updateViewTurnPhase
 
   /** Interface of the view module of game. */
   trait Interface extends Provider with Component:

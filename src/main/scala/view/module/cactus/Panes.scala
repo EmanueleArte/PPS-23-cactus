@@ -3,6 +3,7 @@ package view.module.cactus
 import control.module.cactus.CactusControllerModule.CactusController
 import control.module.cactus.CactusControllerModule
 import model.card.Cards.{Card, PokerCard}
+import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.Player
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.Pos
@@ -12,10 +13,9 @@ import scalafx.scene.layout.{BorderPane, HBox, Pane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
-import view.module.cactus.ModelPhases.{Discard, Draw}
+import view.Utils.turnPhaseDescription
 import view.ViewDSL.{at, bold, colored, containing, covered, doing, long, reacting, saying, showing, tall, tallAtMost, telling, whenHovered, withoutVBar, wrapped, Button as ButtonElement, Card as CardElement, Text as TextElement}
 import view.ViewPosition
-import view.module.cactus.Buttons.*
 import view.module.cactus.CardsPane.*
 import view.module.cactus.PlayersPane.*
 import view.module.cactus.AppPane.*
@@ -122,7 +122,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     override def pane: Pane = new Pane()
       .at(position)
       .containing(header)
-      .containing(cardsContainer)(player.cards.nonEmpty)
+      .containing(cardsContainer)
 
     private def cardsNumberText: Text = TextElement
       .telling(player.cards.size.toString)
@@ -225,7 +225,11 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
  * @param controller of the application.
  */
 class AsidePane(controller: CactusController) extends ScalaFXPane:
-  private val currentPhase: Phases = phaseBuilder(controllerPhase)
+  val turnPhaseProperty: ObjectProperty[TurnPhase] = ObjectProperty(controller.currentPhase)
+  turnPhaseProperty.onChange((_, oldValue, newValue) => update_pane())
+
+  def updateViewTurnPhase: Unit = turnPhaseProperty.setValue(controller.currentPhase)
+
   override def paneWidth: Int = AppPane.asidePaneWidth
 
   override def paneHeight: Int = asidePaneHeight
@@ -233,21 +237,21 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   override def position: ViewPosition = ViewPosition(mainPaneWidth, 0)
 
   private val nextButton: Button = ButtonElement saying "Continue" doing (_ =>
-    println("Continue")
+    print("Continue - ")
+    println(controller.currentPhase)
     controller.continue()
   )
-  private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => controller)
-  private val phaseText: HBox = new HBox()
+  private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => println(controller.currentPhase))
+  private def phaseText: VBox = new VBox()
     .containing(TextElement telling "Current phase: " bold)
-    .containing(TextElement telling currentPhase.name)
+    .containing(TextElement telling turnPhaseDescription(controller.currentPhase)._1 wrapped)
   phaseText.setAlignment(Pos.BaselineLeft)
-  
-  private val phaseDescription: VBox = new VBox()
+
+  private def phaseDescription: VBox = new VBox()
     .containing(TextElement telling "Phase description" bold)
-    .containing(TextElement telling currentPhase.description wrapped)
+    .containing(TextElement telling turnPhaseDescription(controller.currentPhase)._2 wrapped)
 
-
-  override def pane: Pane = new VBox()
+  private val _pane: Pane = new VBox()
     .at(position)
     .long(paneWidth)
     .tall(paneHeight)
@@ -257,18 +261,11 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     .containing(nextButton)
     .containing(cactusButton)
 
-enum ModelPhases:
-  case Draw, Discard, SpecialEffects
+  private def update_pane(): Unit =
+    _pane.children.clear()
+    _pane.children.add(phaseText)
+    _pane.children.add(phaseDescription)
+    _pane.children.add(nextButton)
+    _pane.children.add(cactusButton)
 
-def controllerPhase: ModelPhases = Discard
-
-def phaseBuilder(phase: ModelPhases): Phases = phase match
-  case ModelPhases.Draw => Phases.Draw
-  case ModelPhases.Discard => Phases.Discard
-
-enum Phases(phase: ModelPhases, _name: String, _description: String):
-  case Draw extends Phases(ModelPhases.Draw, "draw", "Click on the deck or on the discard pile to draw a card.")
-  case Discard extends Phases(ModelPhases.Discard, "discard", "Choose a card to put on the discard pile.")
-
-  def name: String = _name
-  def description: String = _description
+  override def pane: Pane = _pane

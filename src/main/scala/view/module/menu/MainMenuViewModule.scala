@@ -30,6 +30,8 @@ object MainMenuViewModule extends ViewModule:
           )
         ScalaFXStageManager.show()
 
+      override def updateViewTurnPhase(): Unit = ()
+
   /** Interface of the view module of the menu. */
   trait Interface extends Provider with Component:
     self: Requirements =>

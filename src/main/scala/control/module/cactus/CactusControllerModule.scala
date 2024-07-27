@@ -5,6 +5,7 @@ import model.module.cactus.CactusModelModule
 import view.module.ViewModule
 import model.card.Cards.{Card, PokerCard}
 import model.logic.Logics.Players
+import model.logic.TurnPhase
 import model.module.cactus.CactusModelModule
 import model.player.Players.{CactusPlayer, Player}
 import view.module.cactus.ScalaFXViewModule
@@ -48,6 +49,12 @@ object CactusControllerModule extends ControllerModule:
      */
     def pilesHead: Option[PokerCard]
 
+    /**
+     * Returns the current phase of the game.
+     * @return current phase of the game.
+     */
+    def currentPhase: TurnPhase
+
   /** Represents the controller component for the Cactus game. */
   trait Component:
     context: Requirements =>
@@ -57,14 +64,21 @@ object CactusControllerModule extends ControllerModule:
 
       override def continue(): Unit = context.model.continue()
 
-      override def draw(fromDeck: Boolean): Unit = context.model.draw(fromDeck)
+      override def draw(fromDeck: Boolean): Unit =
+        context.model.draw(fromDeck)
+        context.view.updateViewTurnPhase()
 
-      override def discard(cardIndex: Int): Unit = context.model.discard(cardIndex)
+      override def discard(cardIndex: Int): Unit =
+        context.model.discard(cardIndex)
+        context.view.updateViewTurnPhase()
 
       override def players: Players = context.model.players
 
       override def pilesHead: Option[PokerCard] = context.model.game.discardPile.cards.headOption
+
       override def discardWithMalus(cardIndex: Int): Unit = context.model.discardWithMalus(cardIndex)
+
+      override def currentPhase: TurnPhase = context.model.currentPhase
 
   /** Interface of the controller module of Cactus game. */
   trait Interface extends Provider with Component:
