@@ -12,13 +12,15 @@ object MainMenuViewModule extends ViewModule:
   override type ViewType = View
 
   override type Requirements = MainMenuControllerModule.Provider
+  
+  trait MainMenuView extends View
 
   /** Represents the view component for the menu. */
   trait Component:
     context: Requirements =>
 
     /** Implementation of the main menu view using ScalaFx. */
-    class MainMenuScalaFxView extends View:
+    class MainMenuScalaFxView extends MainMenuView:
 
       override def show(): Unit =
         Platform.startup: () =>
@@ -29,8 +31,6 @@ object MainMenuViewModule extends ViewModule:
             false
           )
         ScalaFXStageManager.show()
-
-      override def updateViewTurnPhase(): Unit = ()
 
   /** Interface of the view module of the menu. */
   trait Interface extends Provider with Component:

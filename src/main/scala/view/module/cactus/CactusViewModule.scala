@@ -7,17 +7,18 @@ import view.ScalaFXStageManager
 import view.module.ViewModule
 
 /** Represents the view component. */
-object ScalaFXViewModule extends ViewModule:
-  override type ViewType     = ScalaFXView
+object CactusViewModule extends ViewModule:
+  override type ViewType     = CactusView
   override type Requirements = CactusControllerModule.Provider
 
-  trait ScalaFXView extends View
+  trait CactusView extends View:
+    def updateViewTurnPhase(): Unit
 
   /** Represents the view component for the Cactus game. */
   trait Component:
     context: Requirements =>
 
-    class ScalaFXViewImpl extends ScalaFXView:
+    class CactusScalaFXView extends CactusView:
       
       val asidePane = AsidePane(context.controller)
       override def show(): Unit =

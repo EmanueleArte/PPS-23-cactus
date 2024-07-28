@@ -10,8 +10,6 @@ trait ViewModule:
     /** Shows the view. */
     def show(): Unit
 
-    def updateViewTurnPhase(): Unit
-
   /** Provider for a [[View]]. */
   trait Provider:
     val view: ViewType

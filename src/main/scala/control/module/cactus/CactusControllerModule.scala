@@ -8,12 +8,12 @@ import model.logic.Logics.Players
 import model.logic.TurnPhase
 import model.module.cactus.CactusModelModule
 import model.player.Players.{CactusPlayer, Player}
-import view.module.cactus.ScalaFXViewModule
+import view.module.cactus.CactusViewModule
 
 /** Represents the controller module for the Cactus game. */
 object CactusControllerModule extends ControllerModule:
   override type ControllerType = CactusController
-  override type Requirements = CactusModelModule.Provider with ScalaFXViewModule.Provider
+  override type Requirements = CactusModelModule.Provider with CactusViewModule.Provider
 
   trait CactusController extends Controller:
     /** Continues to the next step. */
