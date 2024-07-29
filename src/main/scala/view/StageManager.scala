@@ -3,7 +3,9 @@ package view
 import scalafx.application.{JFXApp3, Platform}
 import scalafx.application.JFXApp3.PrimaryStage
 import scalafx.scene.Scene
+import scalafx.scene.input.{KeyCode, KeyCombination}
 import scalafx.stage.Stage
+import view.module.cactus.AppPane
 
 /** Represents the manager of the stages of the gui. */
 trait StageManager:
@@ -45,7 +47,7 @@ object ScalaFXStageManager extends StageManager:
         title = "Cactus & Co."
         width = AppPane.windowWidth
         height = AppPane.windowHeight
-        minWidth = AppPane.mainPaneWidth
-        minHeight = AppPane.mainPaneHeight
+//        minWidth = AppPane.windowWidth
+//        minHeight = AppPane.windowHeight
         scene = new Scene
       showWindow()

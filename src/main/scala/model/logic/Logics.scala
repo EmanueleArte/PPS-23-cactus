@@ -147,10 +147,24 @@ object Logics:
      *
      * @param cardIndex index of the card in the player hand to discard.
      */
-    def discard(cardIndex: Int): Unit = currentPhase match
+    @tailrec
+    final def discard(cardIndex: Int): Unit = currentPhase match
       case CactusTurnPhase.Discard =>
-        game.discardPile = game.discardPile.put(currentPlayer.discard(cardIndex))
+        val discardedCard = currentPlayer.discard(cardIndex)
+        discardedCard.uncover()
+        game.discardPile = game.discardPile.put(discardedCard)
         currentPhase_=(CactusTurnPhase.DiscardEquals)
+      case CactusTurnPhase.DiscardEquals =>
+        game.discardPile.draw() match
+          case Some(card) if card.value != currentPlayer.cards(cardIndex).value =>
+            currentPlayer.draw(game.deck)
+            currentPlayer.cards.foreach(_.cover())
+            game.discardPile = game.discardPile.put(card)
+          case Some(card) =>
+            game.discardPile = game.discardPile.put(card)
+            currentPhase_=(CactusTurnPhase.Discard)
+            discard(cardIndex)
+          case _ => currentPlayer.draw(game.deck)
       case _ =>
 
     /**

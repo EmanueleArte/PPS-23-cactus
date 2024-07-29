@@ -4,7 +4,7 @@ import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
 import model.bot.Bots.CactusBotImpl
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods}
 import model.card.CardBuilder.PokerDSL.of
-import model.card.Cards.PokerCard
+import model.card.Cards.{Coverable, PokerCard}
 import model.card.CardsData.PokerCardName.Ace
 import model.card.CardsData.PokerSuit.Spades
 import model.deck.Decks.PokerDeck
@@ -17,7 +17,7 @@ class CactusBotTest extends AnyFlatSpec:
   private val deck: PokerDeck = PokerDeck()
 
   "Bot " should "know Ace of Spades" in:
-    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.Deck, DiscardMethods.Known, model.bot.CactusBotsData.Memory.Optimal)
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard & Coverable], DrawMethods.Deck, DiscardMethods.Known, model.bot.CactusBotsData.Memory.Optimal)
     cactusBot.draw(deck)
     cactusBot.draw(deck)
     cactusBot.draw(deck)
@@ -26,13 +26,13 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.knownCards.head should be (Ace of Spades)
 
   "Bot " should "not have a card in the known cards list" in :
-    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.Deck, DiscardMethods.Known, model.bot.CactusBotsData.Memory.Optimal)
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard & Coverable], DrawMethods.Deck, DiscardMethods.Known, model.bot.CactusBotsData.Memory.Optimal)
     cactusBot.draw(deck)
     cactusBot.discard(0)
     cactusBot.knownCards.isEmpty shouldBe true
 
   "Bot's index card to discard " should "be 3" in:
-    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.Deck, DiscardMethods.Known, model.bot.CactusBotsData.Memory.Optimal)
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard & Coverable], DrawMethods.Deck, DiscardMethods.Known, model.bot.CactusBotsData.Memory.Optimal)
     cactusBot.draw(deck)
     cactusBot.draw(deck)
     cactusBot.draw(deck)
@@ -42,14 +42,14 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.chooseDiscard() shouldBe 3
 
   "Bot's index card to discard " should "be 1" in:
-    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.Deck, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard & Coverable], DrawMethods.Deck, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
     cactusBot.draw(deck)
     cactusBot.draw(deck)
     cactusBot.seeCard(0)
     cactusBot.chooseDiscard() shouldBe 1
 
   "Bot " should "draw from pile" in :
-    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard & Coverable], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
     var discardPile: PokerPile = PokerPile()
     cactusBot.draw(deck)
     cactusBot.draw(deck)
@@ -59,7 +59,7 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.chooseDraw(discardPile) shouldBe true
 
   "Bot " should "call cactus" in :
-    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard & Coverable], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
     cactusBot.draw(deck)
     cactusBot.draw(deck)
     cactusBot.draw(deck)
@@ -69,7 +69,7 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.callCactus() shouldBe true
 
   "Bot " should "not call cactus" in :
-    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
+    val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard & Coverable], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
     cactusBot.draw(deck)
     cactusBot.draw(deck)
     cactusBot.draw(deck)

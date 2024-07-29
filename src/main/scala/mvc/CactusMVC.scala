@@ -5,18 +5,18 @@ import control.module.cactus.CactusControllerModule.ControllerType
 import model.logic.Logics.CactusLogic
 import model.module.cactus.CactusModelModule
 import model.module.cactus.CactusModelModule.ModelType
-import view.module.cactus.ScalaFXViewModule.ViewType
-import view.module.cactus.ScalaFXViewModule
+import view.module.cactus.CactusViewModule.ViewType
+import view.module.cactus.CactusViewModule
 
 /** Represents the main module for the Cactus game. */
 object CactusMVC
     extends GameMVC
     with CactusModelModule.Interface
     with CactusControllerModule.Interface
-    with ScalaFXViewModule.Interface:
+    with CactusViewModule.Interface:
 
   override lazy val model: ModelType      = if areBotsParamsSet then CactusLogic(botsParams) else CactusLogic(nPlayers)
   override val controller: ControllerType = CactusControllerImpl()
-  override val view: ViewType             = ScalaFXViewImpl()
+  override val view: ViewType             = CactusScalaFXView()
 
   def run(): Unit = view.show()

@@ -3,7 +3,7 @@ package model.game
 import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
 import model.bot.Bots.{BotParamsType, CactusBotImpl}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
-import model.card.Cards.{Card, PokerCard}
+import model.card.Cards.{Card, Coverable, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import model.player.Players.{CactusPlayer, Player}
@@ -92,7 +92,7 @@ trait Game:
 /** Cactus game implementation. */
 class CactusGame() extends Game:
   /** Deck with the cards to draw. */
-  val deck: Deck[PokerCard] = PokerDeck(shuffled = true)
+  val deck: Deck[PokerCard & Coverable] = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
   var discardPile: PokerPile = PokerPile()

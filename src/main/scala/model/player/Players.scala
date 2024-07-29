@@ -1,8 +1,7 @@
 package model.player
 
-import model.card.Cards.{Card, PokerCard}
+import model.card.Cards.{Card, Coverable, PokerCard}
 import model.deck.Piles.DiscardPile
-import model.card.Cards.Card
 import model.deck.Drawable
 
 /** A player of the game. */
@@ -11,7 +10,7 @@ object Players:
   /** Represents a generic player. */
   trait Player:
     /** Type representing the type of the cards in a game. */
-    type CardType <: Card
+    type CardType <: Card & Coverable
     
     /** The name of the player. */
     val name: String
@@ -43,15 +42,18 @@ object Players:
      */
     def isEqualsTo(anotherPlayer: Player): Boolean
 
-  case class CactusPlayer(name: String, private var _cards: List[PokerCard]) extends Player:
-    override type CardType = PokerCard
+  case class CactusPlayer(name: String, private var _cards: List[PokerCard & Coverable]) extends Player:
+    override type CardType = PokerCard & Coverable
 
-    override def cards: List[PokerCard] = _cards
+    override def cards: List[PokerCard & Coverable] = _cards
 
     override def draw(drawable: Drawable[CardType]): Unit =
-      _cards = _cards ::: drawable.draw().get :: Nil
+      val drawnCard = drawable.draw().get
+      drawnCard.uncover()
+      _cards = _cards ::: drawnCard :: Nil
 
     override def discard(cardIndex: Int): CardType =
+      _cards.foreach(_.cover())
       val cardToRemove: CardType = cards(cardIndex)
       _cards = _cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
       cardToRemove

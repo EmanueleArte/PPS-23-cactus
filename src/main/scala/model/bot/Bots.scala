@@ -1,7 +1,7 @@
 package model.bot
 
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
-import model.card.Cards.PokerCard
+import model.card.Cards.{Coverable, PokerCard}
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.card.CardsData.PokerSuit.Clubs
 import model.deck.Piles.{DiscardPile, PokerPile}
@@ -68,7 +68,7 @@ object Bots:
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBotImpl(
       name: String,
-      c: List[PokerCard],
+      c: List[PokerCard & Coverable],
       private val _drawMethod: DrawMethods,
       private val _discardMethod: DiscardMethods,
       private val _memory: Memory
@@ -91,7 +91,7 @@ object Bots:
     private def removeFromKnownCards(card: PokerCard): Unit =
       _knownCards = _knownCards.filterNot(c => c.equals(card))
 
-    override def discard(cardIndex: Int): PokerCard =
+    override def discard(cardIndex: Int): PokerCard & Coverable =
       val discardedCard = super.discard(cardIndex)
       removeFromKnownCards(discardedCard)
       discardedCard
