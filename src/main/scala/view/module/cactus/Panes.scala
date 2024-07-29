@@ -237,7 +237,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   override def position: ViewPosition = ViewPosition(mainPaneWidth, 0)
 
   private val nextButton: Button = ButtonElement saying "Continue" doing (_ => controller.continue())
-  private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => println(controller.currentPhase))
+  private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => controller.callCactus())
   private def phaseText: VBox = new VBox()
     .containing(TextElement telling "Current phase: " bold)
     .containing(TextElement telling turnPhaseDescription(controller.currentPhase)._1 wrapped)

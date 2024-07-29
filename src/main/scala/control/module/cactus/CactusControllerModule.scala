@@ -36,6 +36,11 @@ object CactusControllerModule extends ControllerModule:
      * @param cardIndex index of the card in the player hand to discard.
      */
     def discardWithMalus(cardIndex: Int): Unit
+    
+    /**
+     * Makes player to call Cactus, in order to end the game.
+     */
+    def callCactus(): Unit
 
     /**
      * Returns the players of the game.
@@ -73,6 +78,8 @@ object CactusControllerModule extends ControllerModule:
       override def discard(cardIndex: Int): Unit =
         context.model.discard(cardIndex)
         context.view.updateViewTurnPhase()
+        
+      override def callCactus(): Unit = context.model.callCactus()
 
       override def players: Players = context.model.players
 
