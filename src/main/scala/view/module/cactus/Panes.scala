@@ -165,7 +165,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private def cardClickHandler(card: Card): Unit =
       if player.isEqualsTo(currentPlayer) then
         val index: Int = player.cards.indexOf(card)
-        controller.discard(index)
+        controller.handlePlayerInput(index)
         updatePlayerCards()
         updateDiscardPile()
 
