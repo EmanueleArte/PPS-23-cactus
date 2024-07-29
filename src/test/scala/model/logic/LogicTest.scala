@@ -1,7 +1,7 @@
 package model.logic
 
-import model.card.CardBuilder.PokerDSL.of
-import model.card.Cards.Card
+import model.card.CardBuilder.PokerDSL.OF
+import model.card.Cards.{Card, Coverable}
 import model.card.CardsData.PokerSuit.*
 import model.deck.Drawable
 import model.game.Scores
@@ -19,13 +19,13 @@ class LogicTest extends AnyFlatSpec:
 
   /** Simple player implementation for testing. */
   case class PlayerImpl(name: String) extends Player:
-    override type CardType = Card
+    override type CardType = Card & Coverable
 
-    var cards: List[Card] = List[Card]()
+    var cards: List[Card & Coverable] = List[Card & Coverable]()
 
     override def draw(deck: Drawable[CardType]): Unit = None
 
-    override def discard(cardIndex: Int): Card = 2 of Spades
+    override def discard(cardIndex: Int): Card & Coverable = 2 OF Spades
 
     override def isEqualsTo(anotherPlayer: Player): Boolean =
       this.name.compareTo(anotherPlayer.name) == 0 && this.cards.diff(anotherPlayer.cards).isEmpty

@@ -1,8 +1,8 @@
 package model.deck
 
 import model.card.CardsData.PokerCardName.*
-import model.card.CardBuilder.PokerDSL.of
-import model.card.Cards.{Card, PokerCard}
+import model.card.CardBuilder.PokerDSL.OF
+import model.card.Cards.{Card, Coverable, PokerCard}
 import model.card.CardsData.PokerSuit.*
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers.{be, defined, empty, not}
@@ -13,12 +13,12 @@ import org.scalatest.matchers.must.Matchers
 import scala.collection.immutable.List
 
 class DecksTest extends AnyFlatSpec:
-  type Deck = model.deck.Decks.Deck[PokerCard]
-  val cardsList: List[PokerCard] = List(
-    Ace of Spades, 2 of Spades, 3 of Spades, 4 of Spades, 5 of Spades, 6 of Spades, 7 of Spades, 8 of Spades, 9 of Spades, 10 of Spades, Jack of Spades, Queen of Spades, King of Spades,
-    Ace of Diamonds, 2 of Diamonds, 3 of Diamonds, 4 of Diamonds, 5 of Diamonds, 6 of Diamonds, 7 of Diamonds, 8 of Diamonds, 9 of Diamonds, 10 of Diamonds, Jack of Diamonds, Queen of Diamonds, King of Diamonds,
-    Ace of Clubs, 2 of Clubs, 3 of Clubs, 4 of Clubs, 5 of Clubs, 6 of Clubs, 7 of Clubs, 8 of Clubs, 9 of Clubs, 10 of Clubs, Jack of Clubs, Queen of Clubs, King of Clubs,
-    Ace of Hearts, 2 of Hearts, 3 of Hearts, 4 of Hearts, 5 of Hearts, 6 of Hearts, 7 of Hearts, 8 of Hearts, 9 of Hearts, 10 of Hearts, Jack of Hearts, Queen of Hearts, King of Hearts
+  type Deck = model.deck.Decks.Deck[PokerCard & Coverable]
+  val cardsList: List[PokerCard & Coverable] = List(
+    Ace OF Spades, 2 OF Spades, 3 OF Spades, 4 OF Spades, 5 OF Spades, 6 OF Spades, 7 OF Spades, 8 OF Spades, 9 OF Spades, 10 OF Spades, Jack OF Spades, Queen OF Spades, King OF Spades,
+    Ace OF Diamonds, 2 OF Diamonds, 3 OF Diamonds, 4 OF Diamonds, 5 OF Diamonds, 6 OF Diamonds, 7 OF Diamonds, 8 OF Diamonds, 9 OF Diamonds, 10 OF Diamonds, Jack OF Diamonds, Queen OF Diamonds, King OF Diamonds,
+    Ace OF Clubs, 2 OF Clubs, 3 OF Clubs, 4 OF Clubs, 5 OF Clubs, 6 OF Clubs, 7 OF Clubs, 8 OF Clubs, 9 OF Clubs, 10 OF Clubs, Jack OF Clubs, Queen OF Clubs, King OF Clubs,
+    Ace OF Hearts, 2 OF Hearts, 3 OF Hearts, 4 OF Hearts, 5 OF Hearts, 6 OF Hearts, 7 OF Hearts, 8 OF Hearts, 9 OF Hearts, 10 OF Hearts, Jack OF Hearts, Queen OF Hearts, King OF Hearts
   )
 
   "A deck" should "contain 52 cards" in:
@@ -41,16 +41,16 @@ class DecksTest extends AnyFlatSpec:
 
   it should "be possible to draw the first card" in:
     val deck: Deck = PokerDeck()
-    val cardOption: Option[Card] = deck.draw()
+    val cardOption: Option[Card & Coverable] = deck.draw()
     cardOption shouldBe defined
-    cardOption.fold(None)(card => card) should be (Ace of Spades)
+    cardOption.fold(None)(card => card) should be (Ace OF Spades)
 
-  "After drawing, the head of the deck" should "be different" in:
+  "After drawing, the head OF the deck" should "be different" in:
     val deck: Deck = PokerDeck()
     deck.draw()
-    val cardOption: Option[Card] = deck.draw()
+    val cardOption: Option[Card & Coverable] = deck.draw()
     cardOption shouldBe defined
-    cardOption.fold(None)(card => card) should be (2 of Spades)
+    cardOption.fold(None)(card => card) should be (2 OF Spades)
 
   "After drawing the last card, the deck" should "be empty" in:
     val deck: Deck = PokerDeck()
@@ -67,14 +67,14 @@ class DecksTest extends AnyFlatSpec:
     val deck: Deck = PokerDeck()
     deck.draw()
     deck.draw()
-    val cardOption: Option[Card] = deck.reset().draw()
+    val cardOption: Option[Card & Coverable] = deck.reset().draw()
     cardOption shouldBe defined
-    cardOption.fold(Nil)(card => card) shouldBe (Ace of Spades)
+    cardOption.fold(Nil)(card => card) shouldBe (Ace OF Spades)
 
   "A resetted shuffled deck" should "maintain the order" in:
     val deck: Deck = PokerDeck(true)
-    val firstCardOption: Option[Card] = deck.draw()
-    val firstCardAfterResetOption: Option[Card] = deck.reset().draw()
+    val firstCardOption: Option[Card & Coverable] = deck.draw()
+    val firstCardAfterResetOption: Option[Card & Coverable] = deck.reset().draw()
     firstCardOption shouldBe defined
     firstCardAfterResetOption shouldBe defined
     firstCardOption.fold(Nil)(card => card) should be

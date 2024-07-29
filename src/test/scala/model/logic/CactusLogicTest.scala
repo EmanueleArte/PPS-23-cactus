@@ -2,7 +2,7 @@ package model.logic
 
 import model.bot.Bots.{BotParamsType, CactusBot}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
-import model.card.Cards.PokerCard
+import model.card.Cards.{Coverable, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.game.CactusGame
 import model.game.Scores.toMap
@@ -19,11 +19,11 @@ class CactusLogicTest extends AnyFlatSpec:
   /** Custom implementation of the CactusGame to make tests with an unshuffled deck. */
   class TestCactusLogic(nPlayers: Int) extends CactusLogic(Left(nPlayers): Either[Int, BotParamsType]) with GameLogic:
     override lazy val game: CactusGame = new CactusGame():
-      override val deck: Deck[PokerCard] = PokerDeck()
+      override val deck: Deck[PokerCard & Coverable] = PokerDeck()
 
   class TestCactusLogicBots(botParamsType: BotParamsType) extends CactusLogic(Right(botParamsType): Either[Int, BotParamsType]) with GameLogic:
     override lazy val game: CactusGame = new CactusGame():
-      override val deck: Deck[PokerCard] = PokerDeck()
+      override val deck: Deck[PokerCard & Coverable] = PokerDeck()
 
   "A Cactus Logic" should "have the correct number of players after the setup" in:
     val logic = CactusLogic(playersNumber)
