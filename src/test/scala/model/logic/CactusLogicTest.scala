@@ -120,7 +120,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.players.foreach {
       case bot: CactusBot =>
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
-      case _ =>
+      case _ => ()
     }
     logic.draw(true)
     logic.discard(0)
@@ -138,7 +138,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.players.foreach {
       case bot: CactusBot =>
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
-      case _ =>
+      case _ => ()
     }
     while !logic.isGameOver do
       logic.currentPlayer match
