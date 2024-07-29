@@ -168,3 +168,4 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.callCactus()
           logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
+    logic.game.deckSize should be (32)
