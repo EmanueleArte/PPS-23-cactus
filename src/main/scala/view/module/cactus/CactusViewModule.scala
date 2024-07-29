@@ -21,7 +21,7 @@ object CactusViewModule extends ViewModule:
     context: Requirements =>
 
     class CactusScalaFXView extends CactusView:
-      private val asidePane = AsidePane(context.controller)
+      private lazy val asidePane = AsidePane(context.controller)
       override def show(): Unit =
         ScalaFXStageManager.setScene(
           new Scene(windowWidth, windowHeight):
