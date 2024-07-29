@@ -121,7 +121,7 @@ object Logics:
         nextPlayer
         currentPhase_=(CactusTurnPhase.Draw)
         if isBot(currentPlayer) then botTurn()
-      case _ =>
+      case _ => ()
 
     override def isGameOver: Boolean = if lastRound then
       turnsRemaining -= 1
@@ -140,32 +140,21 @@ object Logics:
         if fromDeck then currentPlayer.draw(game.deck)
         else currentPlayer.draw(game.discardPile)
         currentPhase_=(CactusTurnPhase.Discard)
-      case _ =>
+      case _ => ()
 
     /**
      * Make the current player to discard a card.
      *
      * @param cardIndex index of the card in the player hand to discard.
      */
-    @tailrec
-    final def discard(cardIndex: Int): Unit = currentPhase match
+    def discard(cardIndex: Int): Unit = currentPhase match
       case CactusTurnPhase.Discard =>
         val discardedCard = currentPlayer.discard(cardIndex)
         discardedCard.uncover()
         game.discardPile = game.discardPile.put(discardedCard)
         currentPhase_=(CactusTurnPhase.DiscardEquals)
-      case CactusTurnPhase.DiscardEquals =>
-        game.discardPile.draw() match
-          case Some(card) if card.value != currentPlayer.cards(cardIndex).value =>
-            currentPlayer.draw(game.deck)
-            currentPlayer.cards.foreach(_.cover())
-            game.discardPile = game.discardPile.put(card)
-          case Some(card) =>
-            game.discardPile = game.discardPile.put(card)
-            currentPhase_=(CactusTurnPhase.Discard)
-            discard(cardIndex)
-          case _ => currentPlayer.draw(game.deck)
-      case _ =>
+      case CactusTurnPhase.DiscardEquals => discardWithMalus(cardIndex)
+      case _ => ()
 
     /**
      * Make the current player to discard a card but with a malus if the card does not match the discard criteria.
@@ -183,13 +172,14 @@ object Logics:
             currentPhase_=(CactusTurnPhase.Discard)
             discard(cardIndex)
           case _ => currentPlayer.draw(game.deck)
-      case _ =>
+      case _ => ()
 
     /** Make the current player to call Cactus. */
     def callCactus(): Unit = currentPhase match
       case CactusTurnPhase.CallCactus =>
         lastRound = true
         currentPhase_=(BaseTurnPhase.End)
+      case _ => ()
 
     @tailrec
     private def botTurn(): Unit = currentPlayer match
@@ -208,7 +198,7 @@ object Logics:
               currentPhase_=(BaseTurnPhase.End)
               continue()
           case _ => continue()
-      case _ =>
+      case _ => ()
 
     private def iterateBots(f: CactusBot => Unit): Unit =
       (1 to players.length).foreach(_ =>
@@ -228,7 +218,7 @@ object Logics:
         case Some(i) =>
           discardWithMalus(i)
           botDiscardWithMalus(bot)
-        case _ =>
+        case _ => ()
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:
