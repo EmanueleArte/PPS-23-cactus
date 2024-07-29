@@ -17,6 +17,8 @@ object Logics:
   trait Logic:
     /** Type of the score of the game. */
     type Score
+
+    /** Type of a player. */
     type PlayerType <: Player
 
     protected val _players: Players = List[PlayerType]()
@@ -153,25 +155,26 @@ object Logics:
         discardedCard.uncover()
         game.discardPile = game.discardPile.put(discardedCard)
         currentPhase_=(CactusTurnPhase.DiscardEquals)
-      case CactusTurnPhase.DiscardEquals => discardWithMalus(cardIndex)
       case _ => ()
 
     /**
      * Make the current player to discard a card but with a malus if the card does not match the discard criteria.
      *
      * @param cardIndex index of the card in the player hand to discard.
+     * @param player player that has to discard the card. Default is the current player.
      */
-    def discardWithMalus(cardIndex: Int): Unit = currentPhase match
+    @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
+    def discardWithMalus(cardIndex: Int, player: CactusPlayer = currentPlayer): Unit = currentPhase match
       case CactusTurnPhase.DiscardEquals =>
         game.discardPile.draw() match
-          case Some(card) if card.value != currentPlayer.cards(cardIndex).value =>
-            currentPlayer.draw(game.deck)
+          case Some(card) if card.value != player.cards(cardIndex).value =>
+            player.draw(game.deck)
             game.discardPile = game.discardPile.put(card)
           case Some(card) =>
             game.discardPile = game.discardPile.put(card)
             currentPhase_=(CactusTurnPhase.Discard)
             discard(cardIndex)
-          case _ => currentPlayer.draw(game.deck)
+          case _ => player.draw(game.deck)
       case _ => ()
 
     /** Make the current player to call Cactus. */
