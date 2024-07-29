@@ -42,10 +42,10 @@ object Players:
      */
     def isEqualsTo(anotherPlayer: Player): Boolean
 
-  case class CactusPlayer(name: String, private var _cards: List[PokerCard]) extends Player:
-    override type CardType = PokerCard
+  case class CactusPlayer(name: String, private var _cards: List[PokerCard & Coverable]) extends Player:
+    override type CardType = PokerCard & Coverable
 
-    override def cards: List[PokerCard] = _cards
+    override def cards: List[PokerCard & Coverable] = _cards
 
     override def draw(drawable: Drawable[CardType]): Unit =
       val drawnCard = drawable.draw().get

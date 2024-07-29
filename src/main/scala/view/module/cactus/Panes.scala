@@ -2,7 +2,7 @@ package view.module.cactus
 
 import control.module.cactus.CactusControllerModule.CactusController
 import control.module.cactus.CactusControllerModule
-import model.card.Cards.{Card, PokerCard}
+import model.card.Cards.{Card, Coverable, PokerCard}
 import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.Player
 import scalafx.beans.property.ObjectProperty
@@ -82,7 +82,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   private val topLeftCorner: ViewPosition                          = ViewPosition(topPosition, leftPosition)
   private def paneCenter: ViewPosition                                 = ViewPosition(paneWidth, paneHeight) / 2
   private val currentPlayer: Player                                = controller.players(0)
-  private val pileCardsProperty: ObjectProperty[Option[PokerCard]] = ObjectProperty(controller.pilesHead)
+  private val pileCardsProperty: ObjectProperty[Option[PokerCard & Coverable]] = ObjectProperty(controller.pilesHead)
   private val playerCardsProperty: ObjectProperty[List[Card]] = ObjectProperty(
     currentPlayer.cards
   )

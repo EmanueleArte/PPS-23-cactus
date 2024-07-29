@@ -3,7 +3,7 @@ package control.module.cactus
 import control.module.ControllerModule
 import model.module.cactus.CactusModelModule
 import view.module.ViewModule
-import model.card.Cards.{Card, PokerCard}
+import model.card.Cards.{Card, Coverable, PokerCard}
 import model.logic.Logics.Players
 import model.logic.TurnPhase
 import model.module.cactus.CactusModelModule
@@ -47,7 +47,7 @@ object CactusControllerModule extends ControllerModule:
      * Retrieve an [[Option]] with the card on top of the discard pile (if present).
      * @return [[Option]] with the card on top of the discard pile.
      */
-    def pilesHead: Option[PokerCard]
+    def pilesHead: Option[PokerCard & Coverable]
 
     /**
      * Returns the current phase of the game.
@@ -74,7 +74,7 @@ object CactusControllerModule extends ControllerModule:
 
       override def players: Players = context.model.players
 
-      override def pilesHead: Option[PokerCard] = context.model.game.discardPile.cards.headOption
+      override def pilesHead: Option[PokerCard & Coverable] = context.model.game.discardPile.cards.headOption
 
       override def discardWithMalus(cardIndex: Int): Unit = context.model.discardWithMalus(cardIndex)
 
