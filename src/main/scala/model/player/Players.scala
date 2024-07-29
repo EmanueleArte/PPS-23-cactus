@@ -49,10 +49,11 @@ object Players:
 
     override def draw(drawable: Drawable[CardType]): Unit =
       val drawnCard = drawable.draw().get
-      drawnCard.cover()
+      drawnCard.uncover()
       _cards = _cards ::: drawnCard :: Nil
 
     override def discard(cardIndex: Int): CardType =
+      _cards.foreach(_.cover())
       val cardToRemove: CardType = cards(cardIndex)
       _cards = _cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
       cardToRemove

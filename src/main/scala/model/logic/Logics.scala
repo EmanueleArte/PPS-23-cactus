@@ -158,6 +158,7 @@ object Logics:
         game.discardPile.draw() match
           case Some(card) if card.value != currentPlayer.cards(cardIndex).value =>
             currentPlayer.draw(game.deck)
+            currentPlayer.cards.foreach(_.cover())
             game.discardPile = game.discardPile.put(card)
           case Some(card) =>
             game.discardPile = game.discardPile.put(card)
