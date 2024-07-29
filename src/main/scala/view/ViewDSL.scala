@@ -10,7 +10,7 @@ import model.card.Cards.{Card, Coverable, PokerCard}
 import scalafx.geometry.Insets
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{Pane, Region}
+import scalafx.scene.layout.{BorderPane, Pane, Region}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.{Font, FontWeight, Text}
@@ -238,6 +238,24 @@ object ViewDSL:
       pane.setHbarPolicy(ScrollBarPolicy.NEVER)
       pane
 
+  extension [T <: BorderPane] (pane: T)
+    def --> (element: Node): T =
+      pane.right = element
+      pane
+      
+    def <-- (element: Node): T =
+      pane.left = element
+      pane
+    
+    def ^ (element: Node): T =
+      pane.top = element
+      pane
+      
+    def v (element: Node): T =
+      pane.bottom = element
+      pane
+    
+  
   extension [T <: Button] (button: T)
 
     /**

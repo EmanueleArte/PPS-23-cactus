@@ -2,9 +2,11 @@ package view.module.cactus
 
 import control.module.cactus.CactusControllerModule
 import scalafx.scene.Scene
-import view.module.cactus.AppPane._
+import scalafx.scene.layout.{Background, BackgroundFill, HBox, Priority}
+import view.module.cactus.AppPane.*
 import view.ScalaFXStageManager
 import view.module.ViewModule
+import view.ViewDSL.{containing, tall}
 
 /** Represents the view component. */
 object CactusViewModule extends ViewModule:
@@ -23,6 +25,7 @@ object CactusViewModule extends ViewModule:
       override def show(): Unit =
         ScalaFXStageManager.setScene(
           new Scene(windowWidth, windowHeight):
+            fill = AppPane.mainPaneColor
             content = List(MainPane(context.controller).pane, asidePane.pane)
           ,
           true

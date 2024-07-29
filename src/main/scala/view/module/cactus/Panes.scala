@@ -9,12 +9,12 @@ import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.Pos
 import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, HBox, Pane, VBox}
+import scalafx.scene.layout.{BorderPane, HBox, Pane, Priority, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
 import view.Utils.turnPhaseDescription
-import view.ViewDSL.{at, bold, colored, containing, covered, doing, long, reacting, saying, showing, tall, tallAtMost, telling, whenHovered, withoutVBar, wrapped, Button as ButtonElement, Card as CardElement, Text as TextElement}
+import view.ViewDSL.{^, at, bold, colored, containing, covered, doing, long, reacting, saying, showing, tall, tallAtMost, telling, v, whenHovered, withoutVBar, wrapped, Button as ButtonElement, Card as CardElement, Text as TextElement}
 import view.ViewPosition
 import view.module.cactus.CardsPane.*
 import view.module.cactus.PlayersPane.*
@@ -88,7 +88,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   )
 
   override def pane: Pane = new Pane()
-    .at(position)
+//    .at(position)
     .tall(paneHeight)
     .long(paneWidth)
     .colored(AppPane.mainPaneColor)
@@ -247,22 +247,27 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     .containing(TextElement telling "Phase description" bold)
     .containing(TextElement telling turnPhaseDescription(controller.currentPhase)._2 wrapped)
 
-  private val _pane: Pane = new VBox()
-    .at(position)
-    .long(paneWidth)
-    .tall(paneHeight)
-    .colored(AppPane.asidePaneColor)
+  private val phaseContainer: VBox = new VBox()
     .containing(phaseText)
     .containing(phaseDescription)
+  private val buttonsContainer: VBox = new VBox()
     .containing(nextButton)
     .containing(cactusButton)
 
+  private val _pane: BorderPane = new BorderPane()
+    .at(position)
+    .tall(paneHeight)
+    .colored(AppPane.asidePaneColor)
+    .^(phaseContainer)
+    .v(buttonsContainer)
+
+  VBox.setVgrow(_pane, Priority.Always)
+
+
   private def update_pane(): Unit =
-    println("Pane updating")
-    _pane.children.clear()
-    _pane.children.add(phaseText)
-    _pane.children.add(phaseDescription)
-    _pane.children.add(nextButton)
-    _pane.children.add(cactusButton)
+    phaseContainer.children.clear()
+    phaseContainer.children.add(phaseText)
+    phaseContainer.children.add(phaseDescription)
+    _pane.top = phaseContainer
 
   override def pane: Pane = _pane

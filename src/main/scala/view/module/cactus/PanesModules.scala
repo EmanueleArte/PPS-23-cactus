@@ -34,7 +34,7 @@ object AppPane:
   /**
    * Height of the main pane.
    */
-  val mainPaneHeight: Int = windowHeight
+  val mainPaneHeight: Int = (windowHeight * 0.9).toInt
 
   /**
    * Background color of the main pane, expressed in rgb format.
@@ -49,7 +49,7 @@ object AppPane:
   /**
    * Height of the side pane.
    */
-  val asidePaneHeight: Int = windowHeight
+  val asidePaneHeight: Int = mainPaneHeight
 
   /**
    * Background color of the side pane.
