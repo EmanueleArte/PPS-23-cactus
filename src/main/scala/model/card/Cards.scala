@@ -51,7 +51,7 @@ object Cards:
    * @param value the value of the card that ranges from 1 to 13.
    * @param suit the suit of the card.
    */
-  case class PokerCard(value: Int, suit: PokerSuit) extends Card:
+  case class PokerCard(value: Int, suit: PokerSuit) extends Card with Coverable:
     override type Value = Int
     require(value >= 1, "Card value cannot be less than 1")
     require(value <= 13, "Card value cannot be greater than 13")

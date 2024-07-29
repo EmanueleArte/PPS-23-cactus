@@ -6,7 +6,7 @@ import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.MouseEvent
-import model.card.Cards.Card
+import model.card.Cards.{Card, Coverable, PokerCard}
 import scalafx.geometry.Insets
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
@@ -188,9 +188,12 @@ object ViewDSL:
      * @param card to display in the pane.
      * @return pane displaying the card.
      */
-    def showing(card: Card): Pane =
-      if pane.children.isEmpty then
+    def showing(card: Card & Coverable): Pane =
+      if pane.children.isEmpty && !card.isCovered then
         val filename: String = CardsPane.frontsFolderPath + s"/${card.suit.toString.toLowerCase()}_${card.value}.png"
+        pane.children.add(imageView(filename))
+      else if card.isCovered then 
+        val filename: String = CardsPane.backsFolderPath + CardsPane.defaultBack
         pane.children.add(imageView(filename))
       pane
 
@@ -199,9 +202,11 @@ object ViewDSL:
      * @param cardOption containing the card to display in the pane.
      * @return pane displaying the card.
      */
-    def showing(cardOption: Option[Card]): Pane = cardOption match
+    def showing(cardOption: Option[Card & Coverable]): Pane = cardOption match
       case Some(card) => pane showing card
-      case _ if pane.children.isEmpty => pane.children.add(placeholder); pane
+      case _ if pane.children.isEmpty =>
+        pane.children.add(placeholder)
+        pane
       case _ => pane
 
   extension [T <: ScrollPane] (pane: T)

@@ -150,7 +150,9 @@ object Logics:
     @tailrec
     final def discard(cardIndex: Int): Unit = currentPhase match
       case CactusTurnPhase.Discard =>
-        game.discardPile = game.discardPile.put(currentPlayer.discard(cardIndex))
+        val discardedCard = currentPlayer.discard(cardIndex)
+        discardedCard.uncover()
+        game.discardPile = game.discardPile.put(discardedCard)
         currentPhase_=(CactusTurnPhase.DiscardEquals)
       case CactusTurnPhase.DiscardEquals =>
         game.discardPile.draw() match
