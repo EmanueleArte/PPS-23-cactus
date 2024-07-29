@@ -28,7 +28,7 @@ object CactusViewModule extends ViewModule:
           true
         )
 
-      override def updateViewTurnPhase(): Unit = asidePane.updateViewTurnPhase
+      override def updateViewTurnPhase(): Unit = asidePane.updateViewTurnPhase()
 
   /** Interface of the view module of game. */
   trait Interface extends Provider with Component:

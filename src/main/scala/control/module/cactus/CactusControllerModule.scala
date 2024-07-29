@@ -62,7 +62,9 @@ object CactusControllerModule extends ControllerModule:
     /** Represents the controller for the Cactus game. */
     class CactusControllerImpl extends CactusController:
 
-      override def continue(): Unit = context.model.continue()
+      override def continue(): Unit =
+        context.model.continue()
+        context.view.updateViewTurnPhase()
 
       override def draw(fromDeck: Boolean): Unit =
         context.model.draw(fromDeck)

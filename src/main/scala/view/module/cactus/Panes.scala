@@ -225,10 +225,10 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
  * @param controller of the application.
  */
 class AsidePane(controller: CactusController) extends ScalaFXPane:
-  val turnPhaseProperty: ObjectProperty[TurnPhase] = ObjectProperty(controller.currentPhase)
+  private val turnPhaseProperty: ObjectProperty[TurnPhase] = ObjectProperty(controller.currentPhase)
   turnPhaseProperty.onChange((_, oldValue, newValue) => update_pane())
 
-  def updateViewTurnPhase: Unit = turnPhaseProperty.setValue(controller.currentPhase)
+  def updateViewTurnPhase(): Unit = turnPhaseProperty.setValue(controller.currentPhase)
 
   override def paneWidth: Int = AppPane.asidePaneWidth
 
@@ -236,12 +236,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
 
   override def position: ViewPosition = ViewPosition(mainPaneWidth, 0)
 
-  private val nextButton: Button = ButtonElement saying "Continue" doing (_ =>
-    print("Continue - ")
-    controller.continue()
-    print("New phase: ")
-    println(controller.currentPhase)
-  )
+  private val nextButton: Button = ButtonElement saying "Continue" doing (_ => controller.continue())
   private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => println(controller.currentPhase))
   private def phaseText: VBox = new VBox()
     .containing(TextElement telling "Current phase: " bold)
@@ -263,6 +258,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     .containing(cactusButton)
 
   private def update_pane(): Unit =
+    println("Pane updating")
     _pane.children.clear()
     _pane.children.add(phaseText)
     _pane.children.add(phaseDescription)
