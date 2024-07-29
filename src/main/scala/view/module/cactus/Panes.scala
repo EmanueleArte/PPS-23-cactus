@@ -238,8 +238,9 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
 
   private val nextButton: Button = ButtonElement saying "Continue" doing (_ =>
     print("Continue - ")
-    println(controller.currentPhase)
     controller.continue()
+    print("New phase: ")
+    println(controller.currentPhase)
   )
   private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => println(controller.currentPhase))
   private def phaseText: VBox = new VBox()

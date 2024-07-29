@@ -20,12 +20,11 @@ object Utils:
     BaseTurnPhase.End -> ("End", "The End.")
   )
 
-  /**
-   * Converts a color to its RGB representation.
-   * @param color color to convert.
-   * @return string representation of the color.
-   */
   extension (color: Color)
+    /**
+     * Converts a color to its RGB representation.
+     * @return string representation of the color.
+     */
     def toRgbString: String =
       val red = (color.red * 255).toInt
       val green = (color.green * 255).toInt
