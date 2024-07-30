@@ -113,8 +113,9 @@ object Bots:
       cards.zipWithIndex.filter((c, _) => c.equals(higherValueCard)).map((_, i) => i).headOption.getOrElse(unknownCard)
 
     private def unknownCard: Int =
-      val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => cards.diff(_knownCards).contains(c)).map((_, i) => i)
-      indexes(scala.util.Random.nextInt(indexes.length))
+      cards.zipWithIndex.filter((c, _) => cards.diff(_knownCards).contains(c)).map((_, i) => i) match
+        case Nil     => higherKnownCardIndex
+        case indexes => indexes(scala.util.Random.nextInt(indexes.length))
 
     override def chooseDiscard(): Int = _discardMethod match
       case DiscardMethods.Unknown => unknownCard
@@ -134,7 +135,7 @@ object Bots:
     override def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int] =
       knownCards.zipWithIndex.find((c, _) => c.value == discardPile.copy(discardPile.cards).draw().get.value) match
         case Some((card, i)) => Some(cards.zipWithIndex.filter((c, _) => c.equals(card)).map((_, i) => i).head)
-        case _            => None
+        case _               => None
 
     private def totKnownValue: Int =
       _knownCards.map {
