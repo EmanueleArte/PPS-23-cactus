@@ -98,7 +98,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     )
     .containing(List(new TableCenterPane().pane))
 
-  private def updateDiscardPile(): Unit  = pileCardsProperty.setValue(controller.pilesHead)
+  def updateDiscardPile(): Unit  = pileCardsProperty.setValue(controller.pilesHead)
   private def updatePlayersCards(): Unit = playerCardsProperty.setValue(currentPlayer.cards)
   private def calculatePlayerPosition(i: Int): ViewPosition =
     val theta: Double = 2 * Math.PI / controller.players.length
@@ -165,7 +165,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private def cardClickHandler(card: Card): Unit =
       if player.isEqualsTo(currentPlayer) then
         val index: Int = player.cards.indexOf(card)
-        controller.discard(index)
+        controller.handlePlayerInput(index)
         updatePlayerCards()
         updateDiscardPile()
 
@@ -237,7 +237,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   override def position: ViewPosition = ViewPosition(mainPaneWidth, 0)
 
   private val nextButton: Button = ButtonElement saying "Continue" doing (_ => controller.continue())
-  private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => println(controller.currentPhase))
+  private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => controller.callCactus())
   private def phaseText: VBox = new VBox()
     .containing(TextElement telling "Current phase: " bold)
     .containing(TextElement telling turnPhaseDescription(controller.currentPhase)._1 wrapped)

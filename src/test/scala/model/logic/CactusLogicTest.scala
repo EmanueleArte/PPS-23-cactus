@@ -96,7 +96,6 @@ class CactusLogicTest extends AnyFlatSpec:
       logic.discard(0)
       logic.continue()
       logic.callCactus()
-      logic.nextPlayer
       logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
     logic.game.discardPile.size should be(playersNumber)
@@ -120,7 +119,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.players.foreach {
       case bot: CactusBot =>
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
-      case _ =>
+      case _ => ()
     }
     logic.draw(true)
     logic.discard(0)
@@ -138,7 +137,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.players.foreach {
       case bot: CactusBot =>
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
-      case _ =>
+      case _ => ()
     }
     while !logic.isGameOver do
       logic.currentPlayer match
@@ -168,3 +167,22 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.callCactus()
           logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
+    logic.game.deckSize should be (32)
+
+  it should "be played with the player and one bot" in:
+    val drawings: Seq[DrawMethods] = Seq(DrawMethods.Deck)
+    val discardings: Seq[DiscardMethods] = Seq(DiscardMethods.Random)
+    val memories: Seq[Memory] = Seq(Memory.Optimal)
+    val logic = TestCactusLogicBots((drawings, discardings, memories))
+    while !logic.isGameOver do
+      logic.currentPlayer match
+        case bot: CactusBot =>
+          logic.continue()
+        case _ =>
+          logic.draw(true)
+          logic.discard(0)
+          logic.continue()
+          logic.callCactus()
+          logic.continue()
+    for (_, score) <- toMap(logic.calculateScore) do score should be > 0
+    logic.game.deckSize should be (42)
