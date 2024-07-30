@@ -3,7 +3,7 @@ package model.game
 import model.card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
 import model.card.CardBuilder.PokerDSL.OF
 import model.card.Cards.{Card, Coverable, GenericCard}
-import model.card.CardsData.PokerCardName.Ace
+import model.card.CardsData.PokerCardName.{Ace, King}
 import model.deck.{Decks, Drawable}
 import model.deck.Decks.Deck
 import model.game.Scores
@@ -98,3 +98,10 @@ class CactusGameTest extends AnyFlatSpec:
     scores.get(players(0)) should be(Some(Ace + 2))
     scores.get(players(2)) should be(Some(10 + 10))
     scores.players should not contain nonCactusPlayer
+
+  "Red King" should "count 0 on score calculation" in:
+    val players: Players = List(
+      CactusPlayer("", List(King OF Spades, King OF Hearts, 9 OF Clubs))
+    )
+    val scores: Scores = CactusGame().calculateScores(players)
+    scores.get(players.headOption.get) shouldBe 22
