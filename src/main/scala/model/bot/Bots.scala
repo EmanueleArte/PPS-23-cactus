@@ -110,7 +110,7 @@ object Bots:
       _knownCards.zipWithIndex.foreach((c, i) =>
         if (isHigherValue(c, higherValueCard) || i == 0) then higherValueCard = _knownCards(i)
       )
-      cards.zipWithIndex.filter((c, _) => c.equals(higherValueCard)).map((_, i) => i).head
+      cards.zipWithIndex.filter((c, _) => c.equals(higherValueCard)).map((_, i) => i).headOption.getOrElse(unknownCard)
 
     private def unknownCard: Int =
       val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => cards.diff(_knownCards).contains(c)).map((_, i) => i)
