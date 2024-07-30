@@ -104,4 +104,4 @@ class CactusGameTest extends AnyFlatSpec:
       CactusPlayer("", List(King OF Spades, King OF Hearts, 9 OF Clubs))
     )
     val scores: Scores = CactusGame().calculateScores(players)
-    scores.get(players.headOption.get) shouldBe 22
+    scores.get(players.headOption.get).get shouldBe 22
