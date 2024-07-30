@@ -6,6 +6,7 @@ import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
 import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.CactusPlayer
+import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
 
 /** Represents the controller module for the Cactus game. */
@@ -77,6 +78,7 @@ object CactusControllerModule extends ControllerModule:
         context.model.continue()
         context.view.updateViewTurnPhase()
         context.view.updateDiscardPile()
+        if context.model.isGameOver then Platform.exit() // TODO: Show the scores
 
       override def draw(fromDeck: Boolean): Unit =
         context.model.draw(fromDeck)

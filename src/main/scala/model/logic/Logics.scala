@@ -193,6 +193,7 @@ object Logics:
         currentPhase match
           case CactusTurnPhase.Draw =>
             draw(bot.chooseDraw(game.discardPile))
+            bot.seeCard(bot.cards.size - 1)
             botTurn()
           case CactusTurnPhase.Discard =>
             discard(bot.chooseDiscard())
