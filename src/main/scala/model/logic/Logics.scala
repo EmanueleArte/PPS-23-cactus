@@ -111,9 +111,11 @@ object Logics:
     private var lastRound: Boolean = false
     _currentPhase = CactusTurnPhase.Draw
 
-    override def continue(): Unit = currentPhase match
+    @tailrec
+    final override def continue(): Unit = currentPhase match
       case CactusTurnPhase.DiscardEquals =>
         currentPhase_=(CactusTurnPhase.CallCactus)
+        if isBot(currentPlayer) then continue()
       case CactusTurnPhase.CallCactus =>
         if isBot(currentPlayer) then botTurn()
         else currentPhase_=(BaseTurnPhase.End)
@@ -183,6 +185,7 @@ object Logics:
       case CactusTurnPhase.CallCactus =>
         lastRound = true
         currentPhase_=(BaseTurnPhase.End)
+        continue()
       case _ => ()
 
     @tailrec
@@ -195,11 +198,12 @@ object Logics:
           case CactusTurnPhase.Discard =>
             discard(bot.chooseDiscard())
             botTurn()
-          case CactusTurnPhase.DiscardEquals => () // botDiscardWithMalus(bot)
+          case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>
             if bot.callCactus() then callCactus()
-            currentPhase_=(BaseTurnPhase.End)
-            continue()
+            else
+              currentPhase_=(BaseTurnPhase.End)
+              continue()
           case _ => continue()
       case _ => ()
 
