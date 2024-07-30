@@ -96,7 +96,6 @@ class CactusLogicTest extends AnyFlatSpec:
       logic.discard(0)
       logic.continue()
       logic.callCactus()
-      logic.nextPlayer
       logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
     logic.game.discardPile.size should be(playersNumber)

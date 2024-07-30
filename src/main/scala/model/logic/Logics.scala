@@ -185,7 +185,6 @@ object Logics:
       case CactusTurnPhase.CallCactus =>
         lastRound = true
         currentPhase_=(BaseTurnPhase.End)
-        continue()
       case _ => ()
 
     @tailrec
