@@ -116,7 +116,7 @@ object Logics:
         currentPhase_=(CactusTurnPhase.CallCactus)
       case CactusTurnPhase.CallCactus =>
         if isBot(currentPlayer) then botTurn()
-        currentPhase_=(BaseTurnPhase.End)
+        else currentPhase_=(BaseTurnPhase.End)
       case BaseTurnPhase.End =>
         currentPhase_=(CactusTurnPhase.DiscardEquals)
         iterateBots(botDiscardWithMalus)
@@ -164,18 +164,19 @@ object Logics:
      * @param player player that has to discard the card. Default is the current player.
      */
     @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
-    def discardWithMalus(cardIndex: Int, player: CactusPlayer = currentPlayer): Unit = currentPhase match
-      case CactusTurnPhase.DiscardEquals =>
-        game.discardPile.draw() match
-          case Some(card) if card.value != player.cards(cardIndex).value =>
-            player.draw(game.deck)
-            game.discardPile = game.discardPile.put(card)
-          case Some(card) =>
-            game.discardPile = game.discardPile.put(card)
-            currentPhase_=(CactusTurnPhase.Discard)
-            discard(cardIndex)
-          case _ => player.draw(game.deck)
-      case _ => ()
+    def discardWithMalus(cardIndex: Int, player: CactusPlayer = currentPlayer): Unit =
+      currentPhase match
+        case CactusTurnPhase.DiscardEquals =>
+          game.discardPile.draw() match
+            case Some(card) if card.value != player.cards(cardIndex).value =>
+              player.draw(game.deck)
+              game.discardPile = game.discardPile.put(card)
+            case Some(card) =>
+              game.discardPile = game.discardPile.put(card)
+              currentPhase_=(CactusTurnPhase.Discard)
+              discard(cardIndex)
+            case _ => player.draw(game.deck)
+        case _ => ()
 
     /** Make the current player to call Cactus. */
     def callCactus(): Unit = currentPhase match
@@ -194,12 +195,11 @@ object Logics:
           case CactusTurnPhase.Discard =>
             discard(bot.chooseDiscard())
             botTurn()
-          case CactusTurnPhase.DiscardEquals => botDiscardWithMalus(bot)
+          case CactusTurnPhase.DiscardEquals => () // botDiscardWithMalus(bot)
           case CactusTurnPhase.CallCactus =>
             if bot.callCactus() then callCactus()
-            else
-              currentPhase_=(BaseTurnPhase.End)
-              continue()
+            currentPhase_=(BaseTurnPhase.End)
+            continue()
           case _ => continue()
       case _ => ()
 
