@@ -98,7 +98,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     )
     .containing(List(new TableCenterPane().pane))
 
-  private def updateDiscardPile(): Unit  = pileCardsProperty.setValue(controller.pilesHead)
+  def updateDiscardPile(): Unit  = pileCardsProperty.setValue(controller.pilesHead)
   private def updatePlayersCards(): Unit = playerCardsProperty.setValue(currentPlayer.cards)
   private def calculatePlayerPosition(i: Int): ViewPosition =
     val theta: Double = 2 * Math.PI / controller.players.length
