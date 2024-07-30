@@ -54,8 +54,6 @@ object CactusControllerModule extends ControllerModule:
      */
     def players: Players
     
-    def currentPlayer: CactusPlayer
-
     /**
      * Retrieve an [[Option]] with the card on top of the discard pile (if present).
      * @return [[Option]] with the card on top of the discard pile.
@@ -99,12 +97,12 @@ object CactusControllerModule extends ControllerModule:
         context.model.discard(cardIndex)
         context.view.updateViewTurnPhase()
 
-      override def callCactus(): Unit = context.model.callCactus()
+      override def callCactus(): Unit =
+        context.model.callCactus()
+        context.view.updateViewTurnPhase()
 
       override def players: Players = context.model.players
       
-      override def currentPlayer: CactusPlayer = context.model.currentPlayer
-
       override def pilesHead: Option[PokerCard & Coverable] = context.model.game.discardPile.cards.headOption
 
       override def discardWithMalus(cardIndex: Int): Unit = context.model.discardWithMalus(cardIndex)
