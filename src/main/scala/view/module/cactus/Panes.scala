@@ -226,7 +226,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
  */
 class AsidePane(controller: CactusController) extends ScalaFXPane:
   private val turnPhaseProperty: ObjectProperty[TurnPhase] = ObjectProperty(controller.currentPhase)
-  turnPhaseProperty.onChange((_, oldValue, newValue) => update_pane())
+  turnPhaseProperty.onChange((_, oldValue, newValue) => updatePane())
 
   def updateViewTurnPhase(): Unit = turnPhaseProperty.setValue(controller.currentPhase)
 
@@ -236,38 +236,36 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
 
   override def position: ViewPosition = ViewPosition(mainPaneWidth, 0)
 
-  private val nextButton: Button = ButtonElement saying "Continue" doing (_ => controller.continue())
-  private val cactusButton: Button = ButtonElement saying "Cactus" doing (_ => controller.callCactus())
-  private def phaseText: VBox = new VBox()
+  private val _nextButton: Button = ButtonElement saying "Continue" doing (_ => controller.continue())
+  private val _cactusButton: Button = ButtonElement saying "Cactus" doing (_ => controller.callCactus())
+  private def _phaseText: VBox = new VBox()
     .containing(TextElement telling "Current phase: " bold)
-    .containing(TextElement telling turnPhaseDescription(controller.currentPhase)._1 wrapped)
-  phaseText.setAlignment(Pos.BaselineLeft)
+    .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value)._1 wrapped)
+  _phaseText.setAlignment(Pos.BaselineLeft)
 
-  private def phaseDescription: VBox = new VBox()
+  private def _phaseDescription: VBox = new VBox()
     .containing(TextElement telling "Phase description" bold)
-    .containing(TextElement telling turnPhaseDescription(controller.currentPhase)._2 wrapped)
+    .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value)._2 wrapped)
 
-  private val phaseContainer: VBox = new VBox()
-    .containing(phaseText)
-    .containing(phaseDescription)
-  private val buttonsContainer: VBox = new VBox()
-    .containing(nextButton)
-    .containing(cactusButton)
+  private val _phaseContainer: VBox = new VBox()
+    .containing(_phaseText)
+    .containing(_phaseDescription)
+  private val _buttonsContainer: VBox = new VBox()
+    .containing(_nextButton)
+    .containing(_cactusButton)
 
   private val _pane: BorderPane = new BorderPane()
     .at(position)
     .tall(paneHeight)
     .colored(AppPane.asidePaneColor)
-    .^(phaseContainer)
-    .v(buttonsContainer)
-
+    .^(_phaseContainer)
+    .v(_buttonsContainer)
   VBox.setVgrow(_pane, Priority.Always)
 
-
-  private def update_pane(): Unit =
-    phaseContainer.children.clear()
-    phaseContainer.children.add(phaseText)
-    phaseContainer.children.add(phaseDescription)
-    _pane.top = phaseContainer
+  private def updatePane(): Unit =
+    _phaseContainer.children.clear()
+    _phaseContainer.children.add(_phaseText)
+    _phaseContainer.children.add(_phaseDescription)
+    _pane.top = _phaseContainer
 
   override def pane: Pane = _pane
