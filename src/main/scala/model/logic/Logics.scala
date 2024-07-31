@@ -149,7 +149,6 @@ object Logics:
      *
      * @param cardIndex index of the card in the player hand to discard.
      */
-    @SuppressWarnings(Array("org.wartremover.warts.IsInstanceOf"))
     @tailrec
     final def discard(cardIndex: Int): Unit = currentPhase match
       case CactusTurnPhase.Discard =>
