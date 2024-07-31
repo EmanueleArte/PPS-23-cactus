@@ -6,7 +6,7 @@ import model.card.Cards.{Card, Coverable, PokerCard}
 import model.logic.TurnPhase
 import model.player.Players.{CactusPlayer, Player}
 import scalafx.beans.property.ObjectProperty
-import scalafx.geometry.Pos
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
 import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.image.ImageView
@@ -17,7 +17,7 @@ import scalafx.scene.text.Text
 import view.Utils.turnPhaseDescription
 import view.ViewDSL.{Button as ButtonElement, Card as CardElement, Text as TextElement, *}
 import view.ViewPosition
-import view.module.cactus.AppPane._
+import view.module.cactus.AppPane.*
 import view.module.cactus.CardsPane.*
 import view.module.cactus.PlayersPane.*
 import view.module.cactus.Text.*
@@ -90,7 +90,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
   private val turnIndicators: List[Circle] = controller.players.indices.toList.map(_ => new Circle:
     radius = PlayersPane.turnIndicatorRadius
-    stroke = PlayersPane.turnIndicatorColor
   )
 
   private val playersPanes: List[PlayerPane] = controller
@@ -122,12 +121,14 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   currentPlayerProperty.onChange((_, oldValue, newValue) =>
     // Update previous player's turn indicator
     val oldPlayerIndex: Int = controller.players.indexOf(oldValue)
-    turnIndicators(oldPlayerIndex).fill = Color.Transparent
+    turnIndicators(oldPlayerIndex).fill = PlayersPane.turnIndicatorFillColorDisabled
+    turnIndicators(oldPlayerIndex).stroke = PlayersPane.turnIndicatorStrokeColorDisabled
     playersPanes(oldPlayerIndex).updateTurnIndicator()
 
     // update new player's turn indicator
     val newPlayerIndex: Int = controller.players.indexOf(newValue)
-    turnIndicators(newPlayerIndex).fill = PlayersPane.turnIndicatorColor
+    turnIndicators(newPlayerIndex).fill = PlayersPane.turnIndicatorFillColorEnabled
+    turnIndicators(newPlayerIndex).stroke = PlayersPane.turnIndicatorStrokeColorEnabled
     playersPanes(newPlayerIndex).updateTurnIndicator()
   )
 
@@ -152,9 +153,12 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     /** Updates the turn indicator of the player. */
     def updateTurnIndicator(): Unit = header.left = turnIndicatorContainer(turnIndicators(controller.players.indexOf(player)))
 
-    private def cardsNumberText: Text = TextElement
-      .telling(player.cards.size.toString)
-      .whenHovered("Number of cards in player's hand")
+    private def cardsNumberText: VBox = new VBox:
+      children = List(TextElement
+        .telling(player.cards.size.toString)
+        .whenHovered("Number of cards in player's hand")
+        .small)
+      alignment = Pos.CenterRight
 
     private def turnIndicatorContainer(turnIndicator: Node): Pane = new VBox:
       alignment = Pos.Center
@@ -187,12 +191,19 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     )
 
     private val header: BorderPane =
-      val nameText: Text = TextElement telling player.name
+      val nameText: HBox = new HBox:
+        padding = Insets(PlayersPane.padding)
+        children = List(TextElement telling player.name)
 
       val turnIndicator: Circle = turnIndicators(controller.players.indexOf(player))
       turnIndicator.setCenterX(position.x + PlayersPane.turnIndicatorRadius)
       turnIndicator.setCenterX(position.y - PlayersPane.turnIndicatorRadius)
-      turnIndicator.fill = if currentPlayerProperty.value.isEqualsTo(player) then PlayersPane.turnIndicatorColor else Color.Transparent
+      turnIndicator.fill = if currentPlayerProperty.value.isEqualsTo(player)
+        then PlayersPane.turnIndicatorFillColorEnabled
+        else PlayersPane.turnIndicatorFillColorDisabled
+      turnIndicator.stroke = if currentPlayerProperty.value.isEqualsTo(player)
+        then PlayersPane.turnIndicatorStrokeColorEnabled
+        else PlayersPane.turnIndicatorStrokeColorDisabled
 
       new BorderPane():
         prefWidth = paneWidth

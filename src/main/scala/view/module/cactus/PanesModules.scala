@@ -15,14 +15,14 @@ object AppPane:
    * @example if `panesRatio` is set to 0.6 it means that the main pane is 60% of the window, while the aside pane is 40%.
    */
   private val mainPaneRatio: Double = 0.8
-  
+
   /** Contains the basic parameters for the aside pane. */
   object AsidePaneModule:
     val continueButtonText: String = "Continue"
     val cactusButtonText: String = "Cactus"
     val phaseText: String = "Current phase: "
     val phaseDescriptionText: String = "Phase description"
-  
+
   /** Width of the application's window. */
   val windowWidth: Int = primaryScreenBounds.width.toInt
 
@@ -36,7 +36,7 @@ object AppPane:
   val mainPaneHeight: Int = (windowHeight * 0.9).toInt
 
   /** Background color of the main pane, expressed in rgb format. */
-  val mainPaneColor: Color = Color.DarkGreen
+  val mainPaneColor: Color = Color.rgb(0, 127, 28)
 
   /** Width of the side pane. */
   val asidePaneWidth: Int = windowWidth - mainPaneWidth
@@ -45,7 +45,7 @@ object AppPane:
   val asidePaneHeight: Int = mainPaneHeight
 
   /** Background color of the side pane. */
-  val asidePaneColor: Color = mainPaneColor
+  val asidePaneColor: Color = mainPaneColor //Color.rgb(12, 85, 28)
 
 /** Contains the basic parameters for the texts. */
 object Text:
@@ -82,7 +82,13 @@ object PlayersPane:
   val turnIndicatorRadius: Int = 6
 
   /** Color of the turn indicator. */
-  val turnIndicatorColor: Color = Color.GhostWhite
+  val turnIndicatorFillColorEnabled: Color = Color.Lime
+  val turnIndicatorStrokeColorEnabled: Color = Color.GhostWhite
+
+  val turnIndicatorFillColorDisabled: Color = Color.Red
+  val turnIndicatorStrokeColorDisabled: Color = Color.Black
+  
+  val padding: Int = 10
 
 /** Contains the basic parameters for the card's panes. */
 object CardsPane:
