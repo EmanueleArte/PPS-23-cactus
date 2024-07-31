@@ -122,7 +122,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     override def pane: Pane = new Pane()
       .at(position)
       .containing(header)
-      .containing(cardsContainer)
+      .containing(cardsContainer)(playerCardsProperty.value.nonEmpty)
 
     private def cardsNumberText: Text = TextElement
       .telling(player.cards.size.toString)
