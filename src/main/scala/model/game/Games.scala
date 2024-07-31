@@ -108,7 +108,11 @@ class CactusGame() extends Game:
         .map(index =>
           CactusBotImpl(
             s"Bot-$index",
-            (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get),
+            (1 to initialPlayerCardsNumber).toList
+              .map(_ => deck.draw().get)
+              .map(card =>
+                card.cover()
+                card),
             DrawMethods.Deck,
             DiscardMethods.Random,
             Memory.Normal
@@ -128,7 +132,10 @@ class CactusGame() extends Game:
       }
       .toList)
       .map(p =>
-        (1 to initialPlayerCardsNumber).foreach(_ => p.draw(deck))
+        (1 to initialPlayerCardsNumber).foreach(cardIndex =>
+          p.draw(deck)
+          p.cards(cardIndex - 1).cover()
+        )
         p
       )
 
