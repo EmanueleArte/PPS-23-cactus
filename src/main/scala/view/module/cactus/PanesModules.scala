@@ -72,10 +72,10 @@ object PlayersPane:
   val paneHeight: Int = (CardsPane.paneHeight * maxCardsLines).toInt + normalFontSize
 
   /** Radius of the circle representing the turn indicator. */
-  val turnIndicatorRadius: Int = 5
+  val turnIndicatorRadius: Int = 6
 
   /** Color of the turn indicator. */
-  val turnIndicatorColor: Color = Color.Red
+  val turnIndicatorColor: Color = Color.GhostWhite
 
 /** Contains the basic parameters for the card's panes. */
 object CardsPane:

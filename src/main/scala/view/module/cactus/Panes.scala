@@ -7,9 +7,10 @@ import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.{CactusPlayer, Player}
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.Pos
+import scalafx.scene.Node
 import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, HBox, Pane, Priority, VBox}
+import scalafx.scene.layout.{BorderPane, HBox, Pane, Priority, StackPane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
@@ -99,7 +100,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)))
 
   override def pane: Pane = new Pane()
-//    .at(position)
     .tall(paneHeight)
     .long(paneWidth)
     .colored(AppPane.mainPaneColor)
@@ -134,7 +134,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
    */
   private class PlayerPane(player: Player, override val position: ViewPosition)
       extends ScalaFXPane: // with PlayersPane:
-    playerCardsProperty.onChange((_, oldValue, newValue) => updatePlayerCards())
     override def paneWidth: Int  = PlayersPane.paneWidth
     override def paneHeight: Int = PlayersPane.paneHeight
 
@@ -143,45 +142,33 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .containing(header)
       .containing(cardsContainer)(playerCardsProperty.value.nonEmpty)
 
+    playerCardsProperty.onChange((_, _, _) => updatePlayerCards())
+
     private def cardsNumberText: Text = TextElement
       .telling(player.cards.size.toString)
       .whenHovered("Number of cards in player's hand")
 
-    def updateTurnIndicator(): Unit =
-      val turnIndicator = turnIndicators(controller.players.indexOf(player))
-      header.left = turnIndicator
-
-    private val header: BorderPane =
-      val nameText: Text = TextElement telling player.name
-
-      val turnIndicator: Circle = turnIndicators(controller.players.indexOf(player))
-      turnIndicator.setCenterX(position.x + PlayersPane.turnIndicatorRadius)
-      turnIndicator.setCenterX(position.y - PlayersPane.turnIndicatorRadius)
-      turnIndicator.fill = if currentPlayer.isEqualsTo(player) then PlayersPane.turnIndicatorColor else Color.Transparent
-
-      new BorderPane():
-        prefWidth = paneWidth
-        left = turnIndicator
-        center = nameText
-        right = cardsNumberText
-
-    private val cardsContainer: ScrollPane = new ScrollPane()
-      .at((leftPosition, topPosition + normalFontSize * 2))
-      .long((CardsPane.paneWidth + CardsPane.margin) * PlayersPane.maxCardsPerLine)
-      .tallAtMost(CardsPane.paneHeight * PlayersPane.maxCardsLines)
-      .colored(Color.Transparent)
-      .containing(playerHand)
-      .withoutVBar
+    private def turnIndicatorContainer(turnIndicator: Node): Pane = new VBox:
+      alignment = Pos.Center
+      children = List(turnIndicator)
 
     private def playerHand: VBox = new VBox()
       .colored(AppPane.mainPaneColor)
       .long((CardsPane.paneWidth + CardsPane.margin) * PlayersPane.maxCardsPerLine)
       .containing(player.cards
-            .map(card => CardElement showing card reacting (_ => cardClickHandler(card)))
-            .grouped(PlayersPane.maxCardsPerLine)
-            .toList
-            .map(pack => new HBox() containing pack)
+        .map(card => CardElement showing card reacting (_ => cardClickHandler(card)))
+        .grouped(PlayersPane.maxCardsPerLine)
+        .toList
+        .map(pack => new HBox() containing pack)
       )
+
+    private def updatePlayerCards(): Unit =
+      cardsContainer.content = playerHand
+      header.right = cardsNumberText
+
+    def updateTurnIndicator(): Unit =
+      val turnIndicator = turnIndicators(controller.players.indexOf(player))
+      header.left = turnIndicatorContainer(turnIndicator)
 
     private def cardClickHandler(card: Card): Unit =
       if player.isEqualsTo(currentPlayer) then
@@ -195,19 +182,33 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       (i / PlayersPane.maxCardsPerLine) * CardsPane.paneHeight
     )
 
-    private def updatePlayerCards(): Unit =
-      cardsContainer.content = playerHand
-      header.right = cardsNumberText
+    private val header: BorderPane =
+      val nameText: Text = TextElement telling player.name
+
+      val turnIndicator: Circle = turnIndicators(controller.players.indexOf(player))
+      turnIndicator.setCenterX(position.x + PlayersPane.turnIndicatorRadius)
+      turnIndicator.setCenterX(position.y - PlayersPane.turnIndicatorRadius)
+      turnIndicator.fill = if currentPlayer.isEqualsTo(player) then PlayersPane.turnIndicatorColor else Color.Transparent
+
+      new BorderPane():
+        prefWidth = paneWidth
+        left = turnIndicatorContainer(turnIndicator)
+        center = nameText
+        right = cardsNumberText
+
+    private val cardsContainer: ScrollPane = new ScrollPane()
+      .at((leftPosition, topPosition + normalFontSize * 2))
+      .long((CardsPane.paneWidth + CardsPane.margin) * PlayersPane.maxCardsPerLine)
+      .tallAtMost(CardsPane.paneHeight * PlayersPane.maxCardsLines)
+      .colored(Color.Transparent)
+      .containing(playerHand)
+      .withoutVBar
 
   /**
    * Representation of the center of the table.
    * It consists in a deck and a discard pile.
    */
   private class TableCenterPane() extends ScalaFXPane:
-    pileCardsProperty.onChange((_, oldValue, newValue) =>
-      pilePane.children.clear()
-      pilePane.children.add(CardElement at topLeftCorner showing newValue)
-    )
 
     override def paneWidth: Int = CardsPane.paneWidth * 2
 
@@ -221,6 +222,11 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .tall(paneHeight)
       .containing(deckPane)
       .containing(pilePane)
+
+    pileCardsProperty.onChange((_, _, newValue) =>
+      pilePane.children.clear()
+      pilePane.children.add(CardElement at topLeftCorner showing newValue)
+    )
 
     private val deckPane: Pane = new Pane()
       .at((leftPosition, topPosition))
