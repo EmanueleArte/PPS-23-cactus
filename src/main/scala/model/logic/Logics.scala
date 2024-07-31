@@ -176,6 +176,9 @@ object Logics:
           game.discardPile.draw() match
             case Some(card) if card.value != player.cards(cardIndex).value =>
               player.draw(game.deck)
+              player.cards.lastOption match
+                case Some(card) => card.cover()
+                case _ => ()
               game.discardPile = game.discardPile.put(card)
             case Some(card) =>
               game.discardPile = game.discardPile.put(card)
