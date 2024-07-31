@@ -136,7 +136,7 @@ class CactusGame() extends Game:
     case PokerCardName.King => c.suit == PokerSuit.Hearts || c.suit == PokerSuit.Diamonds
     case _                  => false
 
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex
       .map((player, index) => (player, player.cards))
