@@ -20,7 +20,7 @@ object AppPane:
   object AsidePaneModule:
     val continueButtonText: String = "Continue"
     val cactusButtonText: String = "Cactus"
-    val phaseText: String = "Current phase: "
+    val phaseText: String = "Current phase"
     val phaseDescriptionText: String = "Phase description"
 
   /** Width of the application's window. */
@@ -47,6 +47,7 @@ object AppPane:
   /** Background color of the side pane. */
   val asidePaneColor: Color = mainPaneColor //Color.rgb(12, 85, 28)
 
+  val spacing: Int = 20
 /** Contains the basic parameters for the texts. */
 object Text:
   /** Font size for small texts. */

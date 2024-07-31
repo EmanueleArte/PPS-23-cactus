@@ -160,9 +160,15 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         .small)
       alignment = Pos.CenterRight
 
-    private def turnIndicatorContainer(turnIndicator: Node): Pane = new VBox:
-      alignment = Pos.Center
-      children = List(turnIndicator)
+    private def turnIndicatorContainer(turnIndicator: Node): Pane =
+      val pane = new VBox:
+        alignment = Pos.Center
+        children = List(turnIndicator)
+
+      pane.whenHovered(currentPlayerProperty.value match
+        case p if p.isEqualsTo(player) => s"${player.name}'s turn"
+        case _ => s"Not ${player.name}'s turn"
+      )
 
     private def playerHand: VBox = new VBox()
       .colored(AppPane.mainPaneColor)
@@ -250,6 +256,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         controller.draw(true)
         updatePlayersCards()
       )
+      .whenHovered("Deck")
 
     private val pilePane: Pane = new Pane()
       .at((CardsPane.paneWidth, topPosition))
@@ -260,6 +267,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
           updatePlayersCards()
           updateDiscardPile()
       )
+      .whenHovered("Discard pile")
 
 /**
  * Representation of the lateral portion of the view.
@@ -296,6 +304,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   private val phaseContainer: VBox = new VBox()
     .containing(phaseText)
     .containing(phaseDescription)
+  phaseContainer.spacing = AppPane.spacing
 
   private val buttonsContainer: VBox = new VBox()
     .containing(nextButton)
