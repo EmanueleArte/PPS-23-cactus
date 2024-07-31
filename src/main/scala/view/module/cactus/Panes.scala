@@ -10,8 +10,8 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
 import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, HBox, Pane, Priority, VBox}
-import scalafx.scene.paint.Color
+import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, HBox, Pane, Priority, VBox}
+import scalafx.scene.paint.{Color, LinearGradient, Stops}
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
 import view.Utils.turnPhaseDescription
@@ -309,13 +309,15 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   private val buttonsContainer: VBox = new VBox()
     .containing(nextButton)
     .containing(cactusButton)
+  buttonsContainer.spacing = AppPane.spacing
 
   private val _pane: BorderPane = new BorderPane()
     .at(position)
     .tall(paneHeight)
-    .colored(AppPane.asidePaneColor)
+    .colored(Gradient.Vertical)(List(Color.DarkGreen, AppPane.asidePaneColor))
     .^(phaseContainer)
     .v(buttonsContainer)
+  _pane.padding = Insets(AppPane.spacing)
   VBox.setVgrow(_pane, Priority.Always)
 
   private def updatePane(): Unit =

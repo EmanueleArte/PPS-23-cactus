@@ -120,7 +120,7 @@ object CardsPane:
 /** Contains the basic parameters for the buttons. */
 object Buttons:
   /** Margins around a button. */
-  val margin: Int = 20
+  val margin: Int = AppPane.spacing
 
   /** Width of a button in the game screen. */
   val buttonWidth: Int = AppPane.asidePaneWidth - margin * 2

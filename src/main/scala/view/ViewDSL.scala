@@ -11,8 +11,8 @@ import scalafx.collections.ObservableBuffer
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{BorderPane, HBox, Pane, Region, VBox}
-import scalafx.scene.paint.Color
+import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, HBox, Pane, Region, VBox}
+import scalafx.scene.paint.{Color, LinearGradient, Stop, Stops}
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.{Font, FontWeight, Text}
 import view.module.cactus.{AppPane, Buttons, CardsPane, PlayersPane}
@@ -35,7 +35,7 @@ object ViewDSL:
     style = s"-fx-background-color: ${Buttons.buttonBgColor.toRgbString};" +
       s"-fx-text-color: ${Buttons.buttonColor.toRgbString};" +
       s"-fx-border-radius: 3px"
-    margin = Insets(10)
+//    margin = Insets(10)
 
   /**
    * Creates a new card's pane with the dimension already set.
@@ -74,6 +74,9 @@ object ViewDSL:
       s"-fx-text-color: ${Buttons.buttonColor.toRgbString};" +
       s"-fx-border-radius: 3px"
 
+  enum Gradient:
+    case Vertical, Horizontal
+
   extension [T <: Region](node: T)
 
     /**
@@ -111,8 +114,30 @@ object ViewDSL:
       node.style = node.style() + s";-fx-background-color: ${color.toRgbString};"
       node
 
+    def colored(alignment: Gradient)(colors: List[Color]): T =
+      val start: ViewPosition = ViewPosition(0, 0)
+      val end: ViewPosition = alignment match
+        case Gradient.Horizontal => ViewPosition(1, 0)
+        case Gradient.Vertical => ViewPosition(0, 1)
+
+      node.setBackground(new Background(Array(
+        new BackgroundFill(
+          new LinearGradient(
+            startX = start.x,
+            startY = start.y,
+            endX = end.x,
+            endY = end.y,
+            proportional = true,
+            stops = Stops(colors: _*)
+          ),
+          null, null
+        )
+      )))
+      node
+
     /**
      * Sets the preferred width of a [[Pane]].
+     *
      * @param width to set for the pane.
      * @return pane with the width set.
      */
