@@ -4,7 +4,7 @@ import control.module.cactus.CactusControllerModule.CactusController
 import control.module.cactus.CactusControllerModule
 import model.card.Cards.{Card, Coverable, PokerCard}
 import model.logic.{CactusTurnPhase, TurnPhase}
-import model.player.Players.Player
+import model.player.Players.{CactusPlayer, Player}
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.Pos
 import scalafx.scene.control.{Button, ScrollPane}
@@ -81,21 +81,29 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   private val leftPosition: Int                                    = 0
   private val topLeftCorner: ViewPosition                          = ViewPosition(topPosition, leftPosition)
   private def paneCenter: ViewPosition                                 = ViewPosition(paneWidth, paneHeight) / 2
-  private val currentPlayer: Player                                = controller.players(0)
+  private val currentPlayer: Player                                = controller.currentPlayer // TODO: remove it, use property instead
   private val pileCardsProperty: ObjectProperty[Option[PokerCard & Coverable]] = ObjectProperty(controller.pilesHead)
   private val playerCardsProperty: ObjectProperty[List[Card]] = ObjectProperty(
     currentPlayer.cards
   )
+  private val currentPlayerProperty: ObjectProperty[CactusPlayer] = ObjectProperty(controller.currentPlayer)
+
+  private val turnIndicators: List[Circle] = controller.players.indices.toList.map(_ => new Circle:
+    radius = PlayersPane.turnIndicatorRadius
+    stroke = PlayersPane.turnIndicatorColor
+  )
+
+  private val playersPanes: List[PlayerPane] = controller
+    .players
+    .zipWithIndex
+    .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)))
 
   override def pane: Pane = new Pane()
 //    .at(position)
     .tall(paneHeight)
     .long(paneWidth)
     .colored(AppPane.mainPaneColor)
-    .containing(
-      controller.players.zipWithIndex
-        .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)).pane)
-    )
+    .containing(playersPanes.map(_.pane))
     .containing(List(new TableCenterPane().pane))
 
   def updateDiscardPile(): Unit  = pileCardsProperty.setValue(controller.pilesHead)
@@ -106,6 +114,17 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       (Math.sin(theta * i) * dispositionRadius * horizontalRatio).toInt + paneCenter.x - PlayersPane.paneWidth / 2
     val y: Int = (Math.cos(theta * i) * dispositionRadius).toInt + paneCenter.y - PlayersPane.paneHeight / 2
     ViewPosition(x, y)
+
+  currentPlayerProperty.onChange((_, oldValue, newValue) =>
+    val oldPlayerIndex: Int = controller.players.indexOf(oldValue)
+    val newPlayerIndex: Int = controller.players.indexOf(newValue)
+    turnIndicators.zipWithIndex.filter((_, index) => index == oldPlayerIndex).foreach((indicator, _) => indicator.fill = Color.Transparent)
+    turnIndicators.zipWithIndex.filter((_, index) => index == newPlayerIndex).foreach((indicator, _) => indicator.fill = PlayersPane.turnIndicatorColor)
+    playersPanes(oldPlayerIndex).updateTurnIndicator()
+    playersPanes(newPlayerIndex).updateTurnIndicator()
+  )
+
+  def updateCurrentPlayer(): Unit = currentPlayerProperty.value = controller.currentPlayer
 
   /**
    * Representation of the player's pane.
@@ -128,15 +147,17 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .telling(player.cards.size.toString)
       .whenHovered("Number of cards in player's hand")
 
+    def updateTurnIndicator(): Unit =
+      val turnIndicator = turnIndicators(controller.players.indexOf(player))
+      header.left = turnIndicator
+
     private val header: BorderPane =
       val nameText: Text = TextElement telling player.name
 
-      val turnIndicator: Circle = new Circle:
-        centerX = position.x + PlayersPane.turnIndicatorRadius
-        centerY = position.y - PlayersPane.turnIndicatorRadius
-        radius = PlayersPane.turnIndicatorRadius
-        fill = if currentPlayer.isEqualsTo(player) then PlayersPane.turnIndicatorColor else Color.Transparent
-        stroke = PlayersPane.turnIndicatorColor
+      val turnIndicator: Circle = turnIndicators(controller.players.indexOf(player))
+      turnIndicator.setCenterX(position.x + PlayersPane.turnIndicatorRadius)
+      turnIndicator.setCenterX(position.y - PlayersPane.turnIndicatorRadius)
+      turnIndicator.fill = if currentPlayer.isEqualsTo(player) then PlayersPane.turnIndicatorColor else Color.Transparent
 
       new BorderPane():
         prefWidth = paneWidth
