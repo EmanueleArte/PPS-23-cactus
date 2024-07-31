@@ -180,8 +180,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
     val logic = TestCactusLogicBots((drawings, discardings, memories))
     logic.nextPlayer
-    logic.nextPlayer
-    val player: CactusBot = logic.nextPlayer.asInstanceOf[CactusBot]//.cards(2).value shouldBe PokerCardName.Jack
-    val knownCardsLength = player.knownCards.length
+    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
+    logic.currentPhase = CactusTurnPhase.Discard
     logic.discard(2)
-    player.knownCards.length shouldBe (knownCardsLength + 1)
+    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)

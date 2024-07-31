@@ -38,7 +38,7 @@ object Bots:
     /**
      * Chooses the draw deck.
      * @param discardPile the [[DiscardPile]] of the game
-     * @return true if the bot should draw from the deck, false if it should draw from the discard pile
+     * @return `true` if the bot should draw from the deck, `false` if it should draw from the discard pile
      */
     def chooseDraw(discardPile: PokerPile): Boolean
 
@@ -50,6 +50,11 @@ object Bots:
     def discard(cardIndex: Int): PokerCard
 
     /*-checkEffect()*/
+
+    /**
+     * Applies the jack card special effect.
+     */
+    def applyJackCardEffect(): Unit
 
     def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int]
 
@@ -114,7 +119,9 @@ object Bots:
 
     private def unknownCard: Int =
       val indexes: List[Int] = cards.zipWithIndex.filter((c, _) => cards.diff(_knownCards).contains(c)).map((_, i) => i)
-      indexes(scala.util.Random.nextInt(indexes.length))
+      indexes match
+        case indexes if indexes.isEmpty => scala.util.Random.nextInt(cards.length)
+        case _ => indexes(scala.util.Random.nextInt(indexes.length))
 
     override def chooseDiscard(): Int = _discardMethod match
       case DiscardMethods.Unknown => unknownCard
@@ -130,6 +137,9 @@ object Bots:
       case DrawMethods.Pile        => false
       case DrawMethods.RandomDeck  => scala.util.Random.nextBoolean()
       case DrawMethods.PileSmartly => isDiscardPileBetter(discardPile)
+
+    override def applyJackCardEffect(): Unit =
+      seeCard(unknownCard)
 
     override def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int] =
       knownCards.zipWithIndex.find((c, _) => c.value == discardPile.copy(discardPile.cards).draw().get.value) match
