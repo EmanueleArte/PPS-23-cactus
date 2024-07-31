@@ -230,3 +230,8 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.seeCard(1)
     logic.draw(fromDeck = true)
     logic.currentPlayer.cards.count(!_.isCovered) should be (1)
+
+  "When the game starts the bot" should "know at maximum 2 cards" in:
+      val logic = CactusLogic(2)
+      import model.bot.Bots.CactusBotImpl
+      logic.players(1).asInstanceOf[CactusBotImpl].knownCards.size should be <= 2

@@ -123,21 +123,31 @@ class CactusGame() extends Game:
   override def setupGameWithBots(botsParams: BotParamsType): List[Player] =
     val (drawings, discardings, memories) =
       botsParams.asInstanceOf[(Seq[DrawMethods], Seq[DiscardMethods], Seq[Memory])]
-    (CactusPlayer("Player", List.empty) :: drawings
+
+    val player: CactusPlayer = CactusPlayer("Player", List.empty)
+    setupCards(player)
+    val bots: List[CactusBotImpl] = drawings
       .lazyZip(discardings)
       .lazyZip(memories)
       .zipWithIndex
       .map { case ((drawMethod, discardMethod, memory), i) =>
         s"Bot ${i + 1}" drawing drawMethod discarding discardMethod withMemory memory
       }
-      .toList)
-      .map(p =>
-        (1 to initialPlayerCardsNumber).foreach(cardIndex =>
-          p.draw(deck)
-          p.cards(cardIndex - 1).cover()
-        )
-        p
+      .toList
+      .map(bot =>
+        setupCards(bot)
+        (0 until cardsSeenAtStart).toList.foreach(bot.seeCard)
+        bot
       )
+
+    player :: bots
+
+  private def setupCards(player: CactusPlayer): Unit =
+    (0 until initialPlayerCardsNumber).foreach(cardIndex =>
+      player.draw(deck)
+      player.cards(cardIndex).cover()
+    )
+
 
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex
