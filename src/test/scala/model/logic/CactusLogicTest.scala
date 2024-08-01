@@ -186,3 +186,52 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
     logic.game.deckSize should be (42)
+
+  "When the game starts the player" should "see 2 cards" in:
+    val logic: CactusLogic = CactusLogic(4)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (0)
+    logic.seeCard(0)
+    logic.seeCard(1)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (2)
+
+  "When the player sees 2 cards, then he" should "draw" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.seeCard(1)
+    logic.currentPhase should be (CactusTurnPhase.Draw)
+
+  it should "not see more than 2 cards" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.seeCard(1)
+    logic.seeCard(2)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (2)
+
+  "If the player sees less than 2 cards he" should "remain in the same turn phase" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.currentPhase should be (BaseTurnPhase.Start)
+
+  "Seeing the same card 2 times" should "not count as 2 different cards" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.seeCard(0)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (1)
+
+  "Passing an index out of bounds" should "make the requirements fail" in:
+    val logic = CactusLogic(4)
+    val playerCardsNumber: Int = logic.currentPlayer.cards.size
+    an [IllegalArgumentException] should be thrownBy logic.seeCard(-1)
+    an [IllegalArgumentException] should be thrownBy logic.seeCard(playerCardsNumber)
+
+  "As soon as Draw phase is reached, the cards in player's hand" should "be covered" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.seeCard(1)
+    logic.draw(fromDeck = true)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (1)
+
+  "When the game starts the bot" should "know at maximum 2 cards" in:
+      val logic = CactusLogic(2)
+      import model.bot.Bots.CactusBotImpl
+      logic.players(1).asInstanceOf[CactusBotImpl].knownCards.size should be <= 2
