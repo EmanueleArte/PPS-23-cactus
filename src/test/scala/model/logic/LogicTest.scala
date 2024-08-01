@@ -61,3 +61,4 @@ class LogicTest extends AnyFlatSpec:
     val logic = TestLogic(nPlayers)
     while !logic.isGameOver do logic.continue()
     for (_, s) <- toMap(logic.calculateScore) do s should be(N)
+

@@ -116,3 +116,4 @@ object CactusControllerModule extends ControllerModule:
   /** Interface of the controller module of Cactus game. */
   trait Interface extends Provider with Component:
     self: Requirements =>
+

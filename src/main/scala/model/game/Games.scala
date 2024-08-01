@@ -162,3 +162,4 @@ class CactusGame() extends Game:
       .map((player, score) => player -> score)
       .toMap
   )
+

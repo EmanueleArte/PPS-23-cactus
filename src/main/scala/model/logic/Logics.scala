@@ -257,3 +257,4 @@ object Logics:
      * @return a new instance of [[CactusLogic]].
      */
     def apply(botsParams: BotParamsType): CactusLogic = new CactusLogic(Right(botsParams): Either[Int, BotParamsType])
+
