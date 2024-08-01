@@ -48,9 +48,11 @@ object Players:
     override def cards: List[PokerCard & Coverable] = _cards
 
     override def draw(drawable: Drawable[CardType]): Unit =
-      val drawnCard = drawable.draw().get
-      drawnCard.uncover()
-      _cards = _cards ::: drawnCard :: Nil
+      val drawnCard = drawable.draw()
+      if drawnCard.isDefined then
+        val card = drawnCard.get
+        card.uncover()
+        _cards = _cards ::: card :: Nil
 
     override def discard(cardIndex: Int): CardType =
       _cards.foreach(_.cover())
