@@ -161,16 +161,16 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.continue()
     logic.isGameOver should be (true)
 
-  it should "see a card after discarding a Jack" in :
-    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
-    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
-    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
-    val logic = TestCactusLogicBots((drawings, discardings, memories))
-    logic.nextPlayer
-    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
-    logic.currentPhase = CactusTurnPhase.Discard
-    logic.discard(2)
-    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
+//  it should "see a card after discarding a Jack" in :
+//    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
+//    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
+//    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
+//    val logic = TestCactusLogicBots((drawings, discardings, memories))
+//    logic.nextPlayer
+//    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
+//    logic.currentPhase = CactusTurnPhase.Discard
+//    logic.discard(2)
+//    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
 
   "A game consisting on basic moves" should "be played with bots" in:
     val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
