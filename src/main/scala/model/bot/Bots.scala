@@ -51,9 +51,7 @@ object Bots:
 
     /*-checkEffect()*/
 
-    /**
-     * Applies the jack card special effect.
-     */
+    /** Applies the jack card special effect. */
     def applyJackCardEffect(): Unit
 
     def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int]
@@ -156,4 +154,8 @@ object Bots:
 
     override def chooseOwnCard(cardIndex: Int): PokerCard = ???
 
-    override def choosePlayer(players: List[CactusPlayer]): CactusPlayer = ???
+    override def choosePlayer(players: List[CactusPlayer]): CactusPlayer =
+      players
+        .filter(p => p != this)
+        .sorted((p1, p2) => p1.cards.length - p2.cards.length)
+        .head

@@ -4,7 +4,7 @@ import model.bot.Bots.{BotParamsType, CactusBot}
 import model.card.Cards.PokerCard
 import model.card.CardsData.PokerCardName
 import model.card.CardsData.PokerCardName.Jack
-import model.game.{CactusGame, Game, Scores}
+import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
 
@@ -23,7 +23,7 @@ object Logics:
     /** Type of a player. */
     type PlayerType <: Player
 
-    protected val _players: Players = List[PlayerType]()
+    protected val _players: Players = List.empty[PlayerType]
 
     /**
      * Iterator of the players in the game.
@@ -158,8 +158,8 @@ object Logics:
         val discardedCard = currentPlayer.discard(cardIndex)
         discardedCard.uncover()
         game.discardPile = game.discardPile.put(discardedCard)
-        game.checkDiscardSpecialCard(currentPlayer, discardedCard)
-        currentPhase_=(CactusTurnPhase.DiscardEquals)
+        resolveCardEffect()
+      // currentPhase_=(CactusTurnPhase.DiscardEquals)
       case _ => ()
 
     /**
@@ -190,6 +190,17 @@ object Logics:
         currentPhase_=(BaseTurnPhase.End)
       case _ => ()
 
+    /**
+     * Apply the effect of the Ace card.
+     *
+     * @param player the player that the effect is applied to.
+     */
+    def applyAceEffect(player: PlayerType): Unit = currentPhase match
+      case CactusTurnPhase.AceEffect =>
+        player.draw(game.deck)
+        currentPhase_=(CactusTurnPhase.DiscardEquals)
+      case _ => ()
+
     @tailrec
     private def botTurn(): Unit = currentPlayer match
       case bot: CactusBot =>
@@ -201,6 +212,8 @@ object Logics:
           case CactusTurnPhase.Discard =>
             discard(bot.chooseDiscard())
             botTurn()
+          case CactusTurnPhase.AceEffect =>
+            applyAceEffect(bot.choosePlayer(players.asInstanceOf[List[CactusPlayer]]))
           case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>
             if bot.callCactus() then callCactus()
@@ -229,6 +242,12 @@ object Logics:
           discardWithMalus(i)
           botDiscardWithMalus(bot)
         case _ => ()
+
+    private def resolveCardEffect(): Unit =
+      game.checkCardEffect() match
+        case CactusCardEffect.AceEffect  => currentPhase_=(CactusTurnPhase.AceEffect)
+        case CactusCardEffect.JackEffect => ()
+        case _                           => currentPhase_=(CactusTurnPhase.DiscardEquals)
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:

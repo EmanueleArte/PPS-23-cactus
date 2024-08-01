@@ -72,14 +72,14 @@ object Scores:
 /** Generic card game. */
 trait Game:
   /**
-   * Setups method to call before start the game.
+   * Setup method to call before start the game with pre-defined bot params.
    * @param playersNumber number of players in the match.
    * @return a list with the initialized players.
    */
   def setupGame(playersNumber: Int): Players
 
   /**
-   * Setups method to call before start the game with bots.
+   * Setups method to call before start the game with custom bots' params.
    * @param botsParams parameters to setup the bots.
    * @return a list with the initialized players.
    */
@@ -166,13 +166,16 @@ class CactusGame() extends Game:
   )
 
   /**
-   * Checks if the discarded card is a card with a special effect.
-   * @param currentPlayer the [[Player]] that discarded the [[Card]]
-   * @param discardedCard the discarded [[Card]]
+   * Check if the last discarded card has an effect on the game.
+   *
+   * @return the effect related of the last discarded card.
    */
-  def checkDiscardSpecialCard(currentPlayer: Player, discardedCard: Card): Unit = currentPlayer match
-    case currentPlayer: CactusBot =>
-      discardedCard.value match
-        case Jack => currentPlayer.asInstanceOf[CactusBot].applyJackCardEffect()
-        case _    => ()
-    case _ => ()
+  def checkCardEffect(): CardEffect =
+    discardPile.draw() match
+      case Some(card) =>
+        discardPile = discardPile.put(card)
+        card.value match
+          case PokerCardName.Ace  => CactusCardEffect.AceEffect
+          case PokerCardName.Jack => CactusCardEffect.JackEffect
+          case _                  => CactusCardEffect.NoEffect
+      case _ => CactusCardEffect.NoEffect
