@@ -9,7 +9,7 @@ enum BaseTurnPhase extends TurnPhase:
 
 /** Phases of a cactus game turn. */
 enum CactusTurnPhase extends TurnPhase:
-  case Draw, Discard, AceEffect, DiscardEquals, CallCactus
+  case Draw, Discard, EffectActivation, AceEffect, DiscardEquals, CallCactus
 
 /** Represents a game with turn phases. */
 trait GameWithTurnPhases:
