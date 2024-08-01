@@ -101,7 +101,7 @@ class CactusLogicTest extends AnyFlatSpec:
     while !logic.isGameOver do
       logic.draw(true)
       logic.discard(1)
-      logic.continue()
+      logic.currentPhase_=(CactusTurnPhase.CallCactus)
       logic.callCactus()
       logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.game.deckSize should be <= (deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
