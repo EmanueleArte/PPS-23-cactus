@@ -36,6 +36,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   "A player" should "draw from the deck" in:
     val logic = CactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber + 1)
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
@@ -60,6 +61,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   it should "make a basic complete turn" in:
     val logic = CactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
     logic.discard(0)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber)
@@ -107,6 +109,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   "At the end of a Cactus match" should "be possible to calculate the scores" in:
     val logic = CactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     while !logic.isGameOver do
       logic.draw(true)
       logic.discard(0)
@@ -126,6 +129,7 @@ class CactusLogicTest extends AnyFlatSpec:
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
       case _ => ()
     }
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
     logic.discard(0)
     logic.continue()
@@ -149,6 +153,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case bot: CactusBot =>
           logic.continue()
         case _ =>
+          logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
           logic.discard(0)
           logic.continue()
@@ -166,6 +171,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case bot: CactusBot =>
           logic.continue()
         case _ =>
+          logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
           logic.discard(0)
           logic.continue()
@@ -195,6 +201,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case bot: CactusBot =>
           logic.continue()
         case _ =>
+          logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
           logic.discard(0)
           logic.continue()
