@@ -10,7 +10,7 @@ object Utils:
   val leftPosition: Int = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
 
-  /** Turn phase scaladoc. */
+  /** Turn phase scaladoc */
   val turnPhaseDescription: Map[TurnPhase, (String, String)] = Map[TurnPhase, (String, String)](
     BaseTurnPhase.Start -> ("Watch cards", "Click on 2 cards to see them."),
     CactusTurnPhase.Draw -> ("Draw", "Draw one card from the deck or from the discard pile, by clicking on it."),

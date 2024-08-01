@@ -40,7 +40,7 @@ class LogicTest extends AnyFlatSpec:
     override def continue(): Unit       = _counter += 1
     override def isGameOver: Boolean    = _counter == N
     override def calculateScore: Scores = Scores(players.map(player => player -> _counter).toMap)
-    override def seeCard(cardIndex: Int): Unit = ()
+    override def seeCard(cardIndex: Int): Unit = () // TODO: remove comment
   
   "The players" should "play turns cyclically" in:
     val logic = TestLogic(nPlayers)

@@ -86,7 +86,7 @@ object CactusControllerModule extends ControllerModule:
 
       override def handlePlayerInput(cardIndex: Int): Unit =
         context.model.currentPhase match
-          case BaseTurnPhase.Start => context.model.seeCard(cardIndex)
+          case BaseTurnPhase.Start => context.model.seeCard(cardIndex) // TODO: remove comment
           case CactusTurnPhase.Discard => context.model.discard(cardIndex)
           case CactusTurnPhase.DiscardEquals =>
             context.model.discardWithMalus(

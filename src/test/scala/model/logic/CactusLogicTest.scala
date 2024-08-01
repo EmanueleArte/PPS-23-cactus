@@ -187,6 +187,7 @@ class CactusLogicTest extends AnyFlatSpec:
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
     logic.game.deckSize should be (42)
 
+  // TODO: new tests
   "When the game starts the player" should "see 2 cards" in:
     val logic: CactusLogic = CactusLogic(4)
     logic.currentPlayer.cards.count(!_.isCovered) should be (0)
