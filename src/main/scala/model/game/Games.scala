@@ -71,14 +71,14 @@ object Scores:
 /** Generic card game. */
 trait Game:
   /**
-   * Setups method to call before start the game.
+   * Setup method to call before start the game with pre-defined bot params.
    * @param playersNumber number of players in the match.
    * @return a list with the initialized players.
    */
   def setupGame(playersNumber: Int): Players
 
   /**
-   * Setups method to call before start the game with bots.
+   * Setups method to call before start the game with custom bots' params.
    * @param botsParams parameters to setup the bots.
    * @return a list with the initialized players.
    */
