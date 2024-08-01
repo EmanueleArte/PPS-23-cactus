@@ -182,7 +182,7 @@ object Logics:
      * @param player player that has to discard the card. Default is the current player.
      */
     @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
-    private def discardWithMalus(cardIndex: Int, player: CactusPlayer = currentPlayer): Unit =
+    def discardWithMalus(cardIndex: Int, player: CactusPlayer = currentPlayer): Unit =
       currentPhase match
         case CactusTurnPhase.DiscardEquals =>
           game.discardPile.draw() match
