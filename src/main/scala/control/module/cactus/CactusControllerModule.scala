@@ -32,20 +32,6 @@ object CactusControllerModule extends ControllerModule:
      */
     def handlePlayerInput(cardIndex: Int): Unit
 
-    /**
-     * Makes player to discard a card.
-     *
-     * @param cardIndex index of the card in the player hand to discard.
-     */
-    def discard(cardIndex: Int): Unit
-
-    /**
-     * Makes player to discard a card but with a malus if the card does not match the discard criteria.
-     *
-     * @param cardIndex index of the card in the player hand to discard.
-     */
-    def discardWithMalus(cardIndex: Int): Unit
-
     /** Makes player to call Cactus, in order to end the game. */
     def callCactus(): Unit
 
@@ -102,10 +88,6 @@ object CactusControllerModule extends ControllerModule:
           case _ => ()
         context.view.updateViewTurnPhase()
 
-      override def discard(cardIndex: Int): Unit =
-        context.model.discard(cardIndex)
-        context.view.updateViewTurnPhase()
-
       override def callCactus(): Unit =
         context.model.callCactus()
         context.view.updateViewTurnPhase()
@@ -113,8 +95,6 @@ object CactusControllerModule extends ControllerModule:
       override def players: Players = context.model.players
 
       override def pilesHead: Option[PokerCard & Coverable] = context.model.game.discardPile.cards.headOption
-
-      override def discardWithMalus(cardIndex: Int): Unit = context.model.discardWithMalus(cardIndex)
 
       override def currentPhase: TurnPhase = context.model.currentPhase
 
