@@ -163,3 +163,18 @@ class CactusGame() extends Game:
       .map((player, score) => player -> score)
       .toMap
   )
+
+  /**
+   * Check if the last discarded card has an effect on the game.
+   *
+   * @return the effect related of the last discarded card.
+   */
+  def checkCardEffect(): CardEffect =
+    discardPile.draw() match
+      case Some(card) =>
+        discardPile = discardPile.put(card)
+        card.value match
+          case PokerCardName.Ace  => CactusCardEffect.AceEffect
+          case PokerCardName.Jack => CactusCardEffect.JackEffect
+          case _                  => CactusCardEffect.NoEffect
+      case _ => CactusCardEffect.NoEffect
