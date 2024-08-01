@@ -214,6 +214,15 @@ object ViewDSL:
       pane
 
     /**
+     * Sets the handler to use when the [[Pane]] is clicked.
+     * @param handler to use when pane is clicked.
+     * @return pane with the handler set.
+     */
+    def whenClicked(handler: EventHandler[MouseEvent]): T =
+      pane.setOnMouseClicked(handler)
+      pane
+
+    /**
      * Sets as child the image of a covered card.
      * @return pane with covered card image set as child.
      */
