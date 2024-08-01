@@ -165,6 +165,11 @@ class CactusGame() extends Game:
       .toMap
   )
 
+  /**
+   * Checks if the discarded card is a card with a special effect.
+   * @param currentPlayer the [[Player]] that discarded the [[Card]]
+   * @param discardedCard the discarded [[Card]]
+   */
   def checkDiscardSpecialCard(currentPlayer: Player, discardedCard: Card): Unit = currentPlayer match
     case currentPlayer: CactusBot =>
       discardedCard.value match
