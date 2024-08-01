@@ -4,7 +4,7 @@ import control.module.ControllerModule
 import model.module.cactus.CactusModelModule
 import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
-import model.logic.{CactusTurnPhase, TurnPhase}
+import model.logic.TurnPhase
 import model.player.Players.CactusPlayer
 import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
@@ -77,15 +77,7 @@ object CactusControllerModule extends ControllerModule:
         context.view.updateViewTurnPhase()
 
       override def handlePlayerInput(cardIndex: Int): Unit =
-        context.model.currentPhase match
-          case CactusTurnPhase.Discard => context.model.discard(cardIndex)
-          case CactusTurnPhase.DiscardEquals =>
-            context.model.discardWithMalus(
-              cardIndex,
-              context.model.players(0) match
-                case player: CactusPlayer => player
-            )
-          case _ => ()
+        context.model.movesHandler(cardIndex)
         context.view.updateViewTurnPhase()
 
       override def callCactus(): Unit =
