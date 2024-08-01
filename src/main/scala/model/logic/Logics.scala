@@ -158,12 +158,7 @@ object Logics:
         val discardedCard = currentPlayer.discard(cardIndex)
         discardedCard.uncover()
         game.discardPile = game.discardPile.put(discardedCard)
-        currentPlayer match
-          case currentPlayer: CactusBot =>
-            discardedCard.value match
-              case Jack => currentPlayer.asInstanceOf[CactusBot].applyJackCardEffect()
-              case _ => ()
-          case _ => ()
+        game.checkDiscardSpecialCard(currentPlayer, discardedCard)
         currentPhase_=(CactusTurnPhase.DiscardEquals)
       case _ => ()
 

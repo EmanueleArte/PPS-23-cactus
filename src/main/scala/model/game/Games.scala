@@ -1,9 +1,10 @@
 package model.game
 
 import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
-import model.bot.Bots.{BotParamsType, CactusBotImpl}
+import model.bot.Bots.{BotParamsType, CactusBot, CactusBotImpl}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.{Card, Coverable, PokerCard}
+import model.card.CardsData.PokerCardName.Jack
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
@@ -163,3 +164,10 @@ class CactusGame() extends Game:
       .map((player, score) => player -> score)
       .toMap
   )
+
+  def checkDiscardSpecialCard(currentPlayer: Player, discardedCard: Card): Unit = currentPlayer match
+    case currentPlayer: CactusBot =>
+      discardedCard.value match
+        case Jack => currentPlayer.asInstanceOf[CactusBot].applyJackCardEffect()
+        case _    => ()
+    case _ => ()
