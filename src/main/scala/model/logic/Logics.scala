@@ -118,6 +118,9 @@ object Logics:
       case CactusTurnPhase.DiscardEquals =>
         currentPhase_=(CactusTurnPhase.CallCactus)
         if isBot(currentPlayer) then continue()
+      case CactusTurnPhase.JackEffect =>
+        if isBot(currentPlayer) then botTurn()
+        else ()//TODO
       case CactusTurnPhase.CallCactus =>
         if isBot(currentPlayer) then botTurn()
         else currentPhase_=(BaseTurnPhase.End)
@@ -201,6 +204,10 @@ object Logics:
         currentPhase_=(CactusTurnPhase.DiscardEquals)
       case _ => ()
 
+    private def applyJackEffectForBots(): Unit =
+      currentPlayer.asInstanceOf[CactusBot].applyJackEffect()
+      currentPhase_=(CactusTurnPhase.DiscardEquals)
+
     @tailrec
     private def botTurn(): Unit = currentPlayer match
       case bot: CactusBot =>
@@ -214,6 +221,8 @@ object Logics:
             botTurn()
           case CactusTurnPhase.AceEffect =>
             applyAceEffect(bot.choosePlayer(players.asInstanceOf[List[CactusPlayer]]))
+          case CactusTurnPhase.JackEffect =>
+            applyJackEffectForBots()
           case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>
             if bot.callCactus() then callCactus()
@@ -246,7 +255,7 @@ object Logics:
     private def resolveCardEffect(): Unit =
       game.checkCardEffect() match
         case CactusCardEffect.AceEffect  => currentPhase_=(CactusTurnPhase.AceEffect)
-        case CactusCardEffect.JackEffect => ()
+        case CactusCardEffect.JackEffect => currentPhase_=(CactusTurnPhase.JackEffect)
         case _                           => currentPhase_=(CactusTurnPhase.DiscardEquals)
 
   /** Companion object for [[CactusLogic]]. */

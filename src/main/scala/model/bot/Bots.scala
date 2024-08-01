@@ -52,7 +52,7 @@ object Bots:
     /*-checkEffect()*/
 
     /** Applies the jack card special effect. */
-    def applyJackCardEffect(): Unit
+    def applyJackEffect(): Unit
 
     def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int]
 
@@ -135,7 +135,7 @@ object Bots:
       case DrawMethods.RandomDeck  => scala.util.Random.nextBoolean()
       case DrawMethods.PileSmartly => isDiscardPileBetter(discardPile)
 
-    override def applyJackCardEffect(): Unit =
+    override def applyJackEffect(): Unit =
       seeCard(unknownCard)
 
     override def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int] =
