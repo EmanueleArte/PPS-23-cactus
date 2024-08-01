@@ -10,14 +10,16 @@ object Utils:
   val leftPosition: Int = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
 
-  val turnPhaseDescription: Map[TurnPhase, (String, String)] = Map[TurnPhase, (String, String)](
-    CactusTurnPhase.Draw -> ("Draw", "Draw one card from the deck or from the discard pile, by clicking on it."),
-    CactusTurnPhase.Discard -> ("Discard", "Choose a card from your hand to discard."),
-    CactusTurnPhase.DiscardEquals -> ("Discard equals cards", "You can discard a card equals to the one on top of the discard pile."),
-    CactusTurnPhase.EffectActivation -> ("Effect activation", ""),
-    CactusTurnPhase.EffectResolution -> ("Effect resolution", ""),
-    CactusTurnPhase.CallCactus -> ("Cactus", "Call \"Cactus\" and end the game."),
-    BaseTurnPhase.End -> ("End", "The End.")
+  case class Phase(name: String, description: String)
+  
+  val turnPhaseDescription: Map[TurnPhase, Phase] = Map[TurnPhase, Phase](
+    CactusTurnPhase.Draw -> Phase("Draw", "Draw one card from the deck or from the discard pile, by clicking on it."),
+    CactusTurnPhase.Discard -> Phase("Discard", "Choose a card from your hand to discard."),
+    CactusTurnPhase.DiscardEquals -> Phase("Discard equals cards", "You can discard a card equals to the one on top of the discard pile."),
+    CactusTurnPhase.EffectActivation -> Phase("Effect activation", ""),
+    CactusTurnPhase.EffectResolution -> Phase("Effect resolution", ""),
+    CactusTurnPhase.CallCactus -> Phase("Cactus", "Call \"Cactus\" and end the game."),
+    BaseTurnPhase.End -> Phase("End", "The End.")
   )
 
   extension (color: Color)

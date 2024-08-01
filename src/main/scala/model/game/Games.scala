@@ -128,6 +128,7 @@ class CactusGame() extends Game:
       .toList)
       .map(p =>
         (1 to initialPlayerCardsNumber).foreach(_ => p.draw(deck))
+        p.cards.foreach(_.cover())
         p
       )
 

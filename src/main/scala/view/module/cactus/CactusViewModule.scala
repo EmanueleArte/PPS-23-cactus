@@ -33,7 +33,9 @@ object CactusViewModule extends ViewModule:
           true
         )
 
-      override def updateViewTurnPhase(): Unit = asidePane.updateViewTurnPhase()
+      override def updateViewTurnPhase(): Unit =
+        mainPane.updateCurrentPlayer()
+        asidePane.updateViewTurnPhase()
 
       override def updateDiscardPile(): Unit = mainPane.updateDiscardPile()
 
