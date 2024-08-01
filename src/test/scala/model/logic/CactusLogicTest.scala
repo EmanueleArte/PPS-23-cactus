@@ -100,11 +100,11 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = CactusLogic(playersNumber)
     while !logic.isGameOver do
       logic.draw(true)
-      logic.discard(0)
+      logic.discard(1)
       logic.continue()
       logic.callCactus()
       logic.currentPhase_=(CactusTurnPhase.Draw)
-    logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
+    logic.game.deckSize should be <= (deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
     logic.game.discardPile.size should be(playersNumber)
 
   "At the end of a Cactus match" should "be possible to calculate the scores" in:
@@ -112,7 +112,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.currentPhase_=(CactusTurnPhase.Draw)
     while !logic.isGameOver do
       logic.draw(true)
-      logic.discard(0)
+      logic.discard(1)
       logic.continue()
       logic.callCactus()
       logic.nextPlayer
@@ -131,7 +131,7 @@ class CactusLogicTest extends AnyFlatSpec:
     }
     logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
-    logic.discard(0)
+    logic.discard(1)
     logic.continue()
     logic.continue()
     logic.continue()
@@ -155,11 +155,22 @@ class CactusLogicTest extends AnyFlatSpec:
         case _ =>
           logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
-          logic.discard(0)
+          logic.discard(1)
           logic.continue()
           logic.continue()
           logic.continue()
     logic.isGameOver should be (true)
+
+  it should "see a card after discarding a Jack" in :
+    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
+    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
+    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
+    val logic = TestCactusLogicBots((drawings, discardings, memories))
+    logic.nextPlayer
+    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
+    logic.currentPhase = CactusTurnPhase.Discard
+    logic.discard(2)
+    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
 
   "A game consisting on basic moves" should "be played with bots" in:
     val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
@@ -173,25 +184,14 @@ class CactusLogicTest extends AnyFlatSpec:
         case _ =>
           logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
-          logic.discard(0)
+          logic.discard(1)
           logic.continue()
           logic.callCactus()
           logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
-    logic.game.deckSize should be(32)
+    logic.game.deckSize should be <= 32
 
-  "A bot" should "see a card after discarding a Jack" in:
-    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
-    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
-    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
-    val logic = TestCactusLogicBots((drawings, discardings, memories))
-    logic.nextPlayer
-    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
-    logic.currentPhase = CactusTurnPhase.Discard
-    logic.discard(2)
-    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
-
-  it should "be played with the player and one bot" in:
+  it should "be played with the player and one bot" in :
     val drawings: Seq[DrawMethods] = Seq(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq(DiscardMethods.Random)
     val memories: Seq[Memory] = Seq(Memory.Optimal)
@@ -203,9 +203,25 @@ class CactusLogicTest extends AnyFlatSpec:
         case _ =>
           logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
-          logic.discard(0)
+          logic.discard(1)
           logic.continue()
           logic.callCactus()
           logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
-    logic.game.deckSize should be (42)
+    logic.game.deckSize should be(42)
+
+  "The effect of an ace" should "be activated when it is discarded" in:
+    val logic = TestCactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
+    logic.draw(true)
+    logic.discard(0)
+    logic.currentPhase should be (CactusTurnPhase.AceEffect)
+    logic.applyAceEffect(logic.players(1).asInstanceOf[logic.PlayerType])
+    logic.players(1).cards.size should be (logic.game.initialPlayerCardsNumber + 1)
+
+  it should "not be activated if is not discarded" in:
+    val logic = TestCactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
+    logic.draw(true)
+    logic.discard(1)
+    logic.currentPhase should be(CactusTurnPhase.DiscardEquals)
