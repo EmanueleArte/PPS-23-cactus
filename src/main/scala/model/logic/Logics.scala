@@ -40,6 +40,14 @@ object Logics:
     def players: Players = _players
 
     /**
+     * Getter for a player at a specific index.
+     *
+     * @param index index of the player in the list.
+     * @return the player at the specified index.
+     */
+    def getPlayer(index: Int): PlayerType
+
+    /**
      * Getter for the current player.
      *
      * @return the current player.
@@ -113,8 +121,13 @@ object Logics:
     private var lastRound: Boolean = false
     _currentPhase = CactusTurnPhase.Draw
 
+    override def getPlayer(index: Int): PlayerType = players(index) match
+      case p: PlayerType => p
+
     @tailrec
     final override def continue(): Unit = currentPhase match
+      case CactusTurnPhase.EffectActivation =>
+        handleCardEffect()
       case CactusTurnPhase.DiscardEquals =>
         currentPhase_=(CactusTurnPhase.CallCactus)
         if isBot(currentPlayer) then continue()
@@ -153,13 +166,13 @@ object Logics:
      *
      * @param cardIndex index of the card in the player hand to discard.
      */
-    def discard(cardIndex: Int): Unit = currentPhase match
+    private def discard(cardIndex: Int): Unit = currentPhase match
       case CactusTurnPhase.Discard =>
         val discardedCard = currentPlayer.discard(cardIndex)
         discardedCard.uncover()
         game.discardPile = game.discardPile.put(discardedCard)
-        resolveCardEffect()
-      // currentPhase_=(CactusTurnPhase.DiscardEquals)
+        currentPhase_=(CactusTurnPhase.EffectActivation)
+        continue()
       case _ => ()
 
     /**
@@ -169,7 +182,7 @@ object Logics:
      * @param player player that has to discard the card. Default is the current player.
      */
     @SuppressWarnings(Array("org.wartremover.warts.DefaultArguments"))
-    def discardWithMalus(cardIndex: Int, player: CactusPlayer = currentPlayer): Unit =
+    private def discardWithMalus(cardIndex: Int, player: CactusPlayer = currentPlayer): Unit =
       currentPhase match
         case CactusTurnPhase.DiscardEquals =>
           game.discardPile.draw() match
@@ -191,11 +204,27 @@ object Logics:
       case _ => ()
 
     /**
-     * Apply the effect of the Ace card.
+     * Handles the player input according to the turn phase.
+     *
+     * @param index index of the card in the player hand or index of the player in the table.
+     */
+    def movesHandler(index: Int): Unit = currentPhase match
+      case CactusTurnPhase.Discard => discard(index)
+      case CactusTurnPhase.DiscardEquals =>
+        discardWithMalus(
+          index,
+          getPlayer(0)
+        )
+      case CactusTurnPhase.AceEffect =>
+        resolveEffect(getPlayer(index))
+      case _ => ()
+
+    /**
+     * Resolve the effect of a card targeting a player.
      *
      * @param player the player that the effect is applied to.
      */
-    def applyAceEffect(player: PlayerType): Unit = currentPhase match
+    private def resolveEffect(player: PlayerType): Unit = currentPhase match
       case CactusTurnPhase.AceEffect =>
         player.draw(game.deck)
         currentPhase_=(CactusTurnPhase.DiscardEquals)
@@ -213,7 +242,8 @@ object Logics:
             discard(bot.chooseDiscard())
             botTurn()
           case CactusTurnPhase.AceEffect =>
-            applyAceEffect(bot.choosePlayer(players.asInstanceOf[List[CactusPlayer]]))
+            resolveEffect(bot.choosePlayer(players.zipWithIndex.map((_, i) => getPlayer(i))))
+            botTurn()
           case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>
             if bot.callCactus() then callCactus()
@@ -243,10 +273,10 @@ object Logics:
           botDiscardWithMalus(bot)
         case _ => ()
 
-    private def resolveCardEffect(): Unit =
+    private def handleCardEffect(): Unit =
       game.checkCardEffect() match
         case CactusCardEffect.AceEffect  => currentPhase_=(CactusTurnPhase.AceEffect)
-        case CactusCardEffect.JackEffect => ()
+        //case CactusCardEffect.JackEffect => ()
         case _                           => currentPhase_=(CactusTurnPhase.DiscardEquals)
 
   /** Companion object for [[CactusLogic]]. */
