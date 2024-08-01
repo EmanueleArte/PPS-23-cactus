@@ -15,6 +15,7 @@ object CactusViewModule extends ViewModule:
 
   trait CactusView extends View:
     def updateViewTurnPhase(): Unit
+    def updateDiscardPile(): Unit
 
   /** Represents the view component for the Cactus game. */
   trait Component:
@@ -22,16 +23,21 @@ object CactusViewModule extends ViewModule:
 
     class CactusScalaFXView extends CactusView:
       private lazy val asidePane = AsidePane(context.controller)
+      private lazy val mainPane  = MainPane(context.controller)
       override def show(): Unit =
         ScalaFXStageManager.setScene(
           new Scene(windowWidth, windowHeight):
             fill = AppPane.mainPaneColor
-            content = List(MainPane(context.controller).pane, asidePane.pane)
+            content = List(mainPane.pane, asidePane.pane)
           ,
           true
         )
 
-      override def updateViewTurnPhase(): Unit = asidePane.updateViewTurnPhase()
+      override def updateViewTurnPhase(): Unit =
+        mainPane.updateCurrentPlayer()
+        asidePane.updateViewTurnPhase()
+
+      override def updateDiscardPile(): Unit = mainPane.updateDiscardPile()
 
   /** Interface of the view module of game. */
   trait Interface extends Provider with Component:

@@ -1,19 +1,36 @@
 package view.module.menu
 
 import control.module.menu.MainMenuControllerModule.MainMenuController
-import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
 import model.bot.CactusBotsData
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import mvc.PlayableGame
 import scalafx.beans.property.ReadOnlyDoubleProperty
-import scalafx.collections.ObservableBuffer
 import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.control.{Button, ComboBox, Label, Spinner}
+import scalafx.scene.control.{ComboBox, Spinner}
 import scalafx.scene.layout.{HBox, Pane, StackPane, VBox}
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewPosition
 import view.Utils.value
+import view.ViewDSL.{
+  aligned,
+  colored,
+  veryBig,
+  bold,
+  containing,
+  doing,
+  saying,
+  spaced,
+  telling,
+  withMargin,
+  prompt,
+  baseWidth,
+  initialValue,
+  Button as ButtonElement,
+  Label as LabelElement,
+  ComboBox as ComboBoxElement
+}
 
+import scala.language.postfixOps
 import scala.util.Random
 
 /**
@@ -42,54 +59,52 @@ class MainMenuPane(
   private def hCenter: ViewPosition    = ViewPosition(paneWidth / 2, 0)
   private var playersPane: PlayersPane = new CactusPlayersPane(position)
 
-  private val gameSelected: ComboBox[PlayableGame] = new ComboBox[PlayableGame]:
-    items = ObservableBuffer.from(PlayableGame.values)
-    promptText = "Select a game"
-    prefWidth = 200
-    value = PlayableGame.Cactus
-    onAction = _ => playersPane = createPlayersPane(view.Utils.value(this))
+  private val gameSelected: ComboBox[PlayableGame] = ComboBoxElement[PlayableGame]
+    .containing(PlayableGame.values)
+    .prompt("Select a game")
+    .baseWidth(200)
+    .initialValue(PlayableGame.Cactus)
+    .doing(_ => playersPane = createPlayersPane(value(gameSelected)))
 
   private def createPlayersPane(game: PlayableGame): PlayersPane = game match
     case PlayableGame.Cactus => new CactusPlayersPane(position)
     case _                   => new CactusPlayersPane(position)
 
-  override def pane: Pane = new CustomStackPane(sceneWidth, sceneHeight):
-    children = Seq(
-      new VBox:
-        alignment = Pos.TopCenter
-        spacing = 20
-        children = Seq(
-          new Label("Cactus & Co."):
-            style = "-fx-font-size: 60pt; -fx-font-weight: bold; -fx-text-alignment: center;"
-            margin = new scalafx.geometry.Insets(Insets(50, 0, 50, 0))
-          ,
-          new HBox:
-            alignment = Pos.Center
-            spacing = 10
-            children = Seq(
-              new Label("Selected game:"),
-              gameSelected
-            )
-          ,
-          new HBox:
-            alignment = Pos.Center
-            spacing = 10
-            children = Seq(
-              new Label("Number of players:"),
+  override def pane: Pane = new CustomStackPane(sceneWidth, sceneHeight)
+    .colored(AppPane.mainPaneColor)
+    .containing(
+      new VBox()
+        .aligned(Pos.TopCenter)
+        .spaced(20)
+        .containing(
+          (LabelElement telling "Cactus & Co." bold).veryBig
+          .aligned(Pos.TopCenter)
+          .withMargin(new scalafx.geometry.Insets(Insets(50, 0, 50, 0)))
+        )
+        .containing(
+          new HBox()
+            .aligned(Pos.Center)
+            .spaced(10)
+            .containing(LabelElement telling "Selected game:")
+            .containing(gameSelected)
+        )
+        .containing(
+          new HBox()
+            .aligned(Pos.Center)
+            .spaced(10)
+            .containing(LabelElement telling "Number of players:")
+            .containing(
               new Spinner[Int](2, 6, 2):
                 editable = false
                 prefWidth = 200
                 value.onChange((_, old, n) =>
-                  val newPlayers = for i <- old + 1 to n yield playersPane.createBotBox(s"Player $i")
+                  val newPlayers = for i <- old until n yield playersPane.createBotBox(s"Bot $i")
                   playersPane.updatePlayersDisplay(newPlayers, n - old)
                 )
             )
-          ,
-          playersPane.pane,
-          new Button:
-            text = "Start game"
-            onAction = _ => startGame()
         )
+        .containing(playersPane.pane)
+        .containing(ButtonElement saying "Start game" doing (_ => startGame()))
     )
 
   private def startGame(): Unit =
@@ -125,27 +140,26 @@ class MainMenuPane(
     override def paneHeight: Int = 250
 
     private var _players: Seq[VBox] = Seq.empty
-    private val _playersBox: HBox = new HBox:
-      alignment = Pos.Center
-      spacing = 50
-      margin = new scalafx.geometry.Insets(Insets(0, 0, 30, 0))
+    private val _playersBox: HBox = new HBox()
+      .aligned(Pos.Center)
+      .spaced(50)
+      .withMargin(new scalafx.geometry.Insets(Insets(0, 0, 30, 0)))
 
     var drawMethods: Seq[ComboBox[DrawMethods]]       = Seq.empty
     var discardMethods: Seq[ComboBox[DiscardMethods]] = Seq.empty
     var memoryList: Seq[ComboBox[Memory]]             = Seq.empty
 
-    override def pane: Pane = new StackPane:
-      children = List(_playersBox)
+    override def pane: Pane = new StackPane()
+      .containing(_playersBox)
 
     /** Initial config of main menu. */
     private def menuInit(): Unit =
       val initialPlayers = Seq(
-        new VBox:
-          alignment = Pos.Center
-          spacing = 10
-          children = Seq(new Label("Player 1"))
-        ,
-        createBotBox("Player 2")
+        new VBox()
+          .aligned(Pos.Center)
+          .spaced(10)
+          .containing(LabelElement telling "Player"),
+        createBotBox("Bot 1")
       )
       updatePlayersDisplay(initialPlayers, 2)
 
@@ -164,34 +178,32 @@ class MainMenuPane(
 
     @SuppressWarnings(Array("org.wartremover.warts.All"))
     override def createBotBox(name: String): VBox =
-      val drawMethod = new ComboBox[DrawMethods]:
-        items = ObservableBuffer.from(CactusBotsData.DrawMethods.values)
-        promptText = "Select a draw method"
-        prefWidth = 200
-        value = CactusBotsData.DrawMethods.values(Random.nextInt(CactusBotsData.DrawMethods.values.length))
+      val drawMethod = ComboBoxElement[DrawMethods]
+        .containing(CactusBotsData.DrawMethods.values)
+        .prompt("Select a draw method")
+        .baseWidth(200)
+        .initialValue(CactusBotsData.DrawMethods.values(Random.nextInt(CactusBotsData.DrawMethods.values.length)))
       drawMethods :+= drawMethod
-      val discardMethod = new ComboBox[DiscardMethods]:
-        items = ObservableBuffer.from(CactusBotsData.DiscardMethods.values)
-        promptText = "Select a discard method"
-        prefWidth = 200
-        value = CactusBotsData.DiscardMethods
-          .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length))
+      val discardMethod = ComboBoxElement[DiscardMethods]
+        .containing(CactusBotsData.DiscardMethods.values)
+        .prompt("Select a discard method")
+        .baseWidth(200)
+        .initialValue(CactusBotsData.DiscardMethods
+          .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length)))
       discardMethods :+= discardMethod
-      val memory = new ComboBox[Memory]:
-        items = ObservableBuffer.from(CactusBotsData.Memory.values)
-        promptText = "Select a memory quality"
-        prefWidth = 200
-        value = CactusBotsData.Memory.values(Random.nextInt(CactusBotsData.Memory.values.length))
+      val memory = ComboBoxElement[Memory]
+        .containing(CactusBotsData.Memory.values)
+        .prompt("Select a memory quality")
+        .baseWidth(200)
+        .initialValue(CactusBotsData.Memory.values(Random.nextInt(CactusBotsData.Memory.values.length)))
       memoryList :+= memory
-      new VBox:
-        alignment = Pos.Center
-        spacing = 10
-        children = Seq(
-          new Label(s"$name (Bot)"),
-          new Label("Draw method:"),
-          drawMethod,
-          new Label("Discard method:"),
-          discardMethod,
-          new Label("Memory:"),
-          memory
-        )
+      new VBox()
+        .aligned(Pos.Center)
+        .spaced(10)
+        .containing(LabelElement telling s"$name")
+        .containing(LabelElement telling "Draw method:")
+        .containing(drawMethod)
+        .containing(LabelElement telling "Discard method:")
+        .containing(discardMethod)
+        .containing(LabelElement telling "Memory:")
+        .containing(memory)

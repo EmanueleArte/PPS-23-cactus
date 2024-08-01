@@ -7,6 +7,7 @@ import model.card.Cards.{Card, Coverable, PokerCard}
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
+import model.logic.Logics.Players
 import model.player.Players.{CactusPlayer, Player}
 
 /**
@@ -74,14 +75,14 @@ trait Game:
    * @param playersNumber number of players in the match.
    * @return a list with the initialized players.
    */
-  def setupGame(playersNumber: Int): List[Player]
+  def setupGame(playersNumber: Int): Players
 
   /**
    * Setups method to call before start the game with bots.
    * @param botsParams parameters to setup the bots.
    * @return a list with the initialized players.
    */
-  def setupGameWithBots(botsParams: BotParamsType): List[Player]
+  def setupGameWithBots(botsParams: BotParamsType): Players
 
   /**
    * Calculate the scores for each player.
@@ -128,6 +129,7 @@ class CactusGame() extends Game:
       .toList)
       .map(p =>
         (1 to initialPlayerCardsNumber).foreach(_ => p.draw(deck))
+        p.cards.foreach(_.cover())
         p
       )
 

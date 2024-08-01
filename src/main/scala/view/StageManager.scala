@@ -47,7 +47,7 @@ object ScalaFXStageManager extends StageManager:
         title = "Cactus & Co."
         width = AppPane.windowWidth
         height = AppPane.windowHeight
-//        minWidth = AppPane.windowWidth
-//        minHeight = AppPane.windowHeight
+        minWidth = AppPane.mainPaneWidth
+        minHeight = AppPane.mainPaneHeight
         scene = new Scene
       showWindow()
