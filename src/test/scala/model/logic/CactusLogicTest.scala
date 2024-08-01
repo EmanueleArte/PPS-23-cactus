@@ -156,6 +156,7 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
           logic.discard(1)
+          logic.currentPhase_=(CactusTurnPhase.DiscardEquals)
           logic.continue()
           logic.continue()
           logic.continue()
