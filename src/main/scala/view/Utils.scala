@@ -11,7 +11,6 @@ object Utils:
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
 
   val turnPhaseDescription: Map[TurnPhase, (String, String)] = Map[TurnPhase, (String, String)](
-    BaseTurnPhase.Start -> ("Watch cards", "Click on 2 cards to see them."),
     CactusTurnPhase.Draw -> ("Draw", "Draw one card from the deck or from the discard pile, by clicking on it."),
     CactusTurnPhase.Discard -> ("Discard", "Choose a card from your hand to discard."),
     CactusTurnPhase.DiscardEquals -> ("Discard equals cards", "You can discard a card equals to the one on top of the discard pile."),
