@@ -10,8 +10,10 @@ object Utils:
   val leftPosition: Int = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
 
+  /** Class for a turn phase, with a name and a description. */
   case class Phase(name: String, description: String)
-  
+
+  /** Map with the names and descriptions to show in the GUI, for each turn phase. */
   val turnPhaseDescription: Map[TurnPhase, Phase] = Map[TurnPhase, Phase](
     CactusTurnPhase.Draw -> Phase("Draw", "Draw one card from the deck or from the discard pile, by clicking on it."),
     CactusTurnPhase.Discard -> Phase("Discard", "Choose a card from your hand to discard."),
@@ -37,7 +39,6 @@ object Utils:
         s"rgb($red, $green, $blue)"
       else
         s"rgba($red, $green, $blue, $alpha)"
-
 
   /**
    * Gets the value of the combo box.

@@ -35,7 +35,6 @@ object ViewDSL:
     style = s"-fx-background-color: ${Buttons.buttonBgColor.toRgbString};" +
       s"-fx-text-color: ${Buttons.buttonColor.toRgbString};" +
       s"-fx-border-radius: 3px"
-//    margin = Insets(10)
 
   /**
    * Creates a new card's pane with the dimension already set.
@@ -74,6 +73,7 @@ object ViewDSL:
       s"-fx-text-color: ${Buttons.buttonColor.toRgbString};" +
       s"-fx-border-radius: 3px"
 
+  /** Enumerator containing the types of gradients. */
   enum Gradient:
     case Vertical, Horizontal
 
@@ -114,6 +114,12 @@ object ViewDSL:
       node.style = node.style() + s";-fx-background-color: ${color.toRgbString};"
       node
 
+    /**
+     * Sets the background color of the [[Node]], using a linear gradient.
+     * @param alignment of the linear gradient.
+     * @param colors [[List]] of colors of the gradient.
+     * @return node with the background color set.
+     */
     def colored(alignment: Gradient)(colors: List[Color]): T =
       val start: ViewPosition = ViewPosition(0, 0)
       val end: ViewPosition = alignment match
@@ -349,18 +355,38 @@ object ViewDSL:
       pane
 
   extension [T <: BorderPane](pane: T)
+    /**
+     * Sets the element in the right position of the [[BorderPane]].
+     * @param element to add in the pane.
+     * @return pane with the child set.
+     */
     def -->(element: Node): T =
       pane.right = element
       pane
 
+    /**
+     * Sets the element in the left position of the [[BorderPane]].
+     * @param element to add in the pane.
+     * @return pane with the child set.
+     */
     def <--(element: Node): T =
       pane.left = element
       pane
 
+    /**
+     * Sets the element in the top position of the [[BorderPane]].
+     * @param element to add in the pane.
+     * @return pane with the child set.
+     */
     def ^(element: Node): T =
       pane.top = element
       pane
 
+    /**
+     * Sets the element in the bottom position of the [[BorderPane]].
+     * @param element to add in the pane.
+     * @return pane with the child set.
+     */
     def v(element: Node): T =
       pane.bottom = element
       pane
