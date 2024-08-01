@@ -4,7 +4,7 @@ import control.module.ControllerModule
 import model.module.cactus.CactusModelModule
 import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
-import model.logic.{BaseTurnPhase, CactusTurnPhase, TurnPhase}
+import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.CactusPlayer
 import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
@@ -67,6 +67,12 @@ object CactusControllerModule extends ControllerModule:
      */
     def currentPhase: TurnPhase
 
+    /**
+     * Returns the player which is playing in the current turn.
+     * @return the current player
+     */
+    def currentPlayer: CactusPlayer
+
   /** Represents the controller component for the Cactus game. */
   trait Component:
     context: Requirements =>
@@ -86,7 +92,6 @@ object CactusControllerModule extends ControllerModule:
 
       override def handlePlayerInput(cardIndex: Int): Unit =
         context.model.currentPhase match
-          case BaseTurnPhase.Start => context.model.seeCard(cardIndex)
           case CactusTurnPhase.Discard => context.model.discard(cardIndex)
           case CactusTurnPhase.DiscardEquals =>
             context.model.discardWithMalus(
@@ -112,6 +117,8 @@ object CactusControllerModule extends ControllerModule:
       override def discardWithMalus(cardIndex: Int): Unit = context.model.discardWithMalus(cardIndex)
 
       override def currentPhase: TurnPhase = context.model.currentPhase
+
+      override def currentPlayer: CactusPlayer = context.model.currentPlayer
 
   /** Interface of the controller module of Cactus game. */
   trait Interface extends Provider with Component:

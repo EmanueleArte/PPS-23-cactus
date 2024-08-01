@@ -172,6 +172,18 @@ object ViewDSL:
      */
     def of(dimensions: (Int, Int)): T = node.long(dimensions._1).tall(dimensions._2)
 
+    /**
+     * Display a message when the element is hovered.
+     *
+     * @param message to display when hovered.
+     * @return [[Text]] with the tooltip set.
+     */
+    def whenHovered(message: String): T =
+      val tooltip: Tooltip = new Tooltip(message)
+      node.setOnMouseMoved(e => if !tooltip.isShowing then tooltip.show(node, e.getScreenX + 10, e.getScreenY + 10))
+      node.onMouseExited = _ => if tooltip.isShowing then tooltip.hide()
+      node
+  
   extension [T <: Pane](pane: T)
     /**
      * Sets a child for a [[Pane]].
@@ -359,17 +371,6 @@ object ViewDSL:
       text
 
     /**
-     * Display a message when the element is hovered.
-     * @param message to display when hovered.
-     * @return [[Text]] with the tooltip set.
-     */
-    def whenHovered(message: String): T =
-      val tooltip: Tooltip = new Tooltip(message)
-      text.setOnMouseMoved(e => if !tooltip.isShowing then tooltip.show(text, e.getScreenX + 10, e.getScreenY + 10))
-      text.onMouseExited = _ => if tooltip.isShowing then tooltip.hide()
-      text
-
-    /**
      * Sets the font size at small size.
      * @return [[Text]] with the font size updated.
      */
@@ -409,6 +410,18 @@ object ViewDSL:
       text.font = Font.font(text.font.value.getFamily, FontWeight.Bold, text.font.value.getSize)
       text
 
+    /**
+     * Display a message when the element is hovered.
+     *
+     * @param message to display when hovered.
+     * @return [[Text]] with the tooltip set.
+     */
+    def whenHovered(message: String): T =
+      val tooltip: Tooltip = new Tooltip(message)
+      text.setOnMouseMoved(e => if !tooltip.isShowing then tooltip.show(text, e.getScreenX + 10, e.getScreenY + 10))
+      text.onMouseExited = _ => if tooltip.isShowing then tooltip.hide()
+      text
+  
   extension [T <: Label](label: T)
     /**
      * Sets the text of a [[Label]].

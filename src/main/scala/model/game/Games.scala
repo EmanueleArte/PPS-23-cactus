@@ -4,6 +4,7 @@ import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
 import model.bot.Bots.{BotParamsType, CactusBotImpl}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.{Card, Coverable, PokerCard}
+import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import model.logic.Logics.Players
@@ -96,9 +97,8 @@ class CactusGame() extends Game:
   val deck: Deck[PokerCard & Coverable] = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  var discardPile: PokerPile = PokerPile()
-  val initialPlayerCardsNumber: Int       = 4
-  val cardsSeenAtStart: Int = 2
+  var discardPile: PokerPile        = PokerPile()
+  val initialPlayerCardsNumber: Int = 4
 
   export deck.{size => deckSize}
 
@@ -108,11 +108,7 @@ class CactusGame() extends Game:
         .map(index =>
           CactusBotImpl(
             s"Bot-$index",
-            (1 to initialPlayerCardsNumber).toList
-              .map(_ => deck.draw().get)
-              .map(card =>
-                card.cover()
-                card),
+            (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get),
             DrawMethods.Deck,
             DiscardMethods.Random,
             Memory.Normal
@@ -123,32 +119,26 @@ class CactusGame() extends Game:
   override def setupGameWithBots(botsParams: BotParamsType): List[Player] =
     val (drawings, discardings, memories) =
       botsParams.asInstanceOf[(Seq[DrawMethods], Seq[DiscardMethods], Seq[Memory])]
-
-    val player: CactusPlayer = CactusPlayer("Player", List.empty)
-    setupCards(player)
-    val bots: List[CactusBotImpl] = drawings
+    (CactusPlayer("Player", List.empty) :: drawings
       .lazyZip(discardings)
       .lazyZip(memories)
       .zipWithIndex
       .map { case ((drawMethod, discardMethod, memory), i) =>
         s"Bot ${i + 1}" drawing drawMethod discarding discardMethod withMemory memory
       }
-      .toList
-      .map(bot =>
-        setupCards(bot)
-        (0 until cardsSeenAtStart).toList.foreach(bot.seeCard)
-        bot
+      .toList)
+      .map(p =>
+        (1 to initialPlayerCardsNumber).foreach(_ => p.draw(deck))
+        p.cards.foreach(_.cover())
+        p
       )
 
-    player :: bots
+  @SuppressWarnings(Array("org.wartremover.warts.All"))
+  private def isRedKing(c: PokerCard): Boolean = c.value match
+    case PokerCardName.King => c.suit == PokerSuit.Hearts || c.suit == PokerSuit.Diamonds
+    case _                  => false
 
-  private def setupCards(player: CactusPlayer): Unit =
-    (0 until initialPlayerCardsNumber).foreach(cardIndex =>
-      player.draw(deck)
-      player.cards(cardIndex).cover()
-    )
-
-
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex
       .map((player, index) => (player, player.cards))
@@ -158,7 +148,18 @@ class CactusGame() extends Game:
           case _               => false
         } == cards.size
       )
-      .map((player, cards) => (player, cards.collect { case card: PokerCard => card.value }.sum))
+      .map((player, cards) =>
+        (player, cards.collect(c => PokerCard(c.value.asInstanceOf[Int], c.suit.asInstanceOf[PokerSuit])))
+      )
+      .map((player, cards) =>
+        (
+          player,
+          cards.collect {
+            case card if isRedKing(card) => 0
+            case card                    => card.value
+          }.sum
+        )
+      )
       .map((player, score) => player -> score)
       .toMap
   )
