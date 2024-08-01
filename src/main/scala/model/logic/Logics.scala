@@ -2,6 +2,8 @@ package model.logic
 
 import model.bot.Bots.{BotParamsType, CactusBot}
 import model.card.Cards.PokerCard
+import model.card.CardsData.PokerCardName
+import model.card.CardsData.PokerCardName.Jack
 import model.game.{CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
@@ -156,6 +158,12 @@ object Logics:
         val discardedCard = currentPlayer.discard(cardIndex)
         discardedCard.uncover()
         game.discardPile = game.discardPile.put(discardedCard)
+        currentPlayer match
+          case currentPlayer: CactusBot =>
+            discardedCard.value match
+              case Jack => currentPlayer.asInstanceOf[CactusBot].applyJackCardEffect()
+              case _ => ()
+          case _ => ()
         currentPhase_=(CactusTurnPhase.DiscardEquals)
       case _ => ()
 

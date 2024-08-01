@@ -48,11 +48,15 @@ object Players:
     override def cards: List[PokerCard & Coverable] = _cards
 
     override def draw(drawable: Drawable[CardType]): Unit =
-      val drawnCard = drawable.draw().get
-      drawnCard.uncover()
-      _cards = _cards ::: drawnCard :: Nil
+      val drawnCard: Option[CardType] = drawable.draw()
+      if drawnCard.isDefined then
+        val card = drawnCard.get
+        card.uncover()
+        _cards = _cards ::: card :: Nil
 
     override def discard(cardIndex: Int): CardType =
+      require(cardIndex >= 0)
+      require(cardIndex < cards.size)
       _cards.foreach(_.cover())
       val cardToRemove: CardType = cards(cardIndex)
       _cards = _cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)

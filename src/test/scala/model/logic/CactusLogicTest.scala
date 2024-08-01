@@ -2,7 +2,11 @@ package model.logic
 
 import model.bot.Bots.{BotParamsType, CactusBot}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
+import model.card.CardBuilder.PokerDSL.OF
 import model.card.Cards.{Coverable, PokerCard}
+import model.card.CardsData
+import model.card.CardsData.PokerCardName
+import model.card.CardsData.PokerSuit.Spades
 import model.deck.Decks.{Deck, PokerDeck}
 import model.game.CactusGame
 import model.game.Scores.toMap
@@ -10,6 +14,7 @@ import model.logic.Logics.{CactusLogic, GameLogic}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
+@SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
 /** Test for [[CactusLogic]]. */
 class CactusLogicTest extends AnyFlatSpec:
 
@@ -31,6 +36,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   "A player" should "draw from the deck" in:
     val logic = CactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber + 1)
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
@@ -55,6 +61,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   it should "make a basic complete turn" in:
     val logic = CactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
     logic.discard(0)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber)
@@ -102,6 +109,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   "At the end of a Cactus match" should "be possible to calculate the scores" in:
     val logic = CactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     while !logic.isGameOver do
       logic.draw(true)
       logic.discard(0)
@@ -121,6 +129,7 @@ class CactusLogicTest extends AnyFlatSpec:
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
       case _ => ()
     }
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
     logic.discard(0)
     logic.continue()
@@ -144,6 +153,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case bot: CactusBot =>
           logic.continue()
         case _ =>
+          logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
           logic.discard(0)
           logic.continue()
@@ -161,13 +171,25 @@ class CactusLogicTest extends AnyFlatSpec:
         case bot: CactusBot =>
           logic.continue()
         case _ =>
+          logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
           logic.discard(0)
           logic.continue()
           logic.callCactus()
           logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
-    logic.game.deckSize should be (32)
+    logic.game.deckSize should be(32)
+
+  "A bot" should "see a card after discarding a Jack" in:
+    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
+    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
+    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
+    val logic = TestCactusLogicBots((drawings, discardings, memories))
+    logic.nextPlayer
+    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
+    logic.currentPhase = CactusTurnPhase.Discard
+    logic.discard(2)
+    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
 
   it should "be played with the player and one bot" in:
     val drawings: Seq[DrawMethods] = Seq(DrawMethods.Deck)
@@ -179,6 +201,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case bot: CactusBot =>
           logic.continue()
         case _ =>
+          logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
           logic.discard(0)
           logic.continue()
