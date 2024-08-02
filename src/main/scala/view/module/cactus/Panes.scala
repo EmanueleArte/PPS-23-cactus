@@ -3,15 +3,15 @@ package view.module.cactus
 import control.module.cactus.CactusControllerModule.CactusController
 import control.module.cactus.CactusControllerModule
 import model.card.Cards.{Card, Coverable, PokerCard}
-import model.logic.TurnPhase
+import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.{CactusPlayer, Player}
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
 import scalafx.scene.control.{Button, ScrollPane}
 import scalafx.scene.image.ImageView
-import scalafx.scene.layout.{BorderPane, HBox, Pane, Priority, VBox}
-import scalafx.scene.paint.Color
+import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, HBox, Pane, Priority, VBox}
+import scalafx.scene.paint.{Color, LinearGradient, Stops}
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
 import view.Utils.turnPhaseDescription
@@ -278,7 +278,12 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   import view.module.cactus.AppPane.AsidePaneModule.*
 
   private val turnPhaseProperty: ObjectProperty[TurnPhase] = ObjectProperty(controller.currentPhase)
-  turnPhaseProperty.onChange((_, _, _) => updatePane())
+  turnPhaseProperty.onChange((_, _, newValue) =>
+    updatePane()
+    newValue match
+      case CactusTurnPhase.CallCactus => cactusButton.setDisable(false)
+      case _ => cactusButton.setDisable(true)
+  )
 
   override def paneWidth: Int = AppPane.asidePaneWidth
 
@@ -290,7 +295,10 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   def updateViewTurnPhase(): Unit = turnPhaseProperty.setValue(controller.currentPhase)
 
   private val nextButton: Button = ButtonElement saying continueButtonText doing (_ => controller.continue())
-  private val cactusButton: Button = ButtonElement saying cactusButtonText doing (_ => controller.callCactus())
+  private val cactusButton: Button =
+    val button: Button = ButtonElement saying cactusButtonText doing (_ => controller.callCactus())
+    button.setDisable(true)
+    button
 
   private def phaseText: VBox = new VBox()
     .containing(TextElement telling AppPane.AsidePaneModule.phaseText bold)
@@ -298,8 +306,9 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   phaseText.setAlignment(Pos.BaselineLeft)
 
   private def phaseDescription: VBox = new VBox()
-    .containing(TextElement telling phaseDescriptionText bold)
-    .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
+      .containing(TextElement telling phaseDescriptionText bold)
+      .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
+
 
   private val phaseContainer: VBox = new VBox()
     .containing(phaseText)
@@ -309,13 +318,15 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   private val buttonsContainer: VBox = new VBox()
     .containing(nextButton)
     .containing(cactusButton)
+  buttonsContainer.spacing = AppPane.spacing
 
   private val _pane: BorderPane = new BorderPane()
     .at(position)
     .tall(paneHeight)
-    .colored(AppPane.asidePaneColor)
+    .colored(Gradient.Vertical)(List(AppPane.asidePaneColor2, AppPane.asidePaneColor))
     .^(phaseContainer)
     .v(buttonsContainer)
+  _pane.padding = Insets(AppPane.spacing)
   VBox.setVgrow(_pane, Priority.Always)
 
   private def updatePane(): Unit =
