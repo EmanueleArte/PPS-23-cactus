@@ -187,9 +187,8 @@ class CactusGame() extends Game:
    * @return the effect related of the last discarded card.
    */
   def checkCardEffect(): CardEffect =
-    discardPile.draw() match
+    discardPile.copy(discardPile.cards).draw() match
       case Some(card) =>
-        discardPile = discardPile.put(card)
         card.value match
           case PokerCardName.Ace  => CactusCardEffect.AceEffect
           case PokerCardName.Jack => CactusCardEffect.JackEffect

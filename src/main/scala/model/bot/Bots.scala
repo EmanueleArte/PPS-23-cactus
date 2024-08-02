@@ -139,9 +139,11 @@ object Bots:
       seeCard(unknownCard)
 
     override def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int] =
-      knownCards.zipWithIndex.find((c, _) => c.value == discardPile.copy(discardPile.cards).draw().get.value) match
-        case Some((card, i)) => Some(cards.zipWithIndex.filter((c, _) => c.equals(card)).map((_, i) => i).head)
-        case _               => None
+      if knownCards.nonEmpty then
+        knownCards.zipWithIndex.find((c, _) => c.value == discardPile.copy(discardPile.cards).draw().get.value) match
+          case Some((card, i)) => Some(cards.zipWithIndex.filter((c, _) => c.equals(card)).map((_, i) => i).head)
+          case _               => None
+      else None
 
     private def totKnownValue: Int =
       _knownCards.map {
