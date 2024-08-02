@@ -79,7 +79,10 @@ object Logics:
      */
     def calculateScore: Scores
 
-    /** Lets the player see a card in his hand. */
+    /** Lets the player see a card in his hand.
+     *
+     * @param cardIndex index of the card in the player hand to see.
+     */
     def seeCard(cardIndex: Int): Unit
 
   /** Provider of a [[Game]]. */
@@ -233,6 +236,7 @@ object Logics:
      * @param index index of the card in the player hand or index of the player in the table.
      */
     def movesHandler(index: Int): Unit = currentPhase match
+      case BaseTurnPhase.Start => seeCard(index)
       case CactusTurnPhase.Discard => discard(index)
       case CactusTurnPhase.DiscardEquals =>
         discardWithMalus(

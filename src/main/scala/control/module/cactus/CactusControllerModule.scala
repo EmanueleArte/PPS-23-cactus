@@ -28,9 +28,9 @@ object CactusControllerModule extends ControllerModule:
     /**
      * Handles the player input according to the turn phase.
      *
-     * @param cardIndex index of the card in the player hand to handle.
+     * @param index index of the card in the player hand or the player to handle.
      */
-    def handlePlayerInput(cardIndex: Int): Unit
+    def handlePlayerInput(index: Int): Unit
 
     /** Makes player to call Cactus, in order to end the game. */
     def callCactus(): Unit
@@ -76,8 +76,8 @@ object CactusControllerModule extends ControllerModule:
         context.model.draw(fromDeck)
         context.view.updateViewTurnPhase()
 
-      override def handlePlayerInput(cardIndex: Int): Unit =
-        context.model.movesHandler(cardIndex)
+      override def handlePlayerInput(index: Int): Unit =
+        context.model.movesHandler(index)
         context.view.updateViewTurnPhase()
 
       override def callCactus(): Unit =
