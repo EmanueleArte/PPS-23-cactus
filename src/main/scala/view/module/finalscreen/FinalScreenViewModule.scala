@@ -1,0 +1,3 @@
+package view.module.finalscreen
+
+object FinalScreenViewModule
