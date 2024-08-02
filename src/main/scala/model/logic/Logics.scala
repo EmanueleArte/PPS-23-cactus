@@ -71,6 +71,9 @@ object Logics:
      */
     def calculateScore: Scores
 
+    /** Lets the player see a card in his hand. */
+    def seeCard(cardIndex: Int): Unit
+
   /** Provider of a [[Game]]. */
   trait GameProvider:
     /** Instance of the game to play. */
@@ -111,7 +114,7 @@ object Logics:
       case Left(nPlayers) => nPlayers
       case _              => players.length
     private var lastRound: Boolean = false
-    _currentPhase = CactusTurnPhase.Draw
+//    _currentPhase = CactusTurnPhase.Draw
 
     @tailrec
     final override def continue(): Unit = currentPhase match
@@ -146,6 +149,7 @@ object Logics:
      */
     def draw(fromDeck: Boolean): Unit = currentPhase match
       case CactusTurnPhase.Draw =>
+        currentPlayer.cards.foreach(_.cover())
         if fromDeck then currentPlayer.draw(game.deck)
         else currentPlayer.draw(game.discardPile)
         currentPhase_=(CactusTurnPhase.Discard)
@@ -178,6 +182,9 @@ object Logics:
           game.discardPile.draw() match
             case Some(card) if card.value != player.cards(cardIndex).value =>
               player.draw(game.deck)
+              player.cards.lastOption match
+                case Some(card) => card.cover()
+                case _ => ()
               game.discardPile = game.discardPile.put(card)
             case Some(card) =>
               game.discardPile = game.discardPile.put(card)
@@ -192,6 +199,12 @@ object Logics:
         lastRound = true
         currentPhase_=(BaseTurnPhase.End)
       case _ => ()
+
+    override def seeCard(cardIndex: Int): Unit =
+      require(cardIndex >= 0)
+      require(cardIndex < currentPlayer.cards.size)
+      if currentPlayer.cards.count(!_.isCovered) < game.cardsSeenAtStart then currentPlayer.cards(cardIndex).uncover()
+      if currentPlayer.cards.count(!_.isCovered) == game.cardsSeenAtStart then _currentPhase = CactusTurnPhase.Draw
 
     /**
      * Apply the effect of the Ace card.
