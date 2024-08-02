@@ -1,0 +1,5 @@
+package control.module.finalscreen
+
+import control.module.ControllerModule
+
+object FinalScreenControllerModule extends ControllerModule
