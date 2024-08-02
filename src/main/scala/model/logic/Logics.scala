@@ -256,6 +256,8 @@ object Logics:
         )
       case CactusTurnPhase.AceEffect =>
         resolveEffect(getPlayer(index))
+      case CactusTurnPhase.JackEffect =>
+        resolveEffect(currentPlayer)
       case _ => ()
 
     /**
@@ -267,9 +269,11 @@ object Logics:
       case CactusTurnPhase.AceEffect =>
         player.drawCovered(game.deck)
         currentPhase_=(CactusTurnPhase.DiscardEquals)
-      case CactusTurnPhase.JackEffect =>
-        currentPlayer.asInstanceOf[CactusBot].applyJackEffect()
-        currentPhase_=(CactusTurnPhase.DiscardEquals)
+      case CactusTurnPhase.JackEffect => player match
+        case player: CactusBot =>
+          player.asInstanceOf[CactusBot].applyJackEffect()
+          currentPhase_=(CactusTurnPhase.DiscardEquals)
+        case _ => ()
       case _ => ()
 
     @tailrec
