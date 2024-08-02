@@ -11,12 +11,13 @@ object Utils:
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
 
   case class Phase(name: String, description: String)
-  
+
   val turnPhaseDescription: Map[TurnPhase, Phase] = Map[TurnPhase, Phase](
+    BaseTurnPhase.Start -> Phase("Watch cards", "Click on 2 cards to see them."),
     CactusTurnPhase.Draw -> Phase("Draw", "Draw one card from the deck or from the discard pile, by clicking on it."),
     CactusTurnPhase.Discard -> Phase("Discard", "Choose a card from your hand to discard."),
     CactusTurnPhase.DiscardEquals -> Phase("Discard equals cards", "You can discard a card equals to the one on top of the discard pile."),
-    CactusTurnPhase.AceEffect -> Phase("Ace effect resolution", ""),
+    CactusTurnPhase.AceEffect -> Phase("Ace discarded", "Choose a player and have them draw a card from the deck."),
     CactusTurnPhase.CallCactus -> Phase("Cactus", "Call \"Cactus\" and end the game."),
     BaseTurnPhase.End -> Phase("End", "The End.")
   )

@@ -98,6 +98,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   "Players" should "make a complete match using basic moves" in:
     val logic = CactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
     while !logic.isGameOver do
       logic.draw(true)
       logic.discard(1)
@@ -192,7 +193,18 @@ class CactusLogicTest extends AnyFlatSpec:
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
     logic.game.deckSize should be <= 32
 
-  it should "be played with the player and one bot" in :
+//  "A bot" should "see a card after discarding a Jack" in:
+//    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
+//    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
+//    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
+//    val logic = TestCactusLogicBots((drawings, discardings, memories))
+//    logic.nextPlayer
+//    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
+//    logic.currentPhase_=(CactusTurnPhase.Discard)
+//    logic.discard(2)
+//    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
+
+  it should "be played with the player and one bot" in:
     val drawings: Seq[DrawMethods] = Seq(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq(DiscardMethods.Random)
     val memories: Seq[Memory] = Seq(Memory.Optimal)
@@ -209,7 +221,7 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.callCactus()
           logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
-    logic.game.deckSize should be(42)
+    logic.game.deckSize should be (42)
 
   "The effect of an ace" should "be activated when it is discarded" in:
     val logic = TestCactusLogic(playersNumber)
@@ -226,3 +238,52 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.draw(true)
     logic.discard(1)
     logic.currentPhase should be(CactusTurnPhase.DiscardEquals)
+
+  "When the game starts the player" should "see 2 cards" in:
+    val logic: CactusLogic = CactusLogic(4)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (0)
+    logic.seeCard(0)
+    logic.seeCard(1)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (2)
+
+  "When the player sees 2 cards, then he" should "draw" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.seeCard(1)
+    logic.currentPhase should be (CactusTurnPhase.Draw)
+
+  it should "not see more than 2 cards" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.seeCard(1)
+    logic.seeCard(2)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (2)
+
+  "If the player sees less than 2 cards he" should "remain in the same turn phase" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.currentPhase should be (BaseTurnPhase.Start)
+
+  "Seeing the same card 2 times" should "not count as 2 different cards" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.seeCard(0)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (1)
+
+  "Passing an index out of bounds" should "make the requirements fail" in:
+    val logic = CactusLogic(4)
+    val playerCardsNumber: Int = logic.currentPlayer.cards.size
+    an [IllegalArgumentException] should be thrownBy logic.seeCard(-1)
+    an [IllegalArgumentException] should be thrownBy logic.seeCard(playerCardsNumber)
+
+  "As soon as Draw phase is reached, the cards in player's hand" should "be covered" in:
+    val logic = CactusLogic(4)
+    logic.seeCard(0)
+    logic.seeCard(1)
+    logic.draw(fromDeck = true)
+    logic.currentPlayer.cards.count(!_.isCovered) should be (1)
+
+  "When the game starts the bot" should "know at maximum 2 cards" in:
+      val logic = CactusLogic(2)
+      import model.bot.Bots.CactusBotImpl
+      logic.players(1).asInstanceOf[CactusBotImpl].knownCards.size should be <= 2
