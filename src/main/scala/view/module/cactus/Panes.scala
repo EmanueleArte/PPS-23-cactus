@@ -82,7 +82,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   private val leftPosition: Int                                   = 0
   private val topLeftCorner: ViewPosition                         = ViewPosition(topPosition, leftPosition)
   private def paneCenter: ViewPosition                            = ViewPosition(paneWidth, paneHeight) / 2
-  private val realPlayer: Player                                  = controller.players(0)
+  private val humanPlayer: Player                                 = controller.humanPlayer
   private val currentPlayerProperty: ObjectProperty[CactusPlayer] = ObjectProperty(controller.currentPlayer)
   private val pileCardsProperty: ObjectProperty[Option[PokerCard & Coverable]] = ObjectProperty(controller.pilesHead)
   private val playerCardsProperty: ObjectProperty[List[Card]] = ObjectProperty(
@@ -198,7 +198,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       header.right = cardsNumberText
 
     private def cardClickHandler(card: Card): Unit =
-      if player.isEqualsTo(realPlayer) then
+      if player.isEqualsTo(humanPlayer) then
         val index: Int = player.cards.indexOf(card)
         controller.handlePlayerInput(index)
         updatePlayerCards()

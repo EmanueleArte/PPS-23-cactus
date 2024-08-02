@@ -5,7 +5,7 @@ import model.module.cactus.CactusModelModule
 import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
 import model.logic.TurnPhase
-import model.player.Players.CactusPlayer
+import model.player.Players.{CactusPlayer, Player}
 import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
 
@@ -59,6 +59,12 @@ object CactusControllerModule extends ControllerModule:
      */
     def currentPlayer: CactusPlayer
 
+    /**
+     * Getter for the human player.
+     * @return the human player.
+     */
+    def humanPlayer: Player
+
   /** Represents the controller component for the Cactus game. */
   trait Component:
     context: Requirements =>
@@ -85,6 +91,8 @@ object CactusControllerModule extends ControllerModule:
         context.view.updateViewTurnPhase()
 
       override def players: Players = context.model.players
+
+      override def humanPlayer: Player = context.model.humanPlayer
 
       override def pilesHead: Option[PokerCard & Coverable] = context.model.game.discardPile.cards.headOption
 
