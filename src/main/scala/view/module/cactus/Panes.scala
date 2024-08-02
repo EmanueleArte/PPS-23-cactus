@@ -147,9 +147,9 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .at(position)
       .containing(header)
       .containing(cardsContainer)(playerCardsProperty.value.nonEmpty)
-      .whenClicked(_ =>
+      .reacting(_ =>
         controller.currentPhase match
-          case CactusTurnPhase.AceEffect if playerIndex != 0 => 
+          case CactusTurnPhase.AceEffect if playerIndex != 0 =>
             controller.handlePlayerInput(playerIndex)
             updatePlayersCards()
           case _                         => ()
