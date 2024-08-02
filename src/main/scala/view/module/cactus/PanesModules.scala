@@ -54,6 +54,9 @@ object AppPane:
   /** Background color of the side pane. */
   val asidePaneColor: Color = mainPaneColor //Color.rgb(12, 85, 28)
 
+  /** Color used for gradients. */
+  val asidePaneColor2: Color = Color.DarkGreen
+
   /** Default space between elements. */
   val spacing: Int = 20
 

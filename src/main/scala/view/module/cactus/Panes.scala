@@ -306,8 +306,9 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   phaseText.setAlignment(Pos.BaselineLeft)
 
   private def phaseDescription: VBox = new VBox()
-    .containing(TextElement telling phaseDescriptionText bold)
-    .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
+      .containing(TextElement telling phaseDescriptionText bold)
+      .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
+
 
   private val phaseContainer: VBox = new VBox()
     .containing(phaseText)
@@ -322,7 +323,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   private val _pane: BorderPane = new BorderPane()
     .at(position)
     .tall(paneHeight)
-    .colored(Gradient.Vertical)(List(Color.DarkGreen, AppPane.asidePaneColor))
+    .colored(Gradient.Vertical)(List(AppPane.asidePaneColor2, AppPane.asidePaneColor))
     .^(phaseContainer)
     .v(buttonsContainer)
   _pane.padding = Insets(AppPane.spacing)
