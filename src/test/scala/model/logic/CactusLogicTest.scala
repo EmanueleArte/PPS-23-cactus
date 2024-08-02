@@ -44,14 +44,14 @@ class CactusLogicTest extends AnyFlatSpec:
   it should "discard a card" in:
     val logic = CactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Discard)
-    logic.discard(0)
+    logic.movesHandler(0)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber - 1)
     logic.game.discardPile.size should be(1)
 
   it should "draw from the discard pile" in:
     val logic = CactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Discard)
-    logic.discard(0)
+    logic.movesHandler(0)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber - 1)
     logic.game.discardPile.size should be(1)
     logic.currentPhase_=(CactusTurnPhase.Draw)
@@ -63,7 +63,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = CactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
-    logic.discard(0)
+    logic.movesHandler(0)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber)
     logic.game.discardPile.size should be(1)
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
@@ -71,7 +71,7 @@ class CactusLogicTest extends AnyFlatSpec:
   it should "have a malus if he discards a card not in the classic discard phase and the discard pile is empty" in:
     val logic = CactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.DiscardEquals)
-    logic.discardWithMalus(0)
+    logic.movesHandler(0)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber + 1)
     logic.game.discardPile.size should be(0)
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
@@ -79,7 +79,7 @@ class CactusLogicTest extends AnyFlatSpec:
   it should "have a malus if he discards an incorrect card not in the classic discard phase" in:
     val logic = TestCactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Discard)
-    logic.discard(1)
+    logic.movesHandler(1)
     logic.nextPlayer
     logic.discardWithMalus(1)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber + 1)
@@ -89,7 +89,7 @@ class CactusLogicTest extends AnyFlatSpec:
   it should "discard a card if it matches the criteria of the non-classic discard" in:
     val logic = TestCactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Discard)
-    logic.discard(1)
+    logic.movesHandler(1)
     for _ <- 1 to 3 do logic.nextPlayer
     logic.discardWithMalus(2)
     logic.currentPlayer.cards.size should be(logic.game.initialPlayerCardsNumber - 1)
@@ -101,7 +101,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.currentPhase_=(CactusTurnPhase.Draw)
     while !logic.isGameOver do
       logic.draw(true)
-      logic.discard(1)
+      logic.movesHandler(1)
       logic.currentPhase_=(CactusTurnPhase.CallCactus)
       logic.callCactus()
       logic.currentPhase_=(CactusTurnPhase.Draw)
@@ -113,7 +113,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.currentPhase_=(CactusTurnPhase.Draw)
     while !logic.isGameOver do
       logic.draw(true)
-      logic.discard(1)
+      logic.movesHandler(1)
       logic.continue()
       logic.callCactus()
       logic.nextPlayer
@@ -132,11 +132,11 @@ class CactusLogicTest extends AnyFlatSpec:
     }
     logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
-    logic.discard(1)
+    logic.movesHandler(1)
     logic.continue()
     logic.continue()
     logic.continue()
-    logic.players(3).cards.size should be (logic.game.initialPlayerCardsNumber - 1)
+    logic.getPlayer(3).cards.size should be (logic.game.initialPlayerCardsNumber - 1)
 
   it should "call cactus if it has a good hand" in:
     val maxPlayersNumber = 6
@@ -156,7 +156,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case _ =>
           logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
-          logic.discard(1)
+          logic.movesHandler(1)
           logic.currentPhase_=(CactusTurnPhase.DiscardEquals)
           logic.continue()
           logic.continue()
@@ -186,7 +186,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case _ =>
           logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
-          logic.discard(1)
+          logic.movesHandler(1)
           logic.continue()
           logic.callCactus()
           logic.continue()
@@ -216,7 +216,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case _ =>
           logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
-          logic.discard(1)
+          logic.movesHandler(1)
           logic.continue()
           logic.callCactus()
           logic.continue()
@@ -227,16 +227,16 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = TestCactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
-    logic.discard(0)
+    logic.movesHandler(0)
     logic.currentPhase should be (CactusTurnPhase.AceEffect)
-    logic.applyAceEffect(logic.players(1).asInstanceOf[logic.PlayerType])
-    logic.players(1).cards.size should be (logic.game.initialPlayerCardsNumber + 1)
+    logic.movesHandler(1)
+    logic.getPlayer(1).cards.size should be (logic.game.initialPlayerCardsNumber + 1)
 
   it should "not be activated if is not discarded" in:
     val logic = TestCactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
-    logic.discard(1)
+    logic.movesHandler(1)
     logic.currentPhase should be(CactusTurnPhase.DiscardEquals)
 
   "When the game starts the player" should "see 2 cards" in:
