@@ -71,7 +71,7 @@ object Logics:
      */
     def calculateScore: Scores
 
-    /** Lets the player a card in his hand. */
+    /** Lets the player see a card in his hand. */
     def seeCard(cardIndex: Int): Unit
 
   /** Provider of a [[Game]]. */

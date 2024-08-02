@@ -204,7 +204,7 @@ class CactusLogicTest extends AnyFlatSpec:
 //    logic.discard(2)
 //    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
 
-  it should "be played with the player and one bot" in :
+  it should "be played with the player and one bot" in:
     val drawings: Seq[DrawMethods] = Seq(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq(DiscardMethods.Random)
     val memories: Seq[Memory] = Seq(Memory.Optimal)
@@ -221,7 +221,7 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.callCactus()
           logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
-    logic.game.deckSize should be(42)
+    logic.game.deckSize should be (42)
 
   "The effect of an ace" should "be activated when it is discarded" in:
     val logic = TestCactusLogic(playersNumber)
