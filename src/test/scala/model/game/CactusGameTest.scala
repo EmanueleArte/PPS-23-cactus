@@ -29,6 +29,9 @@ class CactusGameTest extends AnyFlatSpec:
       case Some(card) => cards = cards ::: card :: Nil
       case _          => ()
 
+    override def drawCovered(drawable: Drawable[Card & Coverable]): Unit =
+      draw(drawable)
+
     override def discard(cardIndex: Int): CardType = cards(cardIndex)
 
     override def isEqualsTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&

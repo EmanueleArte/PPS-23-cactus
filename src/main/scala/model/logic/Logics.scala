@@ -265,7 +265,7 @@ object Logics:
      */
     private def resolveEffect(player: PlayerType): Unit = currentPhase match
       case CactusTurnPhase.AceEffect =>
-        player.draw(game.deck)
+        player.drawCovered(game.deck)
         currentPhase_=(CactusTurnPhase.DiscardEquals)
       case CactusTurnPhase.JackEffect =>
         currentPlayer.asInstanceOf[CactusBot].applyJackEffect()

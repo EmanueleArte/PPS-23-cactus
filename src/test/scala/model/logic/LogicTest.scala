@@ -25,6 +25,8 @@ class LogicTest extends AnyFlatSpec:
 
     override def draw(deck: Drawable[CardType]): Unit = None
 
+    override def drawCovered(deck: Drawable[CardType]): Unit = None
+
     override def discard(cardIndex: Int): Card & Coverable = 2 OF Spades
 
     override def isEqualsTo(anotherPlayer: Player): Boolean =

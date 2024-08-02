@@ -11,11 +11,12 @@ object Players:
   trait Player:
     /** Type representing the type of the cards in a game. */
     type CardType <: Card & Coverable
-    
+
     /** The name of the player. */
     val name: String
 
-    /** The cards in the player's hand.
+    /**
+     * The cards in the player's hand.
      * @return the cards in the player's hand.
      */
     def cards: List[CardType]
@@ -26,6 +27,13 @@ object Players:
      * @param drawable the drawable to draw from.
      */
     def draw(drawable: Drawable[CardType]): Unit
+
+    /**
+     * Draws a card that will remain covered from a deck.
+     *
+     * @param drawable the drawable to draw from.
+     */
+    def drawCovered(drawable: Drawable[CardType]): Unit
 
     /**
      * Discards a card from the player's hand.
@@ -47,12 +55,20 @@ object Players:
 
     override def cards: List[PokerCard & Coverable] = _cards
 
-    override def draw(drawable: Drawable[CardType]): Unit =
+    private def genericDraw(drawable: Drawable[CardType], shouldStayCovered: Boolean): Unit =
       val drawnCard: Option[CardType] = drawable.draw()
       if drawnCard.isDefined then
         val card = drawnCard.get
-        card.uncover()
+        shouldStayCovered match
+          case false => card.uncover()
+          case _     => ()
         _cards = _cards ::: card :: Nil
+
+    override def draw(drawable: Drawable[CardType]): Unit =
+      genericDraw(drawable, false)
+
+    override def drawCovered(drawable: Drawable[CardType]): Unit =
+      genericDraw(drawable, true)
 
     override def discard(cardIndex: Int): CardType =
       require(cardIndex >= 0)
@@ -63,8 +79,8 @@ object Players:
       cardToRemove
 
     override def isEqualsTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
-        this.cards.diff(anotherPlayer.cards).isEmpty &&
-        anotherPlayer.cards.diff(this.cards).isEmpty
+      this.cards.diff(anotherPlayer.cards).isEmpty &&
+      anotherPlayer.cards.diff(this.cards).isEmpty
 
   /** Companion object of [[Player]]. */
   object Player
