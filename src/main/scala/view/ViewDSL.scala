@@ -11,8 +11,8 @@ import scalafx.collections.ObservableBuffer
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{BorderPane, HBox, Pane, Region, VBox}
-import scalafx.scene.paint.Color
+import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, HBox, Pane, Region, VBox}
+import scalafx.scene.paint.{Color, LinearGradient, Stop, Stops}
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.{Font, FontWeight, Text}
 import view.module.cactus.{AppPane, Buttons, CardsPane, PlayersPane}
@@ -35,7 +35,6 @@ object ViewDSL:
     style = s"-fx-background-color: ${Buttons.buttonBgColor.toRgbString};" +
       s"-fx-text-color: ${Buttons.buttonColor.toRgbString};" +
       s"-fx-border-radius: 3px"
-    margin = Insets(10)
 
   /**
    * Creates a new card's pane with the dimension already set.
@@ -73,6 +72,10 @@ object ViewDSL:
       s"-fx-background-color: ${Buttons.buttonBgColor.toRgbString};" +
       s"-fx-text-color: ${Buttons.buttonColor.toRgbString};" +
       s"-fx-border-radius: 3px"
+
+  /** Enumerator containing the types of gradients. */
+  enum Gradient:
+    case Vertical, Horizontal
 
   extension [T <: Region](node: T)
 
@@ -112,7 +115,35 @@ object ViewDSL:
       node
 
     /**
+     * Sets the background color of the [[Node]], using a linear gradient.
+     * @param alignment of the linear gradient.
+     * @param colors [[List]] of colors of the gradient.
+     * @return node with the background color set.
+     */
+    def colored(alignment: Gradient)(colors: List[Color]): T =
+      val start: ViewPosition = ViewPosition(0, 0)
+      val end: ViewPosition = alignment match
+        case Gradient.Horizontal => ViewPosition(1, 0)
+        case Gradient.Vertical => ViewPosition(0, 1)
+
+      node.setBackground(new Background(Array(
+        new BackgroundFill(
+          new LinearGradient(
+            startX = start.x,
+            startY = start.y,
+            endX = end.x,
+            endY = end.y,
+            proportional = true,
+            stops = Stops(colors: _*)
+          ),
+          null, null
+        )
+      )))
+      node
+
+    /**
      * Sets the preferred width of a [[Pane]].
+     *
      * @param width to set for the pane.
      * @return pane with the width set.
      */
@@ -324,18 +355,38 @@ object ViewDSL:
       pane
 
   extension [T <: BorderPane](pane: T)
+    /**
+     * Sets the element in the right position of the [[BorderPane]].
+     * @param element to add in the pane.
+     * @return pane with the child set.
+     */
     def -->(element: Node): T =
       pane.right = element
       pane
 
+    /**
+     * Sets the element in the left position of the [[BorderPane]].
+     * @param element to add in the pane.
+     * @return pane with the child set.
+     */
     def <--(element: Node): T =
       pane.left = element
       pane
 
+    /**
+     * Sets the element in the top position of the [[BorderPane]].
+     * @param element to add in the pane.
+     * @return pane with the child set.
+     */
     def ^(element: Node): T =
       pane.top = element
       pane
 
+    /**
+     * Sets the element in the bottom position of the [[BorderPane]].
+     * @param element to add in the pane.
+     * @return pane with the child set.
+     */
     def v(element: Node): T =
       pane.bottom = element
       pane
@@ -399,7 +450,7 @@ object ViewDSL:
      * @return [[Text]] wrappable.
      */
     def wrapped: T =
-      text.wrappingWidth = AppPane.asidePaneWidth
+      text.wrappingWidth = AppPane.asidePaneWidth - AppPane.spacing * 2
       text
 
     /**

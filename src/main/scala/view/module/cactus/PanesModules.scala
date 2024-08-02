@@ -18,9 +18,16 @@ object AppPane:
 
   /** Contains the basic parameters for the aside pane. */
   object AsidePaneModule:
+    /** Text of the "continue" button. */
     val continueButtonText: String = "Continue"
+
+    /** Text of the "cactus" button. */
     val cactusButtonText: String = "Cactus"
+
+    /** Text to display in the "current phase" label. */
     val phaseText: String = "Current phase"
+
+    /** Text to display in the "phase description" label. */
     val phaseDescriptionText: String = "Phase description"
 
   /** Width of the application's window. */
@@ -47,7 +54,12 @@ object AppPane:
   /** Background color of the side pane. */
   val asidePaneColor: Color = mainPaneColor //Color.rgb(12, 85, 28)
 
+  /** Color used for gradients. */
+  val asidePaneColor2: Color = Color.DarkGreen
+
+  /** Default space between elements. */
   val spacing: Int = 20
+
 /** Contains the basic parameters for the texts. */
 object Text:
   /** Font size for small texts. */
@@ -120,7 +132,7 @@ object CardsPane:
 /** Contains the basic parameters for the buttons. */
 object Buttons:
   /** Margins around a button. */
-  val margin: Int = 20
+  val margin: Int = AppPane.spacing
 
   /** Width of a button in the game screen. */
   val buttonWidth: Int = AppPane.asidePaneWidth - margin * 2
