@@ -95,7 +95,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   )
 
   private val playersPanes: List[PlayerPane] = controller.players.zipWithIndex
-    .map((player, index) => new PlayerPane(player, index, calculatePlayerPosition(index)))
+    .map((player, index) => new PlayerPane(player, calculatePlayerPosition(index)))
 
   override def pane: Pane = new Pane()
     .tall(paneHeight)
@@ -138,7 +138,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
    * @param player represented by the pane.
    * @param position of the pane.
    */
-  private class PlayerPane(player: Player, playerIndex: Int, override val position: ViewPosition)
+  private class PlayerPane(player: Player, override val position: ViewPosition)
       extends ScalaFXPane: // with PlayersPane:
     override def paneWidth: Int  = PlayersPane.paneWidth
     override def paneHeight: Int = PlayersPane.paneHeight
@@ -148,11 +148,12 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .containing(header)
       .containing(cardsContainer)(playerCardsProperty.value.nonEmpty)
       .reacting(_ =>
+        val playerIndex = controller.players.indexOf(player)
         controller.currentPhase match
           case CactusTurnPhase.AceEffect if playerIndex != 0 =>
             controller.handlePlayerInput(playerIndex)
             updatePlayersCards()
-          case _                         => ()
+          case _ => ()
       )
 
     playerCardsProperty.onChange((_, _, _) => updatePlayerCards())
