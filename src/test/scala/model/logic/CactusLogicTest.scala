@@ -196,16 +196,17 @@ class CactusLogicTest extends AnyFlatSpec:
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
     logic.game.deckSize should be <= 32
 
-//  "A bot" should "see a card after discarding a Jack" in:
-//    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
-//    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
-//    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
-//    val logic = TestCactusLogicBots((drawings, discardings, memories))
-//    logic.nextPlayer
-//    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
-//    logic.currentPhase_=(CactusTurnPhase.Discard)
-//    logic.discard(2)
-//    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
+  "A bot" should "get a special effect after discarding Jack" in :
+    val drawings: Seq[DrawMethods] = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
+    val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
+    val memories: Seq[Memory] = Seq.fill(playersNumber - 1)(Memory.Optimal)
+    val logic = TestCactusLogicBots((drawings, discardings, memories))
+    logic.nextPlayer
+    val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
+    logic.currentPhase_=(CactusTurnPhase.Discard)
+    logic.discard(2)
+    logic.continue()
+    logic.currentPlayer.asInstanceOf[CactusBot].knownCards.length shouldBe (knownCardsLength + 1)
 
   it should "be played with the player and one bot" in:
     val drawings: Seq[DrawMethods] = Seq(DrawMethods.Deck)
