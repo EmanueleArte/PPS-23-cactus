@@ -1,5 +1,6 @@
 package view.module.finalscreen
 
+import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
 import control.module.menu.MainMenuControllerModule.MainMenuController
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
@@ -10,34 +11,34 @@ import view.module.cactus.{AppPane, ScalaFXPane}
 import view.module.menu.CustomStackPane
 import view.ViewDSL.{
   aligned,
-  colored,
-  veryBig,
+  baseWidth,
   bold,
+  colored,
   containing,
   doing,
+  initialValue,
+  prompt,
   saying,
   spaced,
   telling,
+  veryBig,
   withMargin,
-  prompt,
-  baseWidth,
-  initialValue,
   Button as ButtonElement,
-  Label as LabelElement,
-  ComboBox as ComboBoxElement
+  ComboBox as ComboBoxElement,
+  Label as LabelElement
 }
 
 import scala.language.postfixOps
 
-class FinalScreenPanes(
-    controller: MainMenuController,
+class FinalScreenPane(
+    controller: FinalScreenController,
     sceneWidth: ReadOnlyDoubleProperty,
     sceneHeight: ReadOnlyDoubleProperty
 ) extends ScalaFXPane:
   override def paneWidth: Int         = AppPane.mainPaneWidth
   override def paneHeight: Int        = AppPane.mainPaneHeight
   override def position: ViewPosition = hCenter
-  private def hCenter: ViewPosition    = ViewPosition(paneWidth / 2, 0)
+  private def hCenter: ViewPosition   = ViewPosition(paneWidth / 2, 0)
 
   override def pane: Pane = new CustomStackPane(sceneWidth, sceneHeight)
     .colored(AppPane.mainPaneColor)
@@ -47,15 +48,15 @@ class FinalScreenPanes(
         .spaced(20)
         .containing(
           (LabelElement telling "Cactus & Co." bold).veryBig
-            .aligned(Pos.TopCenter)
-            .withMargin(new scalafx.geometry.Insets(Insets(50, 0, 50, 0)))
+          .aligned(Pos.TopCenter)
+          .withMargin(new scalafx.geometry.Insets(Insets(50, 0, 50, 0)))
         )
         .containing(
           new HBox()
             .aligned(Pos.Center)
             .spaced(10)
             .containing(LabelElement telling "Selected game:")
-            //.containing(gameSelected)
+            // .containing(gameSelected)
         )
         .containing(
           new HBox()
@@ -72,6 +73,6 @@ class FinalScreenPanes(
                 )*/
             )
         )
-        //.containing(playersPane.pane)
-        //.containing(ButtonElement saying "Start game" doing (_ => startGame()))
+        // .containing(playersPane.pane)
+        // .containing(ButtonElement saying "Start game" doing (_ => startGame()))
     )

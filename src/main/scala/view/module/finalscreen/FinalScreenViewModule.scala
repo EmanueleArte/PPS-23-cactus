@@ -4,7 +4,7 @@ import control.module.finalscreen.FinalScreenControllerModule
 import scalafx.scene.Scene
 import view.ScalaFXStageManager
 import view.module.ViewModule
-import view.module.cactus.AppPane.*
+import view.module.cactus.AppPane.{windowHeight, windowWidth}
 
 object FinalScreenViewModule extends ViewModule:
 
@@ -21,13 +21,14 @@ object FinalScreenViewModule extends ViewModule:
     class FinalScreenScalaFxView extends FinalScreenView:
 
       override def show(): Unit =
+        System.out.println("LJFALJFASLFALSFNFKL")
         ScalaFXStageManager.setScene(
           new Scene(windowWidth, windowHeight):
-            content = ()//List(MainMenuPane(context.controller, this.width, this.height).pane)
+            content = List(FinalScreenPane(context.controller, this.width, this.height).pane)
           ,
           true
         )
 
     /** Interface of the view module of game. */
-    trait Interface extends Provider with Component:
-      self: Requirements =>
+  trait Interface extends Provider with Component:
+    self: Requirements =>

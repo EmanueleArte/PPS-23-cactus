@@ -3,7 +3,7 @@ package control.module.menu
 import control.module.ControllerModule
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.module.menu.MainMenuModelModule
-import mvc.{CactusMVC, PlayableGame}
+import mvc.{CactusMVC, FinalScreenMVC, PlayableGame}
 import view.module.menu.MainMenuViewModule
 
 object MainMenuControllerModule extends ControllerModule:
