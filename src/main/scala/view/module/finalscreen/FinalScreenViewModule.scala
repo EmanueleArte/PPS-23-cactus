@@ -1,13 +1,16 @@
 package view.module.finalscreen
 
-import view.module.menu.MainMenuViewModule.Requirements
+import control.module.finalscreen.FinalScreenControllerModule
+import scalafx.scene.Scene
+import view.ScalaFXStageManager
 import view.module.ViewModule
+import view.module.cactus.AppPane.*
 
 object FinalScreenViewModule extends ViewModule:
 
   override type ViewType = View
 
-  override type Requirements = FinalScreenViewModule.Provider
+  override type Requirements = FinalScreenControllerModule.Provider
 
   trait FinalScreenView extends View
 
@@ -15,4 +18,16 @@ object FinalScreenViewModule extends ViewModule:
     context: Requirements =>
 
     /** Implementation of the final screen view using ScalaFx. */
-    class FinalScreenScalaFxView extends FinalScreenView
+    class FinalScreenScalaFxView extends FinalScreenView:
+
+      override def show(): Unit =
+        ScalaFXStageManager.setScene(
+          new Scene(windowWidth, windowHeight):
+            content = ()//List(MainMenuPane(context.controller, this.width, this.height).pane)
+          ,
+          true
+        )
+
+    /** Interface of the view module of game. */
+    trait Interface extends Provider with Component:
+      self: Requirements =>
