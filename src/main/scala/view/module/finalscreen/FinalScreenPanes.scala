@@ -55,24 +55,17 @@ class FinalScreenPane(
           new HBox()
             .aligned(Pos.Center)
             .spaced(10)
-            .containing(LabelElement telling "Selected game:")
-            // .containing(gameSelected)
+            .containing((LabelElement telling "Final Score:").veryBig)
         )
         .containing(
           new HBox()
             .aligned(Pos.Center)
-            .spaced(10)
-            .containing(LabelElement telling "Number of players:")
-            .containing(
-              new Spinner[Int](2, 6, 2):
-                editable = false
-                prefWidth = 200
-                /*value.onChange((_, old, n) =>
-                  val newPlayers = for i <- old until n yield playersPane.createBotBox(s"Bot $i")
-                  playersPane.updatePlayersDisplay(newPlayers, n - old)
-                )*/
-            )
+            .spaced(5)
+            .containing(LabelElement telling "Player:")
+            .containing(LabelElement telling "???")
         )
         // .containing(playersPane.pane)
-        // .containing(ButtonElement saying "Start game" doing (_ => startGame()))
+        .containing(ButtonElement saying "Return to main menu" doing (_ => returnToMainMenu()))
     )
+
+  private def returnToMainMenu(): Unit = ()

@@ -42,11 +42,13 @@ object MainMenuControllerModule extends ControllerModule:
 
       def startGame(nPlayers: Int): Unit =
         context.model.selectedGame.gameMVC.setup(nPlayers)
-        context.model.selectedGame.gameMVC.run()
+        //context.model.selectedGame.gameMVC.run()
+        FinalScreenMVC.run()
 
       def startCactusGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit =
         context.model.selectedGame.gameMVC.setupWithBots((drawings, discardings, memories))
-        context.model.selectedGame.gameMVC.run()
+        //context.model.selectedGame.gameMVC.run()
+        FinalScreenMVC.run()
 
   /** Interface of the controller module of the menu. */
   trait Interface extends Provider with Component:

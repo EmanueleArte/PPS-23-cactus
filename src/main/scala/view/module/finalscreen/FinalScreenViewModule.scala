@@ -21,10 +21,9 @@ object FinalScreenViewModule extends ViewModule:
     class FinalScreenScalaFxView extends FinalScreenView:
 
       override def show(): Unit =
-        System.out.println("LJFALJFASLFALSFNFKL")
         ScalaFXStageManager.setScene(
           new Scene(windowWidth, windowHeight):
-            content = List(FinalScreenPane(context.controller, this.width, this.height).pane)
+            content = FinalScreenPane(context.controller, this.width, this.height).pane
           ,
           true
         )
