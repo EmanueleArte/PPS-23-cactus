@@ -2,6 +2,7 @@ package view.module.finalscreen
 
 import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
 import control.module.menu.MainMenuControllerModule.MainMenuController
+import model.player.Players.CactusPlayer
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Spinner
@@ -57,15 +58,32 @@ class FinalScreenPane(
             .spaced(10)
             .containing((LabelElement telling "Final Score:").veryBig)
         )
-        .containing(
+        /*.containing(
           new HBox()
             .aligned(Pos.Center)
             .spaced(5)
             .containing(LabelElement telling "Player:")
             .containing(LabelElement telling "???")
-        )
-        // .containing(playersPane.pane)
+        )*/
+        .containing(playersPane(Map((CactusPlayer("PlayerTest", List.empty), 10))))
         .containing(ButtonElement saying "Return to main menu" doing (_ => returnToMainMenu()))
     )
 
   private def returnToMainMenu(): Unit = ()
+
+  @SuppressWarnings(Array("org.wartremover.warts.ToString"))
+  private def playersPane(playersScores: Map[CactusPlayer, Integer]): VBox =
+    val vbox = new VBox()
+      .aligned(Pos.TopCenter)
+      .spaced(10)
+    var hboxes: Seq[HBox] = Seq.empty
+    playersScores.foreach((p, s) => {
+      val hbox = Seq.fill(1)(new HBox()
+        .aligned(Pos.Center)
+        .spaced(5)
+        .containing(LabelElement telling p.name)
+        .containing(LabelElement telling s.toString))
+      hboxes = hboxes ++ hbox
+    })
+    vbox.children = hboxes
+    vbox
