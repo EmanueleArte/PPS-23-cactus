@@ -1,6 +1,5 @@
 package view.module.tutorial
 
-import control.module.tutorial.TutorialControllerModule.TutorialController
 import mvc.PlayableGame
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
@@ -28,13 +27,11 @@ import scala.language.postfixOps
 /**
  * ScalaFX tutorial pane for the cactus game.
  *
- * @param controller controller of the tutorial.
  * @param sceneWidth width of the scene.
  * @param sceneHeight height of the scene
  */
 class TutorialPane(
     game: PlayableGame,
-    controller: TutorialController,
     sceneWidth: ReadOnlyDoubleProperty,
     sceneHeight: ReadOnlyDoubleProperty
 ) extends ScalaFXPane:

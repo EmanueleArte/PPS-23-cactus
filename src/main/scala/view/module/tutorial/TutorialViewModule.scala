@@ -1,7 +1,6 @@
 package view.module.tutorial
 
 import control.module.menu.MainMenuControllerModule
-import control.module.tutorial.TutorialControllerModule
 import mvc.PlayableGame
 import mvc.PlayableGame.Cactus
 import scalafx.application.Platform
@@ -16,7 +15,7 @@ import view.module.cactus.AppPane.{mainPaneHeight, mainPaneWidth, windowHeight, 
 object TutorialViewModule extends ViewModule:
   override type ViewType = TutorialView
 
-  override type Requirements = TutorialControllerModule.Provider
+  override type Requirements = Any
 
   /** Represents the tutorial view. */
   trait TutorialView extends View:
@@ -33,7 +32,7 @@ object TutorialViewModule extends ViewModule:
       override def show(): Unit =
         ScalaFXStageManager.newStage(
           new Scene(mainPaneWidth, mainPaneHeight):
-            content = List(TutorialPane(_currentGame, context.controller, this.width, this.height).pane)
+            content = List(TutorialPane(_currentGame, this.width, this.height).pane)
         )
 
       override def show(game: PlayableGame): Unit =
