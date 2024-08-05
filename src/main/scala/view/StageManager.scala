@@ -34,9 +34,8 @@ object ScalaFXStageManager extends StageManager:
     if showScene then ScalaFXWindow.showWindow()
 
   /** Represents the window of the gui. */
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   private object ScalaFXWindow extends JFXApp3:
-    var currentScene: Scene = _
+    var currentScene: Scene = new Scene
 
     /** Shows the window. */
     def showWindow(): Unit = Platform.runLater:
