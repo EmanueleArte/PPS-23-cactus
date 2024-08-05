@@ -5,6 +5,7 @@ import control.module.cactus.CactusControllerModule
 import model.card.Cards.{Card, Coverable, PokerCard}
 import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.{CactusPlayer, Player}
+import mvc.TutorialMVC
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
@@ -314,6 +315,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     val button: Button = ButtonElement saying cactusButtonText doing (_ => controller.callCactus())
     button.setDisable(true)
     button
+  private val tutorialButton: Button = ButtonElement saying "tutorial" doing (_ => controller.showTutorial())
 
   private def phaseText: VBox = new VBox()
     .containing(TextElement telling AppPane.AsidePaneModule.phaseText bold)
@@ -325,6 +327,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
       .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
 
   private val phaseContainer: VBox = new VBox()
+    .containing(tutorialButton)
     .containing(phaseText)
     .containing(phaseDescription)
   phaseContainer.spacing = AppPane.spacing

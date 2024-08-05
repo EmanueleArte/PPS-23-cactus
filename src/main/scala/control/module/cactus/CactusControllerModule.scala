@@ -6,6 +6,8 @@ import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
 import model.logic.TurnPhase
 import model.player.Players.{CactusPlayer, Player}
+import mvc.TutorialMVC
+import mvc.PlayableGame.Cactus
 import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
 
@@ -71,6 +73,8 @@ object CactusControllerModule extends ControllerModule:
 
     /** Represents the controller for the Cactus game. */
     class CactusControllerImpl extends CactusController:
+      
+      override def showTutorial(): Unit = TutorialMVC.run(Cactus)
 
       override def continue(): Unit =
         context.model.continue()

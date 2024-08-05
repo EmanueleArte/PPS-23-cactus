@@ -14,4 +14,4 @@ object TutorialMVC
   override val controller: ControllerType = TutorialControllerImpl()
   override val view: ViewType             = TutorialScalaFxView()
 
-  def run(): Unit = view.show(Cactus)
+  def run(game: PlayableGame): Unit = view.show(game)

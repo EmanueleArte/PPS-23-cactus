@@ -38,6 +38,9 @@ object MainMenuControllerModule extends ControllerModule:
 
     /** Implementation of [[MainMenuController]]. */
     class MainMenuControllerImpl extends MainMenuController:
+      
+      override def showTutorial(): Unit = ()
+      
       def selectGame(game: PlayableGame): Unit = context.model.selectedGame = game
 
       def startGame(nPlayers: Int): Unit =
