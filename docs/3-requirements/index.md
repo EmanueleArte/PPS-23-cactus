@@ -42,7 +42,7 @@ All’inizio della partita, ad ogni giocatore devono venire assegnate 4 carte ca
   - Nel caso in cui venga provata a fare un’azione non concessa, l’utente verrà notificato.
 - Effetti speciali:
   - **Jack scartato**: si potrà continuare oppure cliccare su una delle proprie carte per mostrarla, prima di andare avanti
-  - **Donna scartata**: si potrà continuare oppure cliccare su una coppia di carte in campo per scambiarle, prima di andare avanti
+  - **Donna scartata**: si potrà continuare oppure cliccare su una coppia di carte in campo per scambiarle, prima di andare avanti (opzionale)
   - **Asso scartato**: si potrà continuare oppure cliccare un giocatore a cui far pescare una carta dal mazzo.
   - Quando viene chiamato “cactus”, il giocatore che l’ha chiamato mostra le carte ed è immune agli effetti. Viene effettuato un ultimo giro, fino al giocatore precedente a colui che ha chiamato la fine della partita (quando il giocatore prima finisce il turno, termina anche il gioco).
 - Alla fine del gioco verranno mostrate tutte le carte e verrà calcolato in automatico il punteggio di ogni giocatore, mostrando il vincitore (o i vincitori in caso di parimerito).
