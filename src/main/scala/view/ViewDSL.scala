@@ -517,6 +517,14 @@ object ViewDSL:
       label.setAlignment(alignment)
       label
 
+    /**
+     * Makes the text wrappable.
+     * @return [[Label]] with wrappable text.
+     */
+    def textFlow: T =
+      label.setWrapText(true)
+      label
+
   extension [A, T <: ComboBox[A]](cbox: T)
     /**
      * Sets the items of a [[ComboBox]].
