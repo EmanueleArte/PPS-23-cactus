@@ -19,6 +19,8 @@ import scala.util.Random
 /**
  * ScalaFX main menu pane.
  * @param controller controller of the main menu.
+ * @param sceneWidth width of the scene.
+ * @param sceneHeight height of the scene.
  */
 class MainMenuPane(
     controller: MainMenuController,
