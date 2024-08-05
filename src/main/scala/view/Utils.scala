@@ -12,6 +12,7 @@ object Utils:
   val topPosition: Int            = 0
   val leftPosition: Int           = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
+  val tutorialHPadding: Double       = 400
 
   /** Class for a turn phase, with a name and a description. */
   case class Phase(name: String, description: String)

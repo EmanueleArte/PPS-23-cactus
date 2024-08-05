@@ -1,12 +1,13 @@
 package view
 
 import scalafx.scene.control.{Button, ComboBox, Label, ScrollPane, Tooltip}
-import view.Utils.toRgbString
+import view.Utils.{toRgbString, tutorialHPadding}
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.MouseEvent
 import model.card.Cards.{Card, Coverable, PokerCard}
+import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
@@ -523,6 +524,24 @@ object ViewDSL:
      */
     def textFlow: T =
       label.setWrapText(true)
+      label
+
+    /**
+     * Sets the width of a [[Label]].
+     * @param width to set for the label.
+     * @return [[Label]] with the width set.
+     */
+    def long(width: Double): T =
+      label.prefWidth = width
+      label
+
+    /**
+     * Sets the width of a [[Label]] dynamically.
+     * @param width to set for the label.
+     * @return [[Label]] with the width set.
+     */
+    def dynamicLong(width: ReadOnlyDoubleProperty): T =
+      label.prefWidth <== width - tutorialHPadding
       label
 
   extension [A, T <: ComboBox[A]](cbox: T)
