@@ -22,3 +22,5 @@ Di seguito vengono elencati il _Product Backlog_ e le documentazioni relative ai
 - [Third Sprint](sprint-3.md)
 - [Fourth Sprint](sprint-4.md)
 - [Fifth Sprint](sprint-5.md)
+- [Sixth Sprint](sprint-6.md)
+- [Seventh Sprint](sprint-7.md)
