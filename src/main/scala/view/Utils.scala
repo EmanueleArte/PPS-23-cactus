@@ -1,7 +1,10 @@
 package view
 
 import model.logic.{BaseTurnPhase, CactusTurnPhase, TurnPhase}
+import scalafx.beans.property.ReadOnlyDoubleProperty
+import scalafx.geometry.Pos
 import scalafx.scene.control.ComboBox
+import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
 
 /** Contains utility methods for the view. */
@@ -50,3 +53,14 @@ object Utils:
    * @return the value of the combo box.
    */
   def value[A](comboBox: ComboBox[A]): A = comboBox.value.value
+
+  /**
+   * Custom [[StackPane]] with basic parameters already set and responsive size.
+   *
+   * @param paneWidth  width of the pane.
+   * @param paneHeight height of the pane.
+   */
+  class CustomStackPane(paneWidth: ReadOnlyDoubleProperty, paneHeight: ReadOnlyDoubleProperty) extends StackPane:
+    prefWidth <== paneWidth
+    prefHeight <== paneHeight
+    alignment = Pos.TopCenter

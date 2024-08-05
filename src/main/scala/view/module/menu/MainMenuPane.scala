@@ -10,39 +10,11 @@ import scalafx.scene.control.{ComboBox, Spinner}
 import scalafx.scene.layout.{HBox, Pane, StackPane, VBox}
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewPosition
-import view.Utils.value
-import view.ViewDSL.{
-  aligned,
-  colored,
-  veryBig,
-  bold,
-  containing,
-  doing,
-  saying,
-  spaced,
-  telling,
-  withMargin,
-  prompt,
-  baseWidth,
-  initialValue,
-  Button as ButtonElement,
-  Label as LabelElement,
-  ComboBox as ComboBoxElement
-}
+import view.Utils.{CustomStackPane, value}
+import view.ViewDSL.{aligned, baseWidth, bold, colored, containing, doing, initialValue, prompt, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, ComboBox as ComboBoxElement, Label as LabelElement}
 
 import scala.language.postfixOps
 import scala.util.Random
-
-/**
- * Custom [[StackPane]] with basic parameters already set and responsive size.
- *
- * @param paneWidth width of the pane.
- * @param paneHeight height of the pane.
- */
-class CustomStackPane(paneWidth: ReadOnlyDoubleProperty, paneHeight: ReadOnlyDoubleProperty) extends StackPane:
-  prefWidth <== paneWidth
-  prefHeight <== paneHeight
-  alignment = Pos.TopCenter
 
 /**
  * ScalaFX main menu pane.
