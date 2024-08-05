@@ -17,7 +17,8 @@ object TutorialControllerModule extends ControllerModule:
     context: Requirements =>
 
     /** Implementation of [[TutorialController]]. */
-    class TutorialControllerImpl extends TutorialController
+    class TutorialControllerImpl extends TutorialController:
+      override def showTutorial(): Unit = ()
 
   /** Interface of the controller module of the tutorial. */
   trait Interface extends Provider with Component:
