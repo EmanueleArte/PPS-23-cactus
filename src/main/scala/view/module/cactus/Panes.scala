@@ -110,7 +110,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   /** Updates the current player in the view. */
   def updateCurrentPlayer(): Unit = currentPlayerProperty.value = controller.currentPlayer
 
-  private def updatePlayersCards(): Unit = playerCardsProperty.setValue(currentPlayerProperty.value.cards)
+  def updatePlayersCards(player: Player): Unit = playerCardsProperty.setValue(player.cards)
   private def calculatePlayerPosition(i: Int): ViewPosition =
     val theta: Double = 2 * Math.PI / controller.players.length
     val x: Int =
@@ -152,7 +152,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         controller.currentPhase match
           case CactusTurnPhase.AceEffect if playerIndex != 0 =>
             controller.handlePlayerInput(playerIndex)
-            updatePlayersCards()
           case _ => ()
       )
 
@@ -269,7 +268,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .containing(CardElement at topLeftCorner covered)
       .reacting(_ =>
         controller.draw(true)
-        updatePlayersCards()
       )
       .whenHovered("Deck")
 
@@ -279,7 +277,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .reacting(_ =>
         if controller.pilesHead.isDefined then
           controller.draw(false)
-          updatePlayersCards()
           updateDiscardPile()
       )
       .whenHovered("Discard pile")
