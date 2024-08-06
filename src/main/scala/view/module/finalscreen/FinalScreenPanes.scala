@@ -1,11 +1,9 @@
 package view.module.finalscreen
 
 import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
-import control.module.menu.MainMenuControllerModule.MainMenuController
 import model.player.Players.CactusPlayer
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.control.Spinner
 import scalafx.scene.layout.{HBox, Pane, VBox}
 import view.ViewPosition
 import view.module.cactus.{AppPane, ScalaFXPane}
@@ -34,7 +32,8 @@ import scala.language.postfixOps
 class FinalScreenPane(
     controller: FinalScreenController,
     sceneWidth: ReadOnlyDoubleProperty,
-    sceneHeight: ReadOnlyDoubleProperty
+    sceneHeight: ReadOnlyDoubleProperty,
+    playersScores: Map[CactusPlayer, Integer]
 ) extends ScalaFXPane:
   override def paneWidth: Int         = AppPane.mainPaneWidth
   override def paneHeight: Int        = AppPane.mainPaneHeight
@@ -65,14 +64,14 @@ class FinalScreenPane(
             .containing(LabelElement telling "Player:")
             .containing(LabelElement telling "???")
         )*/
-        .containing(playersPane(Map((CactusPlayer("PlayerTest", List.empty), 10))))
+        .containing(playersPane())
         .containing(ButtonElement saying "Return to main menu" doing (_ => returnToMainMenu()))
     )
 
   private def returnToMainMenu(): Unit = ()
 
   @SuppressWarnings(Array("org.wartremover.warts.ToString"))
-  private def playersPane(playersScores: Map[CactusPlayer, Integer]): VBox =
+  private def playersPane(): VBox =
     val vbox = new VBox()
       .aligned(Pos.TopCenter)
       .spaced(10)

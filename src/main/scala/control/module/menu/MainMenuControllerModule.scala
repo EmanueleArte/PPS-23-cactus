@@ -3,6 +3,7 @@ package control.module.menu
 import control.module.ControllerModule
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.module.menu.MainMenuModelModule
+import model.player.Players.CactusPlayer
 import mvc.{CactusMVC, FinalScreenMVC, PlayableGame}
 import view.module.menu.MainMenuViewModule
 
@@ -30,7 +31,11 @@ object MainMenuControllerModule extends ControllerModule:
      * @param discardings the discarding methods of the bots.
      * @param memories the memory options of the bots.
      */
-    def startCactusGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit
+    def startCactusGameWithBots(
+        drawings: Seq[DrawMethods],
+        discardings: Seq[DiscardMethods],
+        memories: Seq[Memory]
+    ): Unit
 
   /** Represents the controller component for the menu. */
   trait Component:
@@ -42,13 +47,31 @@ object MainMenuControllerModule extends ControllerModule:
 
       def startGame(nPlayers: Int): Unit =
         context.model.selectedGame.gameMVC.setup(nPlayers)
-        //context.model.selectedGame.gameMVC.run()
-        FinalScreenMVC.run()
+        // context.model.selectedGame.gameMVC.run()
+        val finalScreenMVC = FinalScreenMVC
+        finalScreenMVC.setup(
+          Map(
+            (CactusPlayer("PlayerTest1", List.empty), 10),
+            (CactusPlayer("PlayerTest2", List.empty), 31)
+          )
+        )
+        finalScreenMVC.run()
 
-      def startCactusGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit =
+      def startCactusGameWithBots(
+          drawings: Seq[DrawMethods],
+          discardings: Seq[DiscardMethods],
+          memories: Seq[Memory]
+      ): Unit =
         context.model.selectedGame.gameMVC.setupWithBots((drawings, discardings, memories))
-        //context.model.selectedGame.gameMVC.run()
-        FinalScreenMVC.run()
+        // context.model.selectedGame.gameMVC.run()
+        val finalScreenMVC = FinalScreenMVC
+        finalScreenMVC.setup(
+          Map(
+            (CactusPlayer("PlayerTest1", List.empty), 10),
+            (CactusPlayer("PlayerTest2", List.empty), 31)
+          )
+        )
+        finalScreenMVC.run()
 
   /** Interface of the controller module of the menu. */
   trait Interface extends Provider with Component:
