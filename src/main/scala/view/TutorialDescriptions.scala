@@ -16,7 +16,7 @@ object TutorialDescriptions:
         "The game is played with a Poker deck. The game ends when anyone has done another turn after the call of \"Cactus\" made by a player."),
       GameTutorialValue.Rules -> ("The game is played in turns, where each player has to draw a card from the deck or the discard pile, watch it and then discard one from his hand. " +
         "Some cards when discarded in the latter phase activate special effects. \nAfter the previous discarding and the, eventual, effect resolution there is a phase where all the players" +
-        "can discard a card with the same value of the one on top of the discard pile. \nIf they don't want to, they can proceed with the game." +
+        "can discard a card with the same value of the one on top of the discard pile. \nIf they don't want to, they can proceed with the game.\n" +
         "Before the end of his turn the player can call \"Cactus\".\n" +
         "At the start of the first turn each player has to watch two cards in his hand and remember them.\n" +
         "Every card added to a player's hand is placed as last item of the hand.\n" +
@@ -29,7 +29,7 @@ object TutorialDescriptions:
         "\n- Jacks are 11 points." +
         "\n- Queens are 12 points." +
         "\n- Kings are 13 points." +
-        "\n- Red Kings have 0 points."
+        "\n- Red Kings are 0 points."
         )
     )
   )
