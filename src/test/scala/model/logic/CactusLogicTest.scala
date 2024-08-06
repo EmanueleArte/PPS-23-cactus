@@ -6,8 +6,8 @@ import model.card.Cards.{Coverable, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.game.CactusGame
 import model.game.Scores.toMap
-import model.logic.Logics.{CactusLogic, GameLogic}
-import model.player.Players.CactusPlayer
+import model.logic.Logics.{CactusLogic, GameLogic, Players}
+import model.player.Players.{CactusPlayer, Player}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
@@ -18,14 +18,22 @@ class CactusLogicTest extends AnyFlatSpec:
   val playersNumber: Int = 4
   val deckSize: Int      = 52
 
+  /** Custom implementation of the CactusGame to make tests with an unshuffled deck without bots. */
+  class TestCactusLogic(nPlayers: Int) extends CactusLogic(Left(nPlayers): Either[Int, BotParamsType]):
+    override lazy val game: CactusGame = new CactusGame():
+      override val deck: Deck[PokerCard & Coverable] = PokerDeck()
+      override def setupGame(playersNumber: Int): List[Player] = (1 to nPlayers).toList.map(i =>
+        CactusPlayer(s"Player-$i", (1 to game.initialPlayerCardsNumber).toList.map(_ => game.deck.draw().get))
+      )
+
   /** Custom implementation of the CactusGame to make tests with an unshuffled deck. */
-  class TestCactusLogic(nPlayers: Int) extends CactusLogic(Left(nPlayers): Either[Int, BotParamsType]) with GameLogic:
+  class TestCactusLogicBots(nPlayers: Int) extends CactusLogic(Left(nPlayers): Either[Int, BotParamsType]):
     override lazy val game: CactusGame = new CactusGame():
       override val deck: Deck[PokerCard & Coverable] = PokerDeck()
 
-  class TestCactusLogicBots(botParamsType: BotParamsType)
-      extends CactusLogic(Right(botParamsType): Either[Int, BotParamsType])
-      with GameLogic:
+  /** Custom implementation of the CactusGame to make tests with an unshuffled deck and bot config. */
+  class TestCactusLogicBotsConfigured(botParamsType: BotParamsType)
+      extends CactusLogic(Right(botParamsType): Either[Int, BotParamsType]):
     override lazy val game: CactusGame = new CactusGame():
       override val deck: Deck[PokerCard & Coverable] = PokerDeck()
 
@@ -76,7 +84,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
 
   it should "have a malus if he discards an incorrect card not in the classic discard phase" in:
-    val logic = TestCactusLogic(playersNumber)
+    val logic = TestCactusLogicBots(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Discard)
     logic.movesHandler(1)
     logic.nextPlayer
@@ -86,7 +94,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.game.deckSize should be(deckSize - playersNumber * logic.game.initialPlayerCardsNumber - 1)
 
   it should "discard a card if it matches the criteria of the non-classic discard" in:
-    val logic = TestCactusLogic(playersNumber)
+    val logic = TestCactusLogicBots(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Discard)
     logic.movesHandler(1)
     for _ <- 1 to 3 do logic.nextPlayer
@@ -108,6 +116,7 @@ class CactusLogicTest extends AnyFlatSpec:
         case _ => ()
       logic.continue()
       logic.callCactus()
+      logic.continue()
       logic.continue()
     logic.getPlayer(0).cards.size should be(logic.game.initialPlayerCardsNumber)
     logic.getPlayer(1).cards.size should be(logic.game.initialPlayerCardsNumber + 1)
@@ -142,7 +151,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val drawings: Seq[DrawMethods]       = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
     val memories: Seq[Memory]            = Seq.fill(playersNumber - 1)(Memory.Optimal)
-    val logic                            = TestCactusLogicBots((drawings, discardings, memories))
+    val logic                            = TestCactusLogicBotsConfigured((drawings, discardings, memories))
     logic.players.foreach {
       case bot: CactusBot =>
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
@@ -161,7 +170,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val drawings: Seq[DrawMethods]       = Seq.fill(maxPlayersNumber - 1)(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq.fill(maxPlayersNumber - 1)(DiscardMethods.Random)
     val memories: Seq[Memory]            = Seq.fill(maxPlayersNumber - 1)(Memory.Optimal)
-    val logic                            = TestCactusLogicBots((drawings, discardings, memories))
+    val logic                            = TestCactusLogicBotsConfigured((drawings, discardings, memories))
     logic.players.foreach {
       case bot: CactusBot =>
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
@@ -185,7 +194,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val drawings: Seq[DrawMethods]       = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
     val memories: Seq[Memory]            = Seq.fill(playersNumber - 1)(Memory.Optimal)
-    val logic                            = TestCactusLogicBots((drawings, discardings, memories))
+    val logic                            = TestCactusLogicBotsConfigured((drawings, discardings, memories))
     logic.nextPlayer
     val knownCardsLength = logic.nextPlayer.asInstanceOf[CactusBot].knownCards.length
     logic.currentPhase = CactusTurnPhase.Discard
@@ -199,7 +208,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val drawings: Seq[DrawMethods]       = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
     val memories: Seq[Memory]            = Seq.fill(playersNumber - 1)(Memory.Optimal)
-    val logic                            = TestCactusLogicBots((drawings, discardings, memories))
+    val logic                            = TestCactusLogicBotsConfigured((drawings, discardings, memories))
     while !logic.isGameOver do
       logic.currentPlayer match
         case bot: CactusBot =>
@@ -218,7 +227,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val drawings: Seq[DrawMethods]       = Seq(DrawMethods.Deck)
     val discardings: Seq[DiscardMethods] = Seq(DiscardMethods.Random)
     val memories: Seq[Memory]            = Seq(Memory.Optimal)
-    val logic                            = TestCactusLogicBots((drawings, discardings, memories))
+    val logic                            = TestCactusLogicBotsConfigured((drawings, discardings, memories))
     while !logic.isGameOver do
       logic.currentPlayer match
         case bot: CactusBot =>
@@ -234,7 +243,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.game.deckSize should be(42)
 
   "The effect of an ace" should "be activated when it is discarded" in:
-    val logic = TestCactusLogic(playersNumber)
+    val logic = TestCactusLogicBots(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
     logic.movesHandler(0)
@@ -243,7 +252,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.getPlayer(1).cards.size should be(logic.game.initialPlayerCardsNumber + 1)
 
   it should "not be activated if is not discarded" in:
-    val logic = TestCactusLogic(playersNumber)
+    val logic = TestCactusLogicBots(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
     logic.draw(true)
     logic.movesHandler(1)
