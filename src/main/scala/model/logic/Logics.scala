@@ -230,8 +230,10 @@ object Logics:
     /** Make the current player to call Cactus. */
     def callCactus(): Unit = currentPhase match
       case CactusTurnPhase.CallCactus =>
-        lastRound = true
-        currentPhase_=(BaseTurnPhase.End)
+        if !lastRound then
+          lastRound = true
+          currentPlayer.cards.foreach(_.uncover())
+          currentPhase_=(BaseTurnPhase.End)
       case _ => ()
 
     override def seeCard(cardIndex: Int): Unit =
