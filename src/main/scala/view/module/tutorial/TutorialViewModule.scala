@@ -1,15 +1,12 @@
 package view.module.tutorial
 
-import control.module.menu.MainMenuControllerModule
 import mvc.PlayableGame
 import mvc.PlayableGame.Cactus
-import scalafx.application.Platform
 import scalafx.scene.Scene
 import scalafx.scene.layout.Pane
-import scalafx.stage.Stage
 import view.ScalaFXStageManager
 import view.module.ViewModule
-import view.module.cactus.AppPane.{mainPaneHeight, mainPaneWidth, windowHeight, windowWidth}
+import view.module.cactus.AppPane.{mainPaneHeight, mainPaneWidth}
 
 /** Represents the view module for the tutorial. */
 object TutorialViewModule extends ViewModule:
@@ -19,7 +16,11 @@ object TutorialViewModule extends ViewModule:
 
   /** Represents the tutorial view. */
   trait TutorialView extends View:
-    /** Shows the tutorial view. */
+    /**
+     * Shows the tutorial view.
+     *
+     * @param game the game to show the tutorial for.
+     */
     def show(game: PlayableGame): Unit
 
   /** Represents the view component for the menu. */
@@ -38,7 +39,6 @@ object TutorialViewModule extends ViewModule:
       override def show(game: PlayableGame): Unit =
         _currentGame = game
         show()
-
 
   /** Interface of the view module of the menu. */
   trait Interface extends Provider with Component:
