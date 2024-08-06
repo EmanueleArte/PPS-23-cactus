@@ -3,7 +3,6 @@ package model.logic
 import model.bot.Bots.{BotParamsType, CactusBot}
 import model.card.Cards.PokerCard
 import model.card.CardsData.PokerCardName
-import model.card.CardsData.PokerCardName.Jack
 import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
@@ -266,7 +265,7 @@ object Logics:
     private def resolveEffect(player: PlayerType): Unit =
       currentPhase match
         case CactusTurnPhase.AceEffect =>
-          player.draw(game.deck, false)
+          player.draw(game.deck)
         case CactusTurnPhase.JackEffect =>
           currentPlayer.asInstanceOf[CactusBot].applyJackEffect()
         case _ => ()
