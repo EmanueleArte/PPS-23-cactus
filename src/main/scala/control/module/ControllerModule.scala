@@ -11,7 +11,9 @@ trait ControllerModule:
   type ControllerType <: Controller
 
   /** Controller of the game. */
-  trait Controller
+  trait Controller:
+    /** Shows the tutorial. */
+    def showTutorial(): Unit
 
   /** Provider for a [[Controller]]. */
   trait Provider:
