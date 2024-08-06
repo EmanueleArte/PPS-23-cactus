@@ -179,7 +179,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
       pane.whenHovered(currentPlayerProperty.value match
         case p if p.isEqualsTo(player) => s"${player.name}'s turn"
-        case _ => s"Not ${player.name}'s turn"
+        case _                         => s"Not ${player.name}'s turn"
       )
 
     private def playerHand: VBox = new VBox()
@@ -267,9 +267,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private val deckPane: Pane = new Pane()
       .at((leftPosition, topPosition))
       .containing(CardElement at topLeftCorner covered)
-      .reacting(_ =>
-        controller.draw(true)
-      )
+      .reacting(_ => controller.draw(true))
       .whenHovered("Deck")
 
     private val pilePane: Pane = new Pane()
@@ -295,7 +293,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     updatePane()
     newValue match
       case CactusTurnPhase.CallCactus => cactusButton.setDisable(false)
-      case _ => cactusButton.setDisable(true)
+      case _                          => cactusButton.setDisable(true)
   )
 
   override def paneWidth: Int = AppPane.asidePaneWidth
@@ -320,8 +318,8 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   phaseText.setAlignment(Pos.BaselineLeft)
 
   private def phaseDescription: VBox = new VBox()
-      .containing(TextElement telling phaseDescriptionText bold)
-      .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
+    .containing(TextElement telling phaseDescriptionText bold)
+    .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
 
   private val phaseContainer: VBox = new VBox()
     .containing(tutorialButton)
@@ -345,8 +343,10 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
 
   private def updatePane(): Unit =
     phaseContainer.children.clear()
-    phaseContainer.children.add(phaseText)
-    phaseContainer.children.add(phaseDescription)
+    phaseContainer
+      .containing(tutorialButton)
+      .containing(phaseText)
+      .containing(phaseDescription)
     _pane.top = phaseContainer
 
   override def pane: Pane = _pane
