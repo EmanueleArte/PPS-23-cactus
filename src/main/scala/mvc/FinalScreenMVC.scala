@@ -2,23 +2,22 @@ package mvc
 
 import control.module.finalscreen.FinalScreenControllerModule
 import control.module.finalscreen.FinalScreenControllerModule.ControllerType
-import model.module.finalscreen.FinalScreenModelModule
-import model.module.finalscreen.FinalScreenModelModule.ModelType
 import model.player.Players.CactusPlayer
 import view.module.finalscreen.FinalScreenViewModule
-import view.module.finalscreen.FinalScreenViewModule.{FinalScreenView, ViewType}
+import view.module.finalscreen.FinalScreenViewModule.ViewType
 
-object FinalScreenMVC
-    extends FinalScreenModelModule.Interface
-    with FinalScreenControllerModule.Interface
-    with FinalScreenViewModule.Interface:
+/** Represents the main module for the final screen. */
+object FinalScreenMVC extends FinalScreenControllerModule.Interface with FinalScreenViewModule.Interface:
 
-  type ViewType = FinalScreenView
-  override lazy val model: ModelType               = FinalScreenModelModuleImpl()
-  override /*lazy*/ val controller: ControllerType = FinalScreenControllerImpl()
-  override /*lazy*/ val view: ViewType             = FinalScreenScalaFxView()
+  override val controller: ControllerType = FinalScreenControllerImpl()
+  override val view: ViewType             = FinalScreenScalaFxView()
 
+  /** Shows the final screen. */
   def run(): Unit = view.show()
 
+  /**
+   * Sets up the players with their scores.
+   * @param playersScores a [[Map]] with the players and their scores
+   */
   def setup(playersScores: Map[CactusPlayer, Integer]): Unit =
-    view.setupPlayersScores(playersScores)
+    controller.setupPlayersScores(playersScores)

@@ -1,7 +1,6 @@
 package view.module.finalscreen
 
 import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
-import model.player.Players.CactusPlayer
 import mvc.MainMenuMVC
 import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyDoubleProperty
@@ -15,11 +14,14 @@ import view.module.menu.MainMenuViewModule.MainMenuView
 
 import scala.language.postfixOps
 
+/**
+ * ScalaFX final screen pane.
+ * @param controller controller of the final screen.
+ */
 class FinalScreenPane(
     controller: FinalScreenController,
     sceneWidth: ReadOnlyDoubleProperty,
-    sceneHeight: ReadOnlyDoubleProperty,
-    playersScores: Map[CactusPlayer, Integer]
+    sceneHeight: ReadOnlyDoubleProperty
 ) extends ScalaFXPane:
   override def paneWidth: Int         = AppPane.mainPaneWidth
   override def paneHeight: Int        = AppPane.mainPaneHeight
@@ -57,7 +59,7 @@ class FinalScreenPane(
       .aligned(Pos.TopCenter)
       .spaced(10)
     var hboxes: Seq[HBox] = Seq.empty
-    playersScores.foreach((p, s) => {
+    controller.playersScores.foreach((p, s) => {
       val hbox = Seq.fill(1)(new HBox()
         .aligned(Pos.Center)
         .spaced(50)
