@@ -51,10 +51,8 @@ object Bots:
 
     /*-checkEffect()*/
 
-    /**
-     * Applies the jack card special effect.
-     */
-    def applyJackCardEffect(): Unit
+    /** Applies the jack card special effect. */
+    def applyJackEffect(): Unit
 
     def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int]
 
@@ -62,7 +60,7 @@ object Bots:
      * Chooses if it has to call cactus.
      * @return true if it calls cactus
      */
-    def callCactus(): Boolean
+    def shouldCallCactus(): Boolean
 
     def chooseOwnCard(cardIndex: Int): PokerCard
 
@@ -137,13 +135,15 @@ object Bots:
       case DrawMethods.RandomDeck  => scala.util.Random.nextBoolean()
       case DrawMethods.PileSmartly => isDiscardPileBetter(discardPile)
 
-    override def applyJackCardEffect(): Unit =
+    override def applyJackEffect(): Unit =
       seeCard(unknownCard)
 
     override def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int] =
-      knownCards.zipWithIndex.find((c, _) => c.value == discardPile.copy(discardPile.cards).draw().get.value) match
-        case Some((card, i)) => Some(cards.zipWithIndex.filter((c, _) => c.equals(card)).map((_, i) => i).head)
-        case _               => None
+      if knownCards.nonEmpty then
+        knownCards.zipWithIndex.find((c, _) => c.value == discardPile.copy(discardPile.cards).draw().get.value) match
+          case Some((card, i)) => Some(cards.zipWithIndex.filter((c, _) => c.equals(card)).map((_, i) => i).head)
+          case _               => None
+      else None
 
     private def totKnownValue: Int =
       _knownCards.map {
@@ -151,9 +151,14 @@ object Bots:
         case c                 => c.value
       }.sum
 
-    override def callCactus(): Boolean =
+    override def shouldCallCactus(): Boolean =
       cards.length <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)
 
     override def chooseOwnCard(cardIndex: Int): PokerCard = ???
 
-    override def choosePlayer(players: List[CactusPlayer]): CactusPlayer = ???
+    override def choosePlayer(players: List[CactusPlayer]): CactusPlayer =
+      players
+        .filter(p => p != this)
+        .filter(p => !p.calledCactus)
+        .sorted((p1, p2) => p1.cards.length - p2.cards.length)
+        .head

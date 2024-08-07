@@ -4,8 +4,10 @@ import control.module.ControllerModule
 import model.module.cactus.CactusModelModule
 import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
-import model.logic.{CactusTurnPhase, TurnPhase}
+import model.logic.TurnPhase
 import model.player.Players.{CactusPlayer, Player}
+import mvc.TutorialMVC
+import mvc.PlayableGame.Cactus
 import mvc.FinalScreenMVC
 import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
@@ -18,6 +20,9 @@ object CactusControllerModule extends ControllerModule:
   override type Requirements   = CactusModelModule.Provider with CactusViewModule.Provider
 
   trait CactusController extends Controller:
+    /** Shows the tutorial. */
+    def showTutorial(): Unit
+
     /** Continues to the next step. */
     def continue(): Unit
 
@@ -31,23 +36,9 @@ object CactusControllerModule extends ControllerModule:
     /**
      * Handles the player input according to the turn phase.
      *
-     * @param cardIndex index of the card in the player hand to handle.
+     * @param index index of the card in the player hand or the player to handle.
      */
-    def handlePlayerInput(cardIndex: Int): Unit
-
-    /**
-     * Makes player to discard a card.
-     *
-     * @param cardIndex index of the card in the player hand to discard.
-     */
-    def discard(cardIndex: Int): Unit
-
-    /**
-     * Makes player to discard a card but with a malus if the card does not match the discard criteria.
-     *
-     * @param cardIndex index of the card in the player hand to discard.
-     */
-    def discardWithMalus(cardIndex: Int): Unit
+    def handlePlayerInput(index: Int): Unit
 
     /** Makes player to call Cactus, in order to end the game. */
     def callCactus(): Unit
@@ -76,12 +67,20 @@ object CactusControllerModule extends ControllerModule:
      */
     def currentPlayer: CactusPlayer
 
+    /**
+     * Getter for the human player.
+     * @return the human player.
+     */
+    def humanPlayer: Player
+
   /** Represents the controller component for the Cactus game. */
   trait Component:
     context: Requirements =>
 
     /** Represents the controller for the Cactus game. */
     class CactusControllerImpl extends CactusController:
+      
+      override def showTutorial(): Unit = TutorialMVC.run(Cactus)
 
       @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
       override def continue(): Unit =
@@ -98,20 +97,8 @@ object CactusControllerModule extends ControllerModule:
         context.model.draw(fromDeck)
         context.view.updateViewTurnPhase()
 
-      override def handlePlayerInput(cardIndex: Int): Unit =
-        context.model.currentPhase match
-          case CactusTurnPhase.Discard => context.model.discard(cardIndex)
-          case CactusTurnPhase.DiscardEquals =>
-            context.model.discardWithMalus(
-              cardIndex,
-              context.model.players(0) match
-                case player: CactusPlayer => player
-            )
-          case _ => ()
-        context.view.updateViewTurnPhase()
-
-      override def discard(cardIndex: Int): Unit =
-        context.model.discard(cardIndex)
+      override def handlePlayerInput(index: Int): Unit =
+        context.model.movesHandler(index)
         context.view.updateViewTurnPhase()
 
       override def callCactus(): Unit =
@@ -120,9 +107,9 @@ object CactusControllerModule extends ControllerModule:
 
       override def players: Players = context.model.players
 
-      override def pilesHead: Option[PokerCard & Coverable] = context.model.game.discardPile.cards.headOption
+      override def humanPlayer: Player = context.model.humanPlayer
 
-      override def discardWithMalus(cardIndex: Int): Unit = context.model.discardWithMalus(cardIndex)
+      override def pilesHead: Option[PokerCard & Coverable] = context.model.game.discardPile.cards.headOption
 
       override def currentPhase: TurnPhase = context.model.currentPhase
 

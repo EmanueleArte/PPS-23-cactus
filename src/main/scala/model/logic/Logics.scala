@@ -2,9 +2,7 @@ package model.logic
 
 import model.bot.Bots.{BotParamsType, CactusBot}
 import model.card.Cards.PokerCard
-import model.card.CardsData.PokerCardName
-import model.card.CardsData.PokerCardName.Jack
-import model.game.{CactusGame, Game, Scores}
+import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
 
@@ -23,7 +21,7 @@ object Logics:
     /** Type of a player. */
     type PlayerType <: Player
 
-    protected val _players: Players = List[PlayerType]()
+    protected val _players: Players = List.empty[PlayerType]
 
     /**
      * Iterator of the players in the game.
@@ -38,6 +36,14 @@ object Logics:
      * @return the list of players in the game.
      */
     def players: Players = _players
+
+    /**
+     * Getter for a player at a specific index.
+     *
+     * @param index index of the player in the list.
+     * @return the player at the specified index.
+     */
+    def getPlayer(index: Int): PlayerType
 
     /**
      * Getter for the current player.
@@ -70,6 +76,20 @@ object Logics:
      * @return a map with the [[Player]] and the [[Score]].
      */
     def calculateScore: Scores
+
+    /**
+     * Lets the player see a card in his hand.
+     *
+     * @param cardIndex index of the card in the player hand to see.
+     */
+    def seeCard(cardIndex: Int): Unit
+
+    /**
+     * Getter for the human player.
+     *
+     * @return the human player.
+     */
+    def humanPlayer: Player
 
   /** Provider of a [[Game]]. */
   trait GameProvider:
@@ -111,13 +131,22 @@ object Logics:
       case Left(nPlayers) => nPlayers
       case _              => players.length
     private var lastRound: Boolean = false
-    _currentPhase = CactusTurnPhase.Draw
+
+    override def getPlayer(index: Int): PlayerType = players(index) match
+      case p: PlayerType => p
+
+    override def humanPlayer: Player = players(0)
 
     @tailrec
     final override def continue(): Unit = currentPhase match
+      case CactusTurnPhase.EffectActivation =>
+        handleCardEffect()
       case CactusTurnPhase.DiscardEquals =>
         currentPhase_=(CactusTurnPhase.CallCactus)
         if isBot(currentPlayer) then continue()
+      case CactusTurnPhase.JackEffect =>
+        if isBot(currentPlayer) then botTurn()
+        else () // TODO
       case CactusTurnPhase.CallCactus =>
         if isBot(currentPlayer) then botTurn()
         else currentPhase_=(BaseTurnPhase.End)
@@ -143,29 +172,35 @@ object Logics:
      */
     def draw(fromDeck: Boolean): Unit = currentPhase match
       case CactusTurnPhase.Draw =>
+        currentPlayer.cards.foreach(_.cover())
         if fromDeck then currentPlayer.draw(game.deck)
         else currentPlayer.draw(game.discardPile)
         currentPhase_=(CactusTurnPhase.Discard)
       case _ => ()
 
     /**
-     * Make the current player to discard a card.
+     * Make the current player to discard a card and choose if the eventual effect should be activated.
      *
      * @param cardIndex index of the card in the player hand to discard.
+     * @param withEffect if `true` the eventual effect of the card is activated, if `false` the effect is not activated.
      */
-    def discard(cardIndex: Int): Unit = currentPhase match
+    private def discard(cardIndex: Int, withEffect: Boolean): Unit = currentPhase match
       case CactusTurnPhase.Discard =>
         val discardedCard = currentPlayer.discard(cardIndex)
         discardedCard.uncover()
         game.discardPile = game.discardPile.put(discardedCard)
-        currentPlayer match
-          case currentPlayer: CactusBot =>
-            discardedCard.value match
-              case Jack => currentPlayer.asInstanceOf[CactusBot].applyJackCardEffect()
-              case _ => ()
-          case _ => ()
-        currentPhase_=(CactusTurnPhase.DiscardEquals)
+        if withEffect then
+          currentPhase_=(CactusTurnPhase.EffectActivation)
+          continue()
+        else currentPhase_=(CactusTurnPhase.DiscardEquals)
       case _ => ()
+
+    /**
+     * Make the current player to discard a card and activate the eventual effect.
+     *
+     * @param cardIndex  index of the card in the player hand to discard.
+     */
+    private def discard(cardIndex: Int): Unit = discard(cardIndex, true)
 
     /**
      * Make the current player to discard a card but with a malus if the card does not match the discard criteria.
@@ -180,20 +215,65 @@ object Logics:
           game.discardPile.draw() match
             case Some(card) if card.value != player.cards(cardIndex).value =>
               player.draw(game.deck)
+              player.cards.lastOption match
+                case Some(card) => card.cover()
+                case _          => ()
               game.discardPile = game.discardPile.put(card)
             case Some(card) =>
               game.discardPile = game.discardPile.put(card)
               currentPhase_=(CactusTurnPhase.Discard)
-              discard(cardIndex)
+              discard(cardIndex, false)
             case _ => player.draw(game.deck)
         case _ => ()
 
     /** Make the current player to call Cactus. */
     def callCactus(): Unit = currentPhase match
       case CactusTurnPhase.CallCactus =>
-        lastRound = true
-        currentPhase_=(BaseTurnPhase.End)
+        if !lastRound then
+          lastRound = true
+          currentPlayer.cards.foreach(_.uncover())
+          currentPlayer.callCactus()
+          currentPhase_=(BaseTurnPhase.End)
       case _ => ()
+
+    override def seeCard(cardIndex: Int): Unit =
+      require(cardIndex >= 0)
+      require(cardIndex < currentPlayer.cards.size)
+      if currentPlayer.cards.count(!_.isCovered) < game.cardsSeenAtStart then currentPlayer.cards(cardIndex).uncover()
+      if currentPlayer.cards.count(!_.isCovered) == game.cardsSeenAtStart then _currentPhase = CactusTurnPhase.Draw
+
+    /**
+     * Handles the player input according to the turn phase.
+     *
+     * @param index index of the card in the player hand or index of the player in the table.
+     */
+    def movesHandler(index: Int): Unit = currentPhase match
+      case BaseTurnPhase.Start     => seeCard(index)
+      case CactusTurnPhase.Discard => discard(index)
+      case CactusTurnPhase.DiscardEquals =>
+        discardWithMalus(
+          index,
+          getPlayer(0)
+        )
+      case CactusTurnPhase.AceEffect =>
+        val target = getPlayer(index)
+        if !target.calledCactus then
+          resolveEffect(target)
+      case _ => ()
+
+    /**
+     * Resolve the effect of a card targeting a player.
+     *
+     * @param player the player that the effect is applied to.
+     */
+    private def resolveEffect(player: PlayerType): Unit =
+      currentPhase match
+        case CactusTurnPhase.AceEffect =>
+          player.draw(game.deck)
+        case CactusTurnPhase.JackEffect =>
+          currentPlayer.asInstanceOf[CactusBot].applyJackEffect()
+        case _ => ()
+      currentPhase_=(CactusTurnPhase.DiscardEquals)
 
     @tailrec
     private def botTurn(): Unit = currentPlayer match
@@ -206,9 +286,15 @@ object Logics:
           case CactusTurnPhase.Discard =>
             discard(bot.chooseDiscard())
             botTurn()
+          case CactusTurnPhase.AceEffect =>
+            resolveEffect(bot.choosePlayer(players.zipWithIndex.map((_, i) => getPlayer(i))))
+            botTurn()
+          case CactusTurnPhase.JackEffect =>
+            resolveEffect(currentPlayer)
+            botTurn()
           case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>
-            if bot.callCactus() then callCactus()
+            if bot.shouldCallCactus() then callCactus()
             else
               currentPhase_=(BaseTurnPhase.End)
               continue()
@@ -234,6 +320,12 @@ object Logics:
           discardWithMalus(i)
           botDiscardWithMalus(bot)
         case _ => ()
+
+    private def handleCardEffect(): Unit =
+      game.checkCardEffect() match
+        case CactusCardEffect.AceEffect  => currentPhase_=(CactusTurnPhase.AceEffect)
+        case CactusCardEffect.JackEffect => currentPhase_=(CactusTurnPhase.JackEffect)
+        case _                           => currentPhase_=(CactusTurnPhase.DiscardEquals)
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:

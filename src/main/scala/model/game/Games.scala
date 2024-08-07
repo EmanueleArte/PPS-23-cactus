@@ -1,9 +1,10 @@
 package model.game
 
 import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
-import model.bot.Bots.{BotParamsType, CactusBotImpl}
+import model.bot.Bots.{BotParamsType, CactusBot, CactusBotImpl}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.{Card, Coverable, PokerCard}
+import model.card.CardsData.PokerCardName.Jack
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
@@ -71,14 +72,14 @@ object Scores:
 /** Generic card game. */
 trait Game:
   /**
-   * Setups method to call before start the game.
+   * Setup method to call before start the game with pre-defined bot params.
    * @param playersNumber number of players in the match.
    * @return a list with the initialized players.
    */
   def setupGame(playersNumber: Int): Players
 
   /**
-   * Setups method to call before start the game with bots.
+   * Setups method to call before start the game with custom bots' params.
    * @param botsParams parameters to setup the bots.
    * @return a list with the initialized players.
    */
@@ -97,8 +98,9 @@ class CactusGame() extends Game:
   val deck: Deck[PokerCard & Coverable] = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  var discardPile: PokerPile        = PokerPile()
-  val initialPlayerCardsNumber: Int = 4
+  var discardPile: PokerPile = PokerPile()
+  val initialPlayerCardsNumber: Int       = 4
+  val cardsSeenAtStart: Int = 2
 
   export deck.{size => deckSize}
 
@@ -108,7 +110,11 @@ class CactusGame() extends Game:
         .map(index =>
           CactusBotImpl(
             s"Bot-$index",
-            (1 to initialPlayerCardsNumber).toList.map(_ => deck.draw().get),
+            (1 to initialPlayerCardsNumber).toList
+              .map(_ => deck.draw().get)
+              .map(card =>
+                card.cover()
+                card),
             DrawMethods.Deck,
             DiscardMethods.Random,
             Memory.Normal
@@ -119,19 +125,30 @@ class CactusGame() extends Game:
   override def setupGameWithBots(botsParams: BotParamsType): List[Player] =
     val (drawings, discardings, memories) =
       botsParams.asInstanceOf[(Seq[DrawMethods], Seq[DiscardMethods], Seq[Memory])]
-    (CactusPlayer("Player", List.empty) :: drawings
+
+    val player: CactusPlayer = CactusPlayer("Player", List.empty)
+    setupCards(player)
+    val bots: List[CactusBotImpl] = drawings
       .lazyZip(discardings)
       .lazyZip(memories)
       .zipWithIndex
       .map { case ((drawMethod, discardMethod, memory), i) =>
         s"Bot ${i + 1}" drawing drawMethod discarding discardMethod withMemory memory
       }
-      .toList)
-      .map(p =>
-        (1 to initialPlayerCardsNumber).foreach(_ => p.draw(deck))
-        p.cards.foreach(_.cover())
-        p
+      .toList
+      .map(bot =>
+        setupCards(bot)
+        (0 until cardsSeenAtStart).toList.foreach(bot.seeCard)
+        bot
       )
+
+    player :: bots
+
+  private def setupCards(player: CactusPlayer): Unit =
+    (0 until initialPlayerCardsNumber).foreach(cardIndex =>
+      player.draw(deck)
+      player.cards(cardIndex).cover()
+    )
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   private def isRedKing(c: PokerCard): Boolean = c.value match
@@ -163,3 +180,17 @@ class CactusGame() extends Game:
       .map((player, score) => player -> score)
       .toMap
   )
+
+  /**
+   * Check if the last discarded card has an effect on the game.
+   *
+   * @return the effect related of the last discarded card.
+   */
+  def checkCardEffect(): CardEffect =
+    discardPile.copy(discardPile.cards).draw() match
+      case Some(card) =>
+        card.value match
+          case PokerCardName.Ace  => CactusCardEffect.AceEffect
+          case PokerCardName.Jack => CactusCardEffect.JackEffect
+          case _                  => CactusCardEffect.NoEffect
+      case _ => CactusCardEffect.NoEffect
