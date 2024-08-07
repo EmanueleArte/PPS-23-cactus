@@ -37,20 +37,25 @@ trait GameMVC:
    * to the minimum or maximum number of players based on the proximity to them.
    *
    * @param nPlayers the number of players.
+   * @return the game module with number of players set.
    */
-  def setup(nPlayers: Int): Unit = _nPlayers = nPlayers match
-    case _ if nPlayers < _minPlayers => _minPlayers
-    case _ if nPlayers > _maxPlayers => _maxPlayers
-    case _                           => nPlayers
+  def setup(nPlayers: Int): GameMVC =
+    _nPlayers = nPlayers match
+      case _ if nPlayers < _minPlayers => _minPlayers
+      case _ if nPlayers > _maxPlayers => _maxPlayers
+      case _ => nPlayers
+    this
 
   /**
    * Sets the bots parameters for the game.
    *
    * @param botsParams the parameters of the bots.
+   * @return the game module with bots parameters set.
    */
-  def setupWithBots(botsParams: BotParamsType): Unit =
+  def setupWithBots(botsParams: BotParamsType): GameMVC =
     _botsParamsSet = true
     _botsParams = botsParams
+    this
 
   /** Runs the game. */
   def run(): Unit
