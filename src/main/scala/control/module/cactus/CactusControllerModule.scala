@@ -6,6 +6,7 @@ import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
 import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.CactusPlayer
+import mvc.FinalScreenMVC
 import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
 
@@ -84,7 +85,16 @@ object CactusControllerModule extends ControllerModule:
         context.model.continue()
         context.view.updateViewTurnPhase()
         context.view.updateDiscardPile()
-        if context.model.isGameOver then Platform.exit() // TODO: Show the scores
+        //if context.model.isGameOver then Platform.exit() // TODO: Show the scores
+        if context.model.isGameOver then
+          val finalScreenMVC = FinalScreenMVC
+          finalScreenMVC.setup(
+            Map(
+              (CactusPlayer("PlayerTest1", List.empty), 10),
+              (CactusPlayer("PlayerTest2", List.empty), 31)
+            )
+          )
+          finalScreenMVC.run()
 
       override def draw(fromDeck: Boolean): Unit =
         context.model.draw(fromDeck)

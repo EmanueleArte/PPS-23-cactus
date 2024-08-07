@@ -3,8 +3,7 @@ package control.module.menu
 import control.module.ControllerModule
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.module.menu.MainMenuModelModule
-import model.player.Players.CactusPlayer
-import mvc.{CactusMVC, FinalScreenMVC, PlayableGame}
+import mvc.PlayableGame
 import view.module.menu.MainMenuViewModule
 
 object MainMenuControllerModule extends ControllerModule:
@@ -47,15 +46,7 @@ object MainMenuControllerModule extends ControllerModule:
 
       def startGame(nPlayers: Int): Unit =
         context.model.selectedGame.gameMVC.setup(nPlayers)
-        // context.model.selectedGame.gameMVC.run()
-        val finalScreenMVC = FinalScreenMVC
-        finalScreenMVC.setup(
-          Map(
-            (CactusPlayer("PlayerTest1", List.empty), 10),
-            (CactusPlayer("PlayerTest2", List.empty), 31)
-          )
-        )
-        finalScreenMVC.run()
+        context.model.selectedGame.gameMVC.run()
 
       def startCactusGameWithBots(
           drawings: Seq[DrawMethods],
@@ -63,15 +54,7 @@ object MainMenuControllerModule extends ControllerModule:
           memories: Seq[Memory]
       ): Unit =
         context.model.selectedGame.gameMVC.setupWithBots((drawings, discardings, memories))
-        // context.model.selectedGame.gameMVC.run()
-        val finalScreenMVC = FinalScreenMVC
-        finalScreenMVC.setup(
-          Map(
-            (CactusPlayer("PlayerTest1", List.empty), 10),
-            (CactusPlayer("PlayerTest2", List.empty), 31)
-          )
-        )
-        finalScreenMVC.run()
+        context.model.selectedGame.gameMVC.run()
 
   /** Interface of the controller module of the menu. */
   trait Interface extends Provider with Component:

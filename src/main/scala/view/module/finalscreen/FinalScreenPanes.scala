@@ -2,30 +2,14 @@ package view.module.finalscreen
 
 import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
 import model.player.Players.CactusPlayer
+import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.layout.{HBox, Pane, VBox}
 import view.ViewPosition
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.module.menu.CustomStackPane
-import view.ViewDSL.{
-  aligned,
-  baseWidth,
-  bold,
-  colored,
-  containing,
-  doing,
-  initialValue,
-  prompt,
-  saying,
-  spaced,
-  telling,
-  veryBig,
-  withMargin,
-  Button as ButtonElement,
-  ComboBox as ComboBoxElement,
-  Label as LabelElement
-}
+import view.ViewDSL.{aligned, baseWidth, bold, colored, containing, doing, initialValue, prompt, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, ComboBox as ComboBoxElement, Label as LabelElement}
 
 import scala.language.postfixOps
 
@@ -66,6 +50,7 @@ class FinalScreenPane(
         )*/
         .containing(playersPane())
         .containing(ButtonElement saying "Return to main menu" doing (_ => returnToMainMenu()))
+        .containing(ButtonElement saying "Close" doing (_ => Platform.exit()))
     )
 
   private def returnToMainMenu(): Unit = ()
