@@ -50,8 +50,7 @@ class FinalScreenPane(
         .containing(ButtonElement saying "Close application" doing (_ => Platform.exit()))
     )
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
-  private def returnToMainMenu(): Unit = MainMenuMVC.view.asInstanceOf[MainMenuView].showFromFinalScreen()
+  private def returnToMainMenu(): Unit = controller.returnToMainMenu()
 
   @SuppressWarnings(Array("org.wartremover.warts.ToString"))
   private def playersPane: VBox =
