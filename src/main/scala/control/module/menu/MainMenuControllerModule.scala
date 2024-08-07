@@ -3,7 +3,7 @@ package control.module.menu
 import control.module.ControllerModule
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.module.menu.MainMenuModelModule
-import mvc.{CactusMVC, PlayableGame}
+import mvc.PlayableGame
 import view.module.menu.MainMenuViewModule
 
 object MainMenuControllerModule extends ControllerModule:
@@ -30,7 +30,11 @@ object MainMenuControllerModule extends ControllerModule:
      * @param discardings the discarding methods of the bots.
      * @param memories the memory options of the bots.
      */
-    def startCactusGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit
+    def startCactusGameWithBots(
+        drawings: Seq[DrawMethods],
+        discardings: Seq[DiscardMethods],
+        memories: Seq[Memory]
+    ): Unit
 
   /** Represents the controller component for the menu. */
   trait Component:
@@ -39,17 +43,21 @@ object MainMenuControllerModule extends ControllerModule:
     /** Implementation of [[MainMenuController]]. */
     class MainMenuControllerImpl extends MainMenuController:
       
-      override def showTutorial(): Unit = ()
-      
       def selectGame(game: PlayableGame): Unit = context.model.selectedGame = game
 
       def startGame(nPlayers: Int): Unit =
-        context.model.selectedGame.gameMVC.setup(nPlayers)
-        context.model.selectedGame.gameMVC.run()
+        val game = context.model.selectedGame.gameMVC
+        game.setup(nPlayers)
+        game.run()
 
-      def startCactusGameWithBots(drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]): Unit =
-        context.model.selectedGame.gameMVC.setupWithBots((drawings, discardings, memories))
-        context.model.selectedGame.gameMVC.run()
+      def startCactusGameWithBots(
+          drawings: Seq[DrawMethods],
+          discardings: Seq[DiscardMethods],
+          memories: Seq[Memory]
+      ): Unit =
+        val game = context.model.selectedGame.gameMVC
+        game.setupWithBots((drawings, discardings, memories))
+        game.run()
 
   /** Interface of the controller module of the menu. */
   trait Interface extends Provider with Component:

@@ -9,7 +9,7 @@ import view.module.cactus.CactusViewModule.ViewType
 import view.module.cactus.CactusViewModule
 
 /** Represents the main module for the Cactus game. */
-object CactusMVC
+class CactusMVC
     extends GameMVC
     with CactusModelModule.Interface
     with CactusControllerModule.Interface
@@ -20,3 +20,7 @@ object CactusMVC
   override val view: ViewType             = CactusScalaFXView()
 
   def run(): Unit = view.show()
+
+/** Companion object for Cactus game MVC. */
+object CactusMVC:
+  def apply(): CactusMVC = new CactusMVC()
