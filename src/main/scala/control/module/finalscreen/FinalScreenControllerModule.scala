@@ -24,6 +24,7 @@ object FinalScreenControllerModule extends ControllerModule:
      */
     def setupPlayersScores(playersScores: Map[CactusPlayer, Integer]): Unit
 
+    /** Makes the application return to main menu. */
     def returnToMainMenu(): Unit
 
   /** Represents the controller component for the final screen. */
