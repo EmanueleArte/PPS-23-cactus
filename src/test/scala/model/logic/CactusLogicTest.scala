@@ -123,6 +123,32 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.getPlayer(2).cards.size should be(logic.game.initialPlayerCardsNumber)
     logic.getPlayer(3).cards.size should be(logic.game.initialPlayerCardsNumber)
 
+  it should "not draw a card if targeted by an ace effect after calling cactus" in :
+    val logic = TestCactusLogic(2)
+    // Player 1
+    logic.currentPhase_=(CactusTurnPhase.Draw)
+    logic.draw(true)
+    logic.movesHandler(1)
+    logic.continue()
+    logic.continue()
+    logic.continue()
+    // Player 2
+    logic.draw(true)
+    logic.movesHandler(1)
+    logic.continue()
+    logic.callCactus()
+    logic.continue()
+    // Player 1
+    logic.draw(true)
+    logic.movesHandler(0)
+    logic.currentPhase match
+      case CactusTurnPhase.AceEffect =>
+        logic.movesHandler(0)
+        logic.movesHandler(1)
+      case _ => ()
+    logic.getPlayer(0).cards.size should be(logic.game.initialPlayerCardsNumber)
+    logic.getPlayer(1).cards.size should be(logic.game.initialPlayerCardsNumber)
+
   "Players" should "make a complete match using basic moves" in:
     val logic = CactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
