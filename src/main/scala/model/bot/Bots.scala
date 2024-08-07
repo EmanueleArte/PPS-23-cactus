@@ -66,7 +66,7 @@ object Bots:
 
     // def chooseTwoCards((Player, card: int), (Player, card: int))
 
-    def choosePlayer(players: List[CactusPlayer]): CactusPlayer
+    def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer]
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBotImpl(
@@ -156,9 +156,9 @@ object Bots:
 
     override def chooseOwnCard(cardIndex: Int): PokerCard = ???
 
-    override def choosePlayer(players: List[CactusPlayer]): CactusPlayer =
+    override def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer] =
       players
         .filter(p => p != this)
         .filter(p => !p.calledCactus)
         .sorted((p1, p2) => p1.cards.length - p2.cards.length)
-        .head
+        .headOption
