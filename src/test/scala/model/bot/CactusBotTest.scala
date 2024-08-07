@@ -66,7 +66,7 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.seeCard(0)
     cactusBot.seeCard(1)
     cactusBot.seeCard(2)
-    cactusBot.callCactus() shouldBe true
+    cactusBot.shouldCallCactus() shouldBe true
 
   "Bot " should "not call cactus" in :
     val cactusBot: CactusBotImpl = CactusBotImpl("", List.empty[PokerCard & Coverable], DrawMethods.PileSmartly, DiscardMethods.Unknown, model.bot.CactusBotsData.Memory.Optimal)
@@ -76,7 +76,7 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.seeCard(0)
     cactusBot.seeCard(1)
     cactusBot.seeCard(2)
-    cactusBot.callCactus() shouldBe false
+    cactusBot.shouldCallCactus() shouldBe false
 
   "Bot " should "be created" in:
     val cactusBot = "Bot" drawing DrawMethods.Deck discarding DiscardMethods.Known withMemory model.bot.CactusBotsData.Memory.Good

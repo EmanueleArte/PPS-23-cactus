@@ -11,11 +11,12 @@ object Players:
   trait Player:
     /** Type representing the type of the cards in a game. */
     type CardType <: Card & Coverable
-    
+
     /** The name of the player. */
     val name: String
 
-    /** The cards in the player's hand.
+    /**
+     * The cards in the player's hand.
      * @return the cards in the player's hand.
      */
     def cards: List[CardType]
@@ -45,6 +46,8 @@ object Players:
   case class CactusPlayer(name: String, private var _cards: List[PokerCard & Coverable]) extends Player:
     override type CardType = PokerCard & Coverable
 
+    private var _cactusCaller: Boolean = false
+
     override def cards: List[PokerCard & Coverable] = _cards
 
     override def draw(drawable: Drawable[CardType]): Unit =
@@ -63,8 +66,17 @@ object Players:
       cardToRemove
 
     override def isEqualsTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
-        this.cards.diff(anotherPlayer.cards).isEmpty &&
-        anotherPlayer.cards.diff(this.cards).isEmpty
+      this.cards.diff(anotherPlayer.cards).isEmpty &&
+      anotherPlayer.cards.diff(this.cards).isEmpty
 
-  /** Companion object of [[Player]]. */
-  object Player
+    /**
+     * Returns if the player has called cactus.
+     *
+     * @return `true` if the player has called cactus, `false` otherwise.
+     */
+    def calledCactus: Boolean = _cactusCaller
+
+    /**
+     * Calls cactus, setting the player as the only caller.
+     */
+    def callCactus(): Unit = _cactusCaller = true

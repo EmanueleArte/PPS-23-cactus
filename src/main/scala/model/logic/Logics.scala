@@ -2,7 +2,6 @@ package model.logic
 
 import model.bot.Bots.{BotParamsType, CactusBot}
 import model.card.Cards.PokerCard
-import model.card.CardsData.PokerCardName
 import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
@@ -230,8 +229,11 @@ object Logics:
     /** Make the current player to call Cactus. */
     def callCactus(): Unit = currentPhase match
       case CactusTurnPhase.CallCactus =>
-        lastRound = true
-        currentPhase_=(BaseTurnPhase.End)
+        if !lastRound then
+          lastRound = true
+          currentPlayer.cards.foreach(_.uncover())
+          currentPlayer.callCactus()
+          currentPhase_=(BaseTurnPhase.End)
       case _ => ()
 
     override def seeCard(cardIndex: Int): Unit =
@@ -254,7 +256,9 @@ object Logics:
           getPlayer(0)
         )
       case CactusTurnPhase.AceEffect =>
-        resolveEffect(getPlayer(index))
+        val target = getPlayer(index)
+        if !target.calledCactus then
+          resolveEffect(target)
       case _ => ()
 
     /**
@@ -290,7 +294,7 @@ object Logics:
             botTurn()
           case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>
-            if bot.callCactus() then callCactus()
+            if bot.shouldCallCactus() then callCactus()
             else
               currentPhase_=(BaseTurnPhase.End)
               continue()
