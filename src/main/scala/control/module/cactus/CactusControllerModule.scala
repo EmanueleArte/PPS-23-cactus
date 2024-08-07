@@ -5,10 +5,12 @@ import model.module.cactus.CactusModelModule
 import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
 import model.logic.{CactusTurnPhase, TurnPhase}
-import model.player.Players.CactusPlayer
+import model.player.Players.{CactusPlayer, Player}
 import mvc.FinalScreenMVC
 import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
+
+import scala.collection.immutable.ListMap
 
 /** Represents the controller module for the Cactus game. */
 object CactusControllerModule extends ControllerModule:
@@ -81,19 +83,15 @@ object CactusControllerModule extends ControllerModule:
     /** Represents the controller for the Cactus game. */
     class CactusControllerImpl extends CactusController:
 
+      @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
       override def continue(): Unit =
         context.model.continue()
         context.view.updateViewTurnPhase()
         context.view.updateDiscardPile()
-        //if context.model.isGameOver then Platform.exit() // TODO: Show the scores
         if context.model.isGameOver then
           val finalScreenMVC = FinalScreenMVC
-          finalScreenMVC.setup(
-            Map(
-              (CactusPlayer("PlayerTest1", List.empty), 10),
-              (CactusPlayer("PlayerTest2", List.empty), 31)
-            )
-          )
+          finalScreenMVC.setup(ListMap(context.model.calculateScore.asInstanceOf[Map[CactusPlayer, Integer]]
+            .toSeq.sortWith(_._2 < _._2):_*))
           finalScreenMVC.run()
 
       override def draw(fromDeck: Boolean): Unit =

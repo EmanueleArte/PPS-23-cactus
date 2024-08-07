@@ -2,6 +2,7 @@ package view.module.finalscreen
 
 import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
 import model.player.Players.CactusPlayer
+import mvc.MainMenuMVC
 import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
@@ -9,7 +10,8 @@ import scalafx.scene.layout.{HBox, Pane, VBox}
 import view.ViewPosition
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.module.menu.CustomStackPane
-import view.ViewDSL.{aligned, baseWidth, bold, colored, containing, doing, initialValue, prompt, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, ComboBox as ComboBoxElement, Label as LabelElement}
+import view.ViewDSL.{aligned, bold, colored, containing, doing, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, Label as LabelElement}
+import view.module.menu.MainMenuViewModule.MainMenuView
 
 import scala.language.postfixOps
 
@@ -41,22 +43,16 @@ class FinalScreenPane(
             .spaced(10)
             .containing((LabelElement telling "Final Score:").veryBig)
         )
-        /*.containing(
-          new HBox()
-            .aligned(Pos.Center)
-            .spaced(5)
-            .containing(LabelElement telling "Player:")
-            .containing(LabelElement telling "???")
-        )*/
-        .containing(playersPane())
+        .containing(playersPane)
         .containing(ButtonElement saying "Return to main menu" doing (_ => returnToMainMenu()))
-        .containing(ButtonElement saying "Close" doing (_ => Platform.exit()))
+        .containing(ButtonElement saying "Close application" doing (_ => Platform.exit()))
     )
 
-  private def returnToMainMenu(): Unit = ()
+  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
+  private def returnToMainMenu(): Unit = MainMenuMVC.view.asInstanceOf[MainMenuView].showFromFinalScreen()
 
   @SuppressWarnings(Array("org.wartremover.warts.ToString"))
-  private def playersPane(): VBox =
+  private def playersPane: VBox =
     val vbox = new VBox()
       .aligned(Pos.TopCenter)
       .spaced(10)
@@ -64,8 +60,8 @@ class FinalScreenPane(
     playersScores.foreach((p, s) => {
       val hbox = Seq.fill(1)(new HBox()
         .aligned(Pos.Center)
-        .spaced(5)
-        .containing(LabelElement telling p.name)
+        .spaced(50)
+        .containing(LabelElement telling p.name bold)
         .containing(LabelElement telling s.toString))
       hboxes = hboxes ++ hbox
     })
