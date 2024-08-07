@@ -141,6 +141,8 @@ object Logics:
     final override def continue(): Unit = currentPhase match
       case CactusTurnPhase.EffectActivation =>
         handleCardEffect()
+      case CactusTurnPhase.AceEffect =>
+        currentPhase_=(CactusTurnPhase.DiscardEquals)
       case CactusTurnPhase.DiscardEquals =>
         currentPhase_=(CactusTurnPhase.CallCactus)
         if isBot(currentPlayer) then continue()
@@ -257,8 +259,7 @@ object Logics:
         )
       case CactusTurnPhase.AceEffect =>
         val target = getPlayer(index)
-        if !target.calledCactus then
-          resolveEffect(target)
+        if !target.calledCactus && !target.isEqualsTo(currentPlayer) then resolveEffect(target)
       case _ => ()
 
     /**
@@ -287,7 +288,10 @@ object Logics:
             discard(bot.chooseDiscard())
             botTurn()
           case CactusTurnPhase.AceEffect =>
-            resolveEffect(bot.choosePlayer(players.zipWithIndex.map((_, i) => getPlayer(i))))
+            bot.choosePlayer(players.zipWithIndex.map((_, i) => getPlayer(i))) match
+              case Some(p) =>
+                resolveEffect(p)
+              case _ => ()
             botTurn()
           case CactusTurnPhase.JackEffect =>
             resolveEffect(currentPlayer)
