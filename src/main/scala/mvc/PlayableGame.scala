@@ -15,4 +15,4 @@ enum PlayableGame:
    * @return the game MVC.
    */
   def gameMVC: GameMVC = this match
-    case Cactus => CactusMVC
+    case Cactus => CactusMVC()
