@@ -45,23 +45,23 @@ class PlayerTest extends AnyFlatSpec:
   "Players with same name and same cards" should "be equal" in:
     val player1: Player = CactusPlayer("Mario", List(1 OF Spades))
     val player2: Player = CactusPlayer("Mario", List(1 OF Spades))
-    player1.isEqualsTo(player2) should be (true)
+    player1.isEqualTo(player2) should be (true)
 
   "Players with same name and different cards" should "not be equal" in :
     val player1: Player = CactusPlayer("Mario", List(1 OF Spades))
     val player2: Player = CactusPlayer("Mario", List(2 OF Spades))
-    player1.isEqualsTo(player2) should be (false)
+    player1.isEqualTo(player2) should be (false)
 
   "Players with same name and different number of cards" should "not be equal" in :
     val player1: Player = CactusPlayer("Mario", List(1 OF Spades))
     val player2: Player = CactusPlayer("Mario", List(1 OF Spades, 2 OF Spades))
-    player1.isEqualsTo(player2) should be (false)
+    player1.isEqualTo(player2) should be (false)
 
   "Players with different name and same cards" should "not be equal" in :
     val player1: Player = CactusPlayer("Mario", List(1 OF Spades))
     val player2: Player = CactusPlayer("Luigi", List(1 OF Spades))
-    player1.isEqualsTo(player2) should be (false)
+    player1.isEqualTo(player2) should be (false)
 
   "Player" should "be equal to himself" in:
     val player: Player = CactusPlayer("Mario", List(1 OF Spades, 2 OF Spades))
-    player.isEqualsTo(player) should be (true)
+    player.isEqualTo(player) should be (true)

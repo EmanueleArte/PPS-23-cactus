@@ -34,7 +34,7 @@ class CactusGameTest extends AnyFlatSpec:
 
     override def discard(cardIndex: Int): CardType = cards(cardIndex)
 
-    override def isEqualsTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
+    override def isEqualTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
       this.cards.diff(anotherPlayer.cards).isEmpty &&
       anotherPlayer.cards.diff(this.cards).isEmpty
 

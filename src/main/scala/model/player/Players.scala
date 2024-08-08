@@ -48,7 +48,7 @@ object Players:
      * @param anotherPlayer to compare with the player.
      * @return `true` if the players are equal, `false` otherwise.
      */
-    def isEqualsTo(anotherPlayer: Player): Boolean
+    def isEqualTo(anotherPlayer: Player): Boolean
 
   case class CactusPlayer(name: String, private var _cards: List[PokerCard & Coverable]) extends Player:
     override type CardType = PokerCard & Coverable
@@ -80,7 +80,7 @@ object Players:
       _cards = _cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
       cardToRemove
 
-    override def isEqualsTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
+    override def isEqualTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
       this.cards.diff(anotherPlayer.cards).isEmpty &&
       anotherPlayer.cards.diff(this.cards).isEmpty
 

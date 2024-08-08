@@ -29,7 +29,7 @@ class LogicTest extends AnyFlatSpec:
 
     override def discard(cardIndex: Int): Card & Coverable = 2 OF Spades
 
-    override def isEqualsTo(anotherPlayer: Player): Boolean =
+    override def isEqualTo(anotherPlayer: Player): Boolean =
       this.name.compareTo(anotherPlayer.name) == 0 && this.cards.diff(anotherPlayer.cards).isEmpty
 
   /** Simple game logic implementation for testing. */
