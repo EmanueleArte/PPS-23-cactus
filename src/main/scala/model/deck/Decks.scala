@@ -2,7 +2,7 @@ package model.deck
 
 import model.card.CardBuilder.PokerDSL.{OF, of}
 import model.card.Cards.{Card, Coverable, GenericCard, PokerCard}
-import model.card.CardsData.PokerCardName.{Ace, Jack, King}
+import model.card.CardsData.PokerCardName.{Ace, King}
 import model.card.CardsData.{PokerSuit, Suit}
 import model.deck.Piles.{DiscardPile, PokerPile}
 
@@ -132,7 +132,7 @@ object Decks:
 
     override val inputCards: List[PokerCard & Coverable] = for
       suit  <- PokerSuit.values.toList
-      value <- Seq.fill(13)(Jack)//Ace to King
+      value <- Ace to King
     yield value OF suit
 
     override def shuffle(): Deck[PokerCard & Coverable] = PokerDeck(true)

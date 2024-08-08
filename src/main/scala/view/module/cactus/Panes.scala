@@ -199,7 +199,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       header.right = cardsNumberText
 
     private def cardClickHandler(card: Card): Unit =
-      System.out.println("LJAFHFJLSLFKCSçKFCç")
       if player.isEqualTo(humanPlayer) && controller.currentPhase != CactusTurnPhase.AceEffect then
         val index: Int = player.cards.indexOf(card)
         controller.handlePlayerInput(index)
