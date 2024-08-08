@@ -8,7 +8,8 @@ val warts = Warts.allBut(
   Wart.Enumeration,
   Wart.Overloading,
   Wart.While,
-  Wart.Equals
+  Wart.Equals,
+  Wart.ListAppend
 )
 
 lazy val root = project

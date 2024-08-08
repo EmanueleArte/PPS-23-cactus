@@ -152,13 +152,13 @@ class CactusLogicTest extends AnyFlatSpec:
 
   "Players" should "make a complete match using basic moves" in:
     val logic = CactusLogic(playersNumber)
-    logic.currentPhase_=(CactusTurnPhase.Draw)
     while !logic.isGameOver do
+      logic.currentPhase_=(CactusTurnPhase.Draw)
       logic.draw(true)
       logic.movesHandler(1)
       logic.currentPhase_=(CactusTurnPhase.CallCactus)
       logic.callCactus()
-      logic.currentPhase_=(CactusTurnPhase.Draw)
+      logic.nextPlayer
     logic.game.deckSize should be <= (deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
     logic.game.discardPile.size should be(playersNumber)
 
@@ -208,7 +208,7 @@ class CactusLogicTest extends AnyFlatSpec:
       logic.currentPlayer match
         case bot: CactusBot =>
           logic.continue()
-          logic.players(logic.players.indexOf(bot) - 1) match
+          logic.players(logic.players.indexOf(bot)) match
             case p: CactusPlayer =>
               if p.calledCactus then nCardsOfCactusCaller = p.cards.size
             case _ => ()

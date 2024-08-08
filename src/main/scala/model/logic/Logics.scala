@@ -161,10 +161,7 @@ object Logics:
         if isBot(currentPlayer) then botTurn()
       case _ => ()
 
-    override def isGameOver: Boolean = if lastRound then
-      turnsRemaining -= 1
-      turnsRemaining <= 0
-    else false
+    override def isGameOver: Boolean = lastRound && currentPlayer.calledCactus && currentPhase == CactusTurnPhase.Draw
 
     override def calculateScore: Scores = game.calculateScores(players)
 
@@ -289,6 +286,7 @@ object Logics:
 
     @tailrec
     private def botTurn(): Unit = currentPlayer match
+      case player if player.calledCactus && currentPhase == CactusTurnPhase.Draw => ()
       case bot: CactusBot =>
         currentPhase match
           case CactusTurnPhase.Draw =>
