@@ -60,13 +60,13 @@ object Bots:
      * Chooses if it has to call cactus.
      * @return true if it calls cactus
      */
-    def callCactus(): Boolean
+    def shouldCallCactus(): Boolean
 
     def chooseOwnCard(cardIndex: Int): PokerCard
 
     // def chooseTwoCards((Player, card: int), (Player, card: int))
 
-    def choosePlayer(players: List[CactusPlayer]): CactusPlayer
+    def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer]
 
   @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBotImpl(
@@ -151,13 +151,14 @@ object Bots:
         case c                 => c.value
       }.sum
 
-    override def callCactus(): Boolean =
+    override def shouldCallCactus(): Boolean =
       cards.length <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)
 
     override def chooseOwnCard(cardIndex: Int): PokerCard = ???
 
-    override def choosePlayer(players: List[CactusPlayer]): CactusPlayer =
+    override def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer] =
       players
         .filter(p => p != this)
+        .filter(p => !p.calledCactus)
         .sorted((p1, p2) => p1.cards.length - p2.cards.length)
-        .head
+        .headOption

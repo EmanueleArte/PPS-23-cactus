@@ -1,6 +1,7 @@
 package view.module.cactus
 
 import control.module.cactus.CactusControllerModule
+import model.logic.CactusTurnPhase
 import scalafx.scene.Scene
 import scalafx.scene.layout.{Background, BackgroundFill, HBox, Priority}
 import view.module.cactus.AppPane.*
@@ -35,9 +36,15 @@ object CactusViewModule extends ViewModule:
 
       override def updateViewTurnPhase(): Unit =
         mainPane.updateCurrentPlayer()
+        updatePlayersHands()
         asidePane.updateViewTurnPhase()
 
       override def updateDiscardPile(): Unit = mainPane.updateDiscardPile()
+
+      private def updatePlayersHands(): Unit =
+        context.controller.players.foreach { player =>
+          mainPane.updatePlayersCards(player)
+        }
 
   /** Interface of the view module of game. */
   trait Interface extends Provider with Component:

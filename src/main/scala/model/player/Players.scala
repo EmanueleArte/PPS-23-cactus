@@ -53,6 +53,8 @@ object Players:
   case class CactusPlayer(name: String, private var _cards: List[PokerCard & Coverable]) extends Player:
     override type CardType = PokerCard & Coverable
 
+    private var _cactusCaller: Boolean = false
+
     override def cards: List[PokerCard & Coverable] = _cards
 
     private def genericDraw(drawable: Drawable[CardType], shouldStayCovered: Boolean): Unit =
@@ -82,5 +84,14 @@ object Players:
       this.cards.diff(anotherPlayer.cards).isEmpty &&
       anotherPlayer.cards.diff(this.cards).isEmpty
 
-  /** Companion object of [[Player]]. */
-  object Player
+    /**
+     * Returns if the player has called cactus.
+     *
+     * @return `true` if the player has called cactus, `false` otherwise.
+     */
+    def calledCactus: Boolean = _cactusCaller
+
+    /**
+     * Calls cactus, setting the player as the only caller.
+     */
+    def callCactus(): Unit = _cactusCaller = true

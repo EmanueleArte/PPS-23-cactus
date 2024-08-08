@@ -112,7 +112,7 @@ object CardsPane:
   val margin: Int = 5
 
   /** Width of the card's pane. */
-  val paneWidth: Int = 50 + margin
+  val paneWidth: Int = 65 + margin
 
   /** Height of the card's pane. */
   val paneHeight: Int = (paneWidth.toDouble * aspectRatio).toInt + margin
@@ -123,7 +123,7 @@ object CardsPane:
   /** Path for the folder of card's fronts. */
   val frontsFolderPath: String = cardsFolderPath + "/fronts"
 
-  /** valault back for the cards. */
+  /** Default back for the cards. */
   val defaultBack: String = "/red.png"
 
   /** Placeholder color to put when a card is not present. */

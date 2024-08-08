@@ -5,6 +5,7 @@ import control.module.cactus.CactusControllerModule
 import model.card.Cards.{Card, Coverable, PokerCard}
 import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.{CactusPlayer, Player}
+import mvc.TutorialMVC
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
@@ -110,7 +111,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
   /** Updates the current player in the view. */
   def updateCurrentPlayer(): Unit = currentPlayerProperty.value = controller.currentPlayer
 
-  private def updatePlayersCards(): Unit = playerCardsProperty.setValue(currentPlayerProperty.value.cards)
+  def updatePlayersCards(player: Player): Unit = playerCardsProperty.setValue(player.cards)
   private def calculatePlayerPosition(i: Int): ViewPosition =
     val theta: Double = 2 * Math.PI / controller.players.length
     val x: Int =
@@ -152,7 +153,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         controller.currentPhase match
           case CactusTurnPhase.AceEffect if playerIndex != 0 =>
             controller.handlePlayerInput(playerIndex)
-            updatePlayersCards()
           case _ => ()
       )
 
@@ -179,7 +179,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
       pane.whenHovered(currentPlayerProperty.value match
         case p if p.isEqualsTo(player) => s"${player.name}'s turn"
-        case _ => s"Not ${player.name}'s turn"
+        case _                         => s"Not ${player.name}'s turn"
       )
 
     private def playerHand: VBox = new VBox()
@@ -198,7 +198,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       header.right = cardsNumberText
 
     private def cardClickHandler(card: Card): Unit =
-      if player.isEqualsTo(humanPlayer) then
+      if player.isEqualsTo(humanPlayer) && controller.currentPhase != CactusTurnPhase.AceEffect then
         val index: Int = player.cards.indexOf(card)
         controller.handlePlayerInput(index)
         updatePlayerCards()
@@ -267,10 +267,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
     private val deckPane: Pane = new Pane()
       .at((leftPosition, topPosition))
       .containing(CardElement at topLeftCorner covered)
-      .reacting(_ =>
-        controller.draw(true)
-        updatePlayersCards()
-      )
+      .reacting(_ => controller.draw(true))
       .whenHovered("Deck")
 
     private val pilePane: Pane = new Pane()
@@ -279,7 +276,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       .reacting(_ =>
         if controller.pilesHead.isDefined then
           controller.draw(false)
-          updatePlayersCards()
           updateDiscardPile()
       )
       .whenHovered("Discard pile")
@@ -297,7 +293,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     updatePane()
     newValue match
       case CactusTurnPhase.CallCactus => cactusButton.setDisable(false)
-      case _ => cactusButton.setDisable(true)
+      case _                          => cactusButton.setDisable(true)
   )
 
   override def paneWidth: Int = AppPane.asidePaneWidth
@@ -314,6 +310,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     val button: Button = ButtonElement saying cactusButtonText doing (_ => controller.callCactus())
     button.setDisable(true)
     button
+  private val tutorialButton: Button = ButtonElement saying "tutorial" doing (_ => controller.showTutorial())
 
   private def phaseText: VBox = new VBox()
     .containing(TextElement telling AppPane.AsidePaneModule.phaseText bold)
@@ -321,10 +318,11 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
   phaseText.setAlignment(Pos.BaselineLeft)
 
   private def phaseDescription: VBox = new VBox()
-      .containing(TextElement telling phaseDescriptionText bold)
-      .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
+    .containing(TextElement telling phaseDescriptionText bold)
+    .containing(TextElement telling turnPhaseDescription(turnPhaseProperty.value).description wrapped)
 
   private val phaseContainer: VBox = new VBox()
+    .containing(tutorialButton)
     .containing(phaseText)
     .containing(phaseDescription)
   phaseContainer.spacing = AppPane.spacing
@@ -345,8 +343,10 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
 
   private def updatePane(): Unit =
     phaseContainer.children.clear()
-    phaseContainer.children.add(phaseText)
-    phaseContainer.children.add(phaseDescription)
+    phaseContainer
+      .containing(tutorialButton)
+      .containing(phaseText)
+      .containing(phaseDescription)
     _pane.top = phaseContainer
 
   override def pane: Pane = _pane

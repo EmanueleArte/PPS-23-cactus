@@ -2,8 +2,6 @@ package model.logic
 
 import model.bot.Bots.{BotParamsType, CactusBot}
 import model.card.Cards.PokerCard
-import model.card.CardsData.PokerCardName
-import model.card.CardsData.PokerCardName.Jack
 import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
@@ -143,12 +141,14 @@ object Logics:
     final override def continue(): Unit = currentPhase match
       case CactusTurnPhase.EffectActivation =>
         handleCardEffect()
+      case CactusTurnPhase.AceEffect =>
+        currentPhase_=(CactusTurnPhase.DiscardEquals)
       case CactusTurnPhase.DiscardEquals =>
         currentPhase_=(CactusTurnPhase.CallCactus)
         if isBot(currentPlayer) then continue()
       case CactusTurnPhase.JackEffect =>
         if isBot(currentPlayer) then botTurn()
-        else ()//TODO
+        else () // TODO
       case CactusTurnPhase.CallCactus =>
         if isBot(currentPlayer) then botTurn()
         else currentPhase_=(BaseTurnPhase.End)
@@ -231,8 +231,11 @@ object Logics:
     /** Make the current player to call Cactus. */
     def callCactus(): Unit = currentPhase match
       case CactusTurnPhase.CallCactus =>
-        lastRound = true
-        currentPhase_=(BaseTurnPhase.End)
+        if !lastRound then
+          lastRound = true
+          currentPlayer.cards.foreach(_.uncover())
+          currentPlayer.callCactus()
+          currentPhase_=(BaseTurnPhase.End)
       case _ => ()
 
     override def seeCard(cardIndex: Int): Unit =
@@ -255,7 +258,8 @@ object Logics:
           getPlayer(0)
         )
       case CactusTurnPhase.AceEffect =>
-        resolveEffect(getPlayer(index))
+        val target = getPlayer(index)
+        if !target.calledCactus && !target.isEqualsTo(currentPlayer) then resolveEffect(target)
       case CactusTurnPhase.JackEffect =>
         resolveEffect(currentPlayer)
       case _ => ()
@@ -265,16 +269,16 @@ object Logics:
      *
      * @param player the player that the effect is applied to.
      */
-    private def resolveEffect(player: PlayerType): Unit = currentPhase match
-      case CactusTurnPhase.AceEffect =>
-        player.drawCovered(game.deck)
-        currentPhase_=(CactusTurnPhase.DiscardEquals)
-      case CactusTurnPhase.JackEffect => player match
-        case player: CactusBot =>
-          player.asInstanceOf[CactusBot].applyJackEffect()
-          currentPhase_=(CactusTurnPhase.DiscardEquals)
+    private def resolveEffect(player: PlayerType): Unit =
+      currentPhase match
+        case CactusTurnPhase.AceEffect =>
+          player.drawCovered(game.deck)
+        case CactusTurnPhase.JackEffect =>
+          currentPlayer match
+            case currentPlayer: CactusBot => currentPlayer.applyJackEffect()
+            case _ => ()
         case _ => ()
-      case _ => ()
+      currentPhase_=(CactusTurnPhase.DiscardEquals)
 
     @tailrec
     private def botTurn(): Unit = currentPlayer match
@@ -288,14 +292,17 @@ object Logics:
             discard(bot.chooseDiscard())
             botTurn()
           case CactusTurnPhase.AceEffect =>
-            resolveEffect(bot.choosePlayer(players.zipWithIndex.map((_, i) => getPlayer(i))))
+            bot.choosePlayer(players.zipWithIndex.map((_, i) => getPlayer(i))) match
+              case Some(p) =>
+                resolveEffect(p)
+              case _ => ()
             botTurn()
           case CactusTurnPhase.JackEffect =>
             resolveEffect(currentPlayer)
             botTurn()
           case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>
-            if bot.callCactus() then callCactus()
+            if bot.shouldCallCactus() then callCactus()
             else
               currentPhase_=(BaseTurnPhase.End)
               continue()
@@ -324,9 +331,9 @@ object Logics:
 
     private def handleCardEffect(): Unit =
       game.checkCardEffect() match
-        case CactusCardEffect.AceEffect => currentPhase_=(CactusTurnPhase.AceEffect)
+        case CactusCardEffect.AceEffect  => currentPhase_=(CactusTurnPhase.AceEffect)
         case CactusCardEffect.JackEffect => currentPhase_=(CactusTurnPhase.JackEffect)
-        case _ => currentPhase_=(CactusTurnPhase.DiscardEquals)
+        case _                           => currentPhase_=(CactusTurnPhase.DiscardEquals)
 
   /** Companion object for [[CactusLogic]]. */
   object CactusLogic:
