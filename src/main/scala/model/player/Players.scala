@@ -29,6 +29,13 @@ object Players:
     def draw(drawable: Drawable[CardType]): Unit
 
     /**
+     * Draws a card that will remain covered from a deck.
+     *
+     * @param drawable the drawable to draw from.
+     */
+    def drawCovered(drawable: Drawable[CardType]): Unit
+
+    /**
      * Discards a card from the player's hand.
      *
      * @param cardIndex the index of the card in the list to discard.
@@ -41,7 +48,7 @@ object Players:
      * @param anotherPlayer to compare with the player.
      * @return `true` if the players are equal, `false` otherwise.
      */
-    def isEqualsTo(anotherPlayer: Player): Boolean
+    def isEqualTo(anotherPlayer: Player): Boolean
 
   case class CactusPlayer(name: String, private var _cards: List[PokerCard & Coverable]) extends Player:
     override type CardType = PokerCard & Coverable
@@ -50,12 +57,20 @@ object Players:
 
     override def cards: List[PokerCard & Coverable] = _cards
 
-    override def draw(drawable: Drawable[CardType]): Unit =
+    private def genericDraw(drawable: Drawable[CardType], shouldStayCovered: Boolean): Unit =
       val drawnCard: Option[CardType] = drawable.draw()
       if drawnCard.isDefined then
         val card = drawnCard.get
-        card.uncover()
+        shouldStayCovered match
+          case false => card.uncover()
+          case _     => ()
         _cards = _cards ::: card :: Nil
+
+    override def draw(drawable: Drawable[CardType]): Unit =
+      genericDraw(drawable, false)
+
+    override def drawCovered(drawable: Drawable[CardType]): Unit =
+      genericDraw(drawable, true)
 
     override def discard(cardIndex: Int): CardType =
       require(cardIndex >= 0)
@@ -65,7 +80,7 @@ object Players:
       _cards = _cards.zipWithIndex.filter((_, i) => i != cardIndex).map((c, _) => c)
       cardToRemove
 
-    override def isEqualsTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
+    override def isEqualTo(anotherPlayer: Player): Boolean = this.name.compareTo(anotherPlayer.name) == 0 &&
       this.cards.diff(anotherPlayer.cards).isEmpty &&
       anotherPlayer.cards.diff(this.cards).isEmpty
 

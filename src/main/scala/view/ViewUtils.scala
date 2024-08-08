@@ -8,7 +8,7 @@ import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
 
 /** Contains utility methods for the view. */
-object Utils:
+object ViewUtils:
   val topPosition: Int            = 0
   val leftPosition: Int           = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
@@ -37,6 +37,7 @@ object Utils:
       "Activate the effect of the card you just discarded."
     ),
     CactusTurnPhase.AceEffect  -> Phase("Ace discarded", "Choose a player and have them draw a card from the deck."),
+    CactusTurnPhase.JackEffect -> Phase("Jack discarded", "Choose a card to see it."),
     CactusTurnPhase.CallCactus -> Phase("Cactus", "Call \"Cactus\" and end the game."),
     BaseTurnPhase.End          -> Phase("End", "End of the turn. Click \"Continue\" and proceed with the game.")
   )

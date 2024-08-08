@@ -3,6 +3,7 @@ package view.module.cactus
 import control.module.cactus.CactusControllerModule.CactusController
 import control.module.cactus.CactusControllerModule
 import model.card.Cards.{Card, Coverable, PokerCard}
+import model.game.CactusCardEffect.{AceEffect, JackEffect}
 import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.{CactusPlayer, Player}
 import mvc.TutorialMVC
@@ -15,7 +16,7 @@ import scalafx.scene.layout.{BorderPane, HBox, Pane, Priority, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
-import view.Utils.turnPhaseDescription
+import view.ViewUtils.turnPhaseDescription
 import view.ViewDSL.{Button as ButtonElement, Card as CardElement, Text as TextElement, *}
 import view.ViewPosition
 import view.module.cactus.AppPane.*
@@ -178,7 +179,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
         children = List(turnIndicator)
 
       pane.whenHovered(currentPlayerProperty.value match
-        case p if p.isEqualsTo(player) => s"${player.name}'s turn"
+        case p if p.isEqualTo(player) => s"${player.name}'s turn"
         case _                         => s"Not ${player.name}'s turn"
       )
 
@@ -198,7 +199,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       header.right = cardsNumberText
 
     private def cardClickHandler(card: Card): Unit =
-      if player.isEqualsTo(humanPlayer) && controller.currentPhase != CactusTurnPhase.AceEffect then
+      if player.isEqualTo(humanPlayer) && controller.currentPhase != CactusTurnPhase.AceEffect then
         val index: Int = player.cards.indexOf(card)
         controller.handlePlayerInput(index)
         updatePlayerCards()
@@ -218,11 +219,11 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
       turnIndicator.setCenterX(position.x + PlayersPane.turnIndicatorRadius)
       turnIndicator.setCenterX(position.y - PlayersPane.turnIndicatorRadius)
       turnIndicator.fill =
-        if currentPlayerProperty.value.isEqualsTo(player)
+        if currentPlayerProperty.value.isEqualTo(player)
         then PlayersPane.turnIndicatorFillColorEnabled
         else PlayersPane.turnIndicatorFillColorDisabled
       turnIndicator.stroke =
-        if currentPlayerProperty.value.isEqualsTo(player)
+        if currentPlayerProperty.value.isEqualTo(player)
         then PlayersPane.turnIndicatorStrokeColorEnabled
         else PlayersPane.turnIndicatorStrokeColorDisabled
 
@@ -310,7 +311,7 @@ class AsidePane(controller: CactusController) extends ScalaFXPane:
     val button: Button = ButtonElement saying cactusButtonText doing (_ => controller.callCactus())
     button.setDisable(true)
     button
-  private val tutorialButton: Button = ButtonElement saying "tutorial" doing (_ => controller.showTutorial())
+  private val tutorialButton: Button = ButtonElement saying "Tutorial" doing (_ => controller.showTutorial())
 
   private def phaseText: VBox = new VBox()
     .containing(TextElement telling AppPane.AsidePaneModule.phaseText bold)

@@ -10,7 +10,7 @@ import scalafx.scene.control.{ComboBox, Spinner}
 import scalafx.scene.layout.{HBox, Pane, StackPane, VBox}
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewPosition
-import view.Utils.{CustomStackPane, value}
+import view.ViewUtils.{CustomStackPane, value}
 import view.ViewDSL.{aligned, baseWidth, bold, colored, containing, doing, initialValue, prompt, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, ComboBox as ComboBoxElement, Label as LabelElement}
 
 import scala.language.postfixOps

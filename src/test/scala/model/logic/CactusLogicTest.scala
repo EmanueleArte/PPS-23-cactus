@@ -31,6 +31,7 @@ class CactusLogicTest extends AnyFlatSpec:
     override lazy val game: CactusGame = new CactusGame():
       override val deck: Deck[PokerCard & Coverable] = PokerDeck()
 
+
   /** Custom implementation of the CactusGame to make tests with an unshuffled deck and bot config. */
   class TestCactusLogicBotsConfigured(botParamsType: BotParamsType)
       extends CactusLogic(Right(botParamsType): Either[Int, BotParamsType]):
@@ -332,6 +333,15 @@ class CactusLogicTest extends AnyFlatSpec:
     val logic = CactusLogic(2)
     import model.bot.Bots.CactusBotImpl
     logic.players(1).asInstanceOf[CactusBotImpl].knownCards.size should be <= 2
+
+  "The card drawn from an ace special effect" should "be covered" in:
+    val logic = TestCactusLogic(playersNumber)
+    logic.currentPhase_=(CactusTurnPhase.Draw)
+    logic.draw(true)
+    logic.movesHandler(0)
+    logic.currentPhase should be(CactusTurnPhase.AceEffect)
+    logic.movesHandler(1)
+    logic.getPlayer(1).cards.foreach(c => c.isCovered shouldBe true)
 
   "Cactus" should "be called by only one player for match" in:
     val logic = CactusLogic(playersNumber)

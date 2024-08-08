@@ -1,7 +1,7 @@
 package view
 
 import scalafx.scene.control.{Button, ComboBox, Label, ScrollPane, Tooltip}
-import view.Utils.{toRgbString, tutorialHPadding}
+import view.ViewUtils.{toRgbString, tutorialHPadding}
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.ScrollPane.ScrollBarPolicy

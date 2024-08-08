@@ -6,6 +6,7 @@ import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.card.CardsData.PokerSuit.Clubs
 import model.deck.Piles.{DiscardPile, PokerPile}
 import model.player.Players.CactusPlayer
+import model.ModelUtils.isRedKing
 
 /** The bots of the game */
 object Bots:
@@ -98,10 +99,6 @@ object Bots:
       val discardedCard = super.discard(cardIndex)
       removeFromKnownCards(discardedCard)
       discardedCard
-
-    private def isRedKing(c: PokerCard): Boolean = c.value match
-      case PokerCardName.King => c.suit == PokerSuit.Hearts || c.suit == PokerSuit.Diamonds
-      case _                  => false
 
     private def isHigherValue(c1: PokerCard, c2: PokerCard): Boolean = c1 match
       case c1 if isRedKing(c1)                        => false

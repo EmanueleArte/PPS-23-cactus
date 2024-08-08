@@ -144,11 +144,11 @@ object Logics:
       case CactusTurnPhase.AceEffect =>
         currentPhase_=(CactusTurnPhase.DiscardEquals)
       case CactusTurnPhase.DiscardEquals =>
+        currentPlayer.cards.foreach(_.cover())
         currentPhase_=(CactusTurnPhase.CallCactus)
         if isBot(currentPlayer) then continue()
       case CactusTurnPhase.JackEffect =>
         if isBot(currentPlayer) then botTurn()
-        else () // TODO
       case CactusTurnPhase.CallCactus =>
         if isBot(currentPlayer) then botTurn()
         else currentPhase_=(BaseTurnPhase.End)
@@ -259,24 +259,30 @@ object Logics:
         )
       case CactusTurnPhase.AceEffect =>
         val target = getPlayer(index)
-        if !target.calledCactus && !target.isEqualsTo(currentPlayer) then resolveEffect(target)
+        if !target.calledCactus && !target.isEqualTo(currentPlayer) then resolveAceEffect(target)
+      case CactusTurnPhase.JackEffect =>
+        resolveHumanPlayerJackEffect(index)
       case _ => ()
 
     /**
-     * Resolve the effect of a card targeting a player.
+     * Resolves the effect of an ace discard.
      *
      * @param player the player that the effect is applied to.
      */
-    private def resolveEffect(player: PlayerType): Unit =
-      currentPhase match
-        case CactusTurnPhase.AceEffect =>
-          player.draw(game.deck)
-        case CactusTurnPhase.JackEffect =>
-          currentPlayer match
-            case currentPlayer: CactusBot => currentPlayer.applyJackEffect()
-            case _ => ()
-        case _ => ()
+    private def resolveAceEffect(player: PlayerType): Unit =
+      player.drawCovered(game.deck)
       currentPhase_=(CactusTurnPhase.DiscardEquals)
+
+    /**
+     * Resolves the effect of a jack discard.
+     *
+     * @param index the card index that the effect is applied to.
+     */
+    private def resolveHumanPlayerJackEffect(index: Int): Unit = currentPlayer match
+      case currentPlayer: CactusBot => throw new UnsupportedOperationException("Can't resolve jack effect of a bot as a human player.")
+      case _ =>
+        currentPlayer.cards(index).uncover()
+        currentPhase_=(CactusTurnPhase.DiscardEquals)
 
     @tailrec
     private def botTurn(): Unit = currentPlayer match
@@ -292,11 +298,12 @@ object Logics:
           case CactusTurnPhase.AceEffect =>
             bot.choosePlayer(players.zipWithIndex.map((_, i) => getPlayer(i))) match
               case Some(p) =>
-                resolveEffect(p)
+                resolveAceEffect(p)
               case _ => ()
             botTurn()
           case CactusTurnPhase.JackEffect =>
-            resolveEffect(currentPlayer)
+            bot.applyJackEffect()
+            currentPhase_=(CactusTurnPhase.DiscardEquals)
             botTurn()
           case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>

@@ -8,7 +8,7 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.layout.{HBox, Pane, VBox}
 import view.ViewPosition
 import view.module.cactus.{AppPane, ScalaFXPane}
-import view.Utils.CustomStackPane
+import view.ViewUtils.CustomStackPane
 import view.ViewDSL.{aligned, bold, colored, containing, doing, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, Label as LabelElement}
 import view.module.menu.MainMenuViewModule.MainMenuView
 
