@@ -147,8 +147,8 @@ object Logics:
         currentPlayer.cards.foreach(_.cover())
         currentPhase_=(CactusTurnPhase.CallCactus)
         if isBot(currentPlayer) then continue()
-//      case CactusTurnPhase.JackEffect =>
-//        if isBot(currentPlayer) then botTurn()
+      case CactusTurnPhase.JackEffect =>
+        if isBot(currentPlayer) then botTurn()
       case CactusTurnPhase.CallCactus =>
         if isBot(currentPlayer) then botTurn()
         else currentPhase_=(BaseTurnPhase.End)
