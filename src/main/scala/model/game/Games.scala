@@ -10,6 +10,7 @@ import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.{DiscardPile, PokerPile}
 import model.logic.Logics.Players
 import model.player.Players.{CactusPlayer, Player}
+import model.ModelUtils.isRedKing
 
 /**
  * An opaque type representing the scores of players in a game.
@@ -149,11 +150,6 @@ class CactusGame() extends Game:
       player.draw(deck)
       player.cards(cardIndex).cover()
     )
-
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
-  private def isRedKing(c: PokerCard): Boolean = c.value match
-    case PokerCardName.King => c.suit == PokerSuit.Hearts || c.suit == PokerSuit.Diamonds
-    case _                  => false
 
   @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def calculateScores(players: List[Player]): Scores = Scores(

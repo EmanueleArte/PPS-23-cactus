@@ -5,7 +5,7 @@ import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.layout.{Pane, VBox}
 import view.TutorialDescriptions.GameTutorialValue
-import view.Utils.CustomStackPane
+import view.ViewUtils.CustomStackPane
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewDSL.{
   aligned,

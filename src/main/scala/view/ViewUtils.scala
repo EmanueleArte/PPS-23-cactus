@@ -8,7 +8,7 @@ import scalafx.scene.layout.StackPane
 import scalafx.scene.paint.Color
 
 /** Contains utility methods for the view. */
-object Utils:
+object ViewUtils:
   val topPosition: Int            = 0
   val leftPosition: Int           = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)

@@ -15,7 +15,7 @@ import scalafx.scene.layout.{BorderPane, HBox, Pane, Priority, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Circle
 import scalafx.scene.text.Text
-import view.Utils.turnPhaseDescription
+import view.ViewUtils.turnPhaseDescription
 import view.ViewDSL.{Button as ButtonElement, Card as CardElement, Text as TextElement, *}
 import view.ViewPosition
 import view.module.cactus.AppPane.*
