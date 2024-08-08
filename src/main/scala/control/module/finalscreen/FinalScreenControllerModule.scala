@@ -2,7 +2,9 @@ package control.module.finalscreen
 
 import control.module.ControllerModule
 import model.player.Players.CactusPlayer
+import mvc.MainMenuMVC
 import view.module.finalscreen.FinalScreenViewModule
+import view.module.menu.MainMenuViewModule.MainMenuView
 
 object FinalScreenControllerModule extends ControllerModule:
   override type ControllerType = FinalScreenController
@@ -22,6 +24,9 @@ object FinalScreenControllerModule extends ControllerModule:
      */
     def setupPlayersScores(playersScores: Map[CactusPlayer, Integer]): Unit
 
+    /** Makes the application return to main menu. */
+    def returnToMainMenu(): Unit
+
   /** Represents the controller component for the final screen. */
   trait Component:
     context: Requirements =>
@@ -34,6 +39,10 @@ object FinalScreenControllerModule extends ControllerModule:
 
       override def setupPlayersScores(playersScores: Map[CactusPlayer, Integer]): Unit =
         _playersScores = playersScores
+
+      override def returnToMainMenu(): Unit = MainMenuMVC.view match
+        case view: MainMenuView => view.showFromFinalScreen()
+        case _ => ()
 
 
   /** Interface of the controller module of the final screen. */

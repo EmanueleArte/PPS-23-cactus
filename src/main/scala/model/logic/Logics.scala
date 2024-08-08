@@ -272,7 +272,9 @@ object Logics:
         case CactusTurnPhase.AceEffect =>
           player.draw(game.deck)
         case CactusTurnPhase.JackEffect =>
-          currentPlayer.asInstanceOf[CactusBot].applyJackEffect()
+          currentPlayer match
+            case currentPlayer: CactusBot => currentPlayer.applyJackEffect()
+            case _ => ()
         case _ => ()
       currentPhase_=(CactusTurnPhase.DiscardEquals)
 
