@@ -22,6 +22,7 @@ object Utils:
     CactusTurnPhase.DiscardEquals -> Phase("Discard equals cards", "You can discard a card equals to the one on top of the discard pile."),
     CactusTurnPhase.EffectActivation -> Phase("Effect activation", "Activate the effect of the card you just discarded."),
     CactusTurnPhase.AceEffect -> Phase("Ace discarded", "Choose a player and have them draw a card from the deck."),
+    CactusTurnPhase.JackEffect -> Phase("Jack discarded", "Choose a card and see it."),
     CactusTurnPhase.CallCactus -> Phase("Cactus", "Call \"Cactus\" and end the game."),
     BaseTurnPhase.End -> Phase("End", "End of the turn. Click \"Continue\" and proceed with the game.")
   )
