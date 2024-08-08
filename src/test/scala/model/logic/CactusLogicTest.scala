@@ -203,10 +203,15 @@ class CactusLogicTest extends AnyFlatSpec:
         (0 until logic.game.initialPlayerCardsNumber).foreach(i => bot.seeCard(i))
       case _ => ()
     }
+    var nCardsOfCactusCaller = -1
     while !logic.isGameOver do
       logic.currentPlayer match
         case bot: CactusBot =>
           logic.continue()
+          logic.players(logic.players.indexOf(bot) - 1) match
+            case p: CactusPlayer =>
+              if p.calledCactus then nCardsOfCactusCaller = p.cards.size
+            case _ => ()
         case _ =>
           logic.currentPhase_=(CactusTurnPhase.Draw)
           logic.draw(true)
@@ -216,6 +221,7 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.continue()
           logic.continue()
     logic.isGameOver should be(true)
+    logic.players.filter(_.asInstanceOf[CactusPlayer].calledCactus)(0).cards.size should be(nCardsOfCactusCaller)
 
   it should "see a card after discarding a Jack" in:
     val drawings: Seq[DrawMethods]       = Seq.fill(playersNumber - 1)(DrawMethods.Deck)
