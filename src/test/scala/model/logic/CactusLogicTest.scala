@@ -6,6 +6,7 @@ import model.card.Cards.{Coverable, PokerCard}
 import model.deck.Decks.{Deck, PokerDeck}
 import model.game.CactusGame
 import model.game.Scores.toMap
+import model.logic
 import model.logic.Logics.{CactusLogic, GameLogic, Players}
 import model.player.Players.{CactusPlayer, Player}
 import org.scalatest.matchers.should.Matchers.*
@@ -106,7 +107,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   it should "be untargetable after calling cactus" in:
     val logic = TestCactusLogic(playersNumber)
-    while !logic.isGameOver do
+    while logic.currentPhase != CactusTurnPhase.GameOver do
       logic.currentPhase_=(CactusTurnPhase.Draw)
       logic.draw(true)
       logic.movesHandler(1)
@@ -153,26 +154,25 @@ class CactusLogicTest extends AnyFlatSpec:
   "Players" should "make a complete match using basic moves" in:
     val logic = CactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
-    while !logic.isGameOver do
+    while logic.currentPhase != CactusTurnPhase.GameOver do
       logic.draw(true)
       logic.movesHandler(1)
       logic.currentPhase_=(CactusTurnPhase.CallCactus)
       logic.callCactus()
-      logic.nextPlayer
-      logic.currentPhase_=(CactusTurnPhase.Draw)
+      logic.continue()
     logic.game.deckSize should be <= (deckSize - playersNumber * logic.game.initialPlayerCardsNumber - playersNumber)
     logic.game.discardPile.size should be(playersNumber)
 
   "At the end of a Cactus match" should "be possible to calculate the scores" in:
     val logic = CactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
-    while !logic.isGameOver do
+    while logic.currentPhase != CactusTurnPhase.GameOver do
       logic.draw(true)
+      val cp = logic.currentPlayer
       logic.movesHandler(1)
       logic.continue()
       logic.callCactus()
-      logic.nextPlayer
-      logic.currentPhase_=(CactusTurnPhase.Draw)
+      logic.continue()
     for (_, score) <- toMap(logic.calculateScore) do score should be > 0
 
   "A bot" should "discard a card in non-classic way if the head of the pile has the same value" in:
@@ -205,9 +205,7 @@ class CactusLogicTest extends AnyFlatSpec:
       case _ => ()
     }
     var nCardsOfCactusCaller = -1
-    while !logic.isGameOver do
-      println(logic.currentPhase)
-      println(logic.currentPlayer)
+    while logic.currentPhase != CactusTurnPhase.GameOver do
       logic.currentPlayer match
         case bot: CactusBot =>
           logic.continue()
@@ -223,7 +221,7 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.continue()
           logic.continue()
           logic.continue()
-    logic.isGameOver should be(true)
+    logic.currentPhase should be (CactusTurnPhase.GameOver)
     logic.players.filter(_.asInstanceOf[CactusPlayer].calledCactus)(0).cards.size should be(nCardsOfCactusCaller)
 
   it should "see a card after discarding a Jack" in:
@@ -245,7 +243,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val discardings: Seq[DiscardMethods] = Seq.fill(playersNumber - 1)(DiscardMethods.Random)
     val memories: Seq[Memory]            = Seq.fill(playersNumber - 1)(Memory.Optimal)
     val logic                            = TestCactusLogicBotsConfigured((drawings, discardings, memories))
-    while !logic.isGameOver do
+    while logic.currentPhase != CactusTurnPhase.GameOver do
       logic.currentPlayer match
         case bot: CactusBot =>
           logic.continue()
@@ -264,7 +262,7 @@ class CactusLogicTest extends AnyFlatSpec:
     val discardings: Seq[DiscardMethods] = Seq(DiscardMethods.Random)
     val memories: Seq[Memory]            = Seq(Memory.Optimal)
     val logic                            = TestCactusLogicBotsConfigured((drawings, discardings, memories))
-    while !logic.isGameOver do
+    while logic.currentPhase != CactusTurnPhase.GameOver do
       logic.currentPlayer match
         case bot: CactusBot =>
           logic.continue()
@@ -354,7 +352,7 @@ class CactusLogicTest extends AnyFlatSpec:
 
   "Cactus" should "be called by only one player for match" in:
     val logic = CactusLogic(playersNumber)
-    while !logic.isGameOver do
+    while logic.currentPhase != CactusTurnPhase.GameOver do
       logic.currentPhase_=(CactusTurnPhase.Draw)
       logic.draw(true)
       logic.movesHandler(1)
