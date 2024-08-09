@@ -9,7 +9,8 @@ val warts = Warts.allBut(
   Wart.Overloading,
   Wart.While,
   Wart.Equals,
-  Wart.ListAppend
+  Wart.ListAppend,
+  Wart.ScalaApp
 )
 
 lazy val root = project
@@ -42,13 +43,14 @@ lazy val root = project
 
     /* Wartremover */
     wartremoverErrors ++= warts,
-    wartremoverWarnings ++= warts
-  )
-  .enablePlugins(AssemblyPlugin, WartRemover)
-  .settings(
-    assembly / assemblyJarName := "app.jar",
+    wartremoverWarnings ++= warts,
+
+    /* Assembly plugin */
+    assembly / assemblyJarName := "cactus-&-co.jar",
+    assembly / mainClass       := Some("Main"),
     assembly / assemblyMergeStrategy := {
       case PathList("META-INF", xs @ _*) => MergeStrategy.discard
       case x                             => MergeStrategy.first
     }
   )
+  .enablePlugins(AssemblyPlugin, WartRemover)
