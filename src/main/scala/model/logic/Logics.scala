@@ -233,7 +233,7 @@ object Logics:
           lastRound = true
           currentPlayer.cards.foreach(_.uncover())
           currentPlayer.callCactus()
-          currentPhase_=(BaseTurnPhase.End)
+        currentPhase_=(BaseTurnPhase.End)
       case _ => ()
 
     override def seeCard(cardIndex: Int): Unit =
