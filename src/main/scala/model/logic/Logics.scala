@@ -91,7 +91,7 @@ object Logics:
      *
      * @return the human player.
      */
-    def humanPlayer: Player
+    def humanPlayer: PlayerType
 
     /** Does the things to do after the game is over. */
     def handleGameOver(): Unit
@@ -140,7 +140,8 @@ object Logics:
     override def getPlayer(index: Int): PlayerType = players(index) match
       case p: PlayerType => p
 
-    override def humanPlayer: Player = players(0)
+    override def humanPlayer: PlayerType = players(0) match
+      case p: PlayerType => p
 
     @tailrec
     final override def continue(): Unit = currentPhase match
@@ -172,10 +173,7 @@ object Logics:
         if isBot(currentPlayer) then botTurn()
       case _ => ()
 
-    override def isGameOver: Boolean = if lastRound then
-      turnsRemaining -= 1
-      turnsRemaining <= 0
-    else false
+    override def isGameOver: Boolean = lastRound && currentPlayer.calledCactus && currentPhase == CactusTurnPhase.Draw
 
     override def calculateScore: Scores = game.calculateScores(players)
 
@@ -247,7 +245,7 @@ object Logics:
           lastRound = true
           currentPlayer.cards.foreach(_.uncover())
           currentPlayer.callCactus()
-          currentPhase_=(BaseTurnPhase.End)
+        currentPhase_=(BaseTurnPhase.End)
       case _ => ()
 
     override def seeCard(cardIndex: Int): Unit =
@@ -269,10 +267,11 @@ object Logics:
       case BaseTurnPhase.Start     => seeCard(index)
       case CactusTurnPhase.Discard => discard(index)
       case CactusTurnPhase.DiscardEquals =>
-        discardWithMalus(
-          index,
-          getPlayer(0)
-        )
+        if !humanPlayer.calledCactus then
+          discardWithMalus(
+            index,
+            getPlayer(0)
+          )
       case CactusTurnPhase.AceEffect =>
         val target = getPlayer(index)
         if !target.calledCactus && !target.isEqualTo(currentPlayer) then resolveAceEffect(target)
@@ -303,6 +302,7 @@ object Logics:
 
     @tailrec
     private def botTurn(): Unit = currentPlayer match
+      case player if player.calledCactus && currentPhase == CactusTurnPhase.Draw => ()
       case bot: CactusBot =>
         currentPhase match
           case CactusTurnPhase.Draw =>
@@ -344,12 +344,14 @@ object Logics:
       case _            => false
 
     @tailrec
-    private def botDiscardWithMalus(bot: CactusBot): Unit =
-      bot.chooseDiscardWithMalus(game.discardPile) match
-        case Some(i) =>
-          discardWithMalus(i)
-          botDiscardWithMalus(bot)
-        case _ => ()
+    private def botDiscardWithMalus(bot: CactusBot): Unit = bot match
+      case bot: CactusPlayer if !bot.calledCactus =>
+        bot.chooseDiscardWithMalus(game.discardPile) match
+          case Some(i) =>
+            discardWithMalus(i)
+            botDiscardWithMalus(bot)
+          case _ => ()
+      case _ => ()
 
     private def handleCardEffect(): Unit =
       game.checkCardEffect() match
