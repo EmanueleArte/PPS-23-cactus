@@ -88,11 +88,12 @@ object CactusControllerModule extends ControllerModule:
         context.view.updateViewTurnPhase()
         context.view.updateDiscardPile()
         if context.model.isGameOver then
-//          players.foreach(p => p.cards.foreach(_.uncover()))
-          val finalScreenMVC = FinalScreenMVC
-          finalScreenMVC.setup(ListMap(context.model.calculateScore.asInstanceOf[Map[CactusPlayer, Integer]]
-            .toSeq.sortWith(_._2 < _._2):_*))
-          finalScreenMVC.run()
+          context.model.handleGameOver()
+//          players.foreach(_.cards.foreach(_.uncover()))
+//          val finalScreenMVC = FinalScreenMVC
+//          finalScreenMVC.setup(ListMap(context.model.calculateScore.asInstanceOf[Map[CactusPlayer, Integer]]
+//            .toSeq.sortWith(_._2 < _._2):_*))
+//          finalScreenMVC.run()
 
       override def draw(fromDeck: Boolean): Unit =
         context.model.draw(fromDeck)

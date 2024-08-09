@@ -5,8 +5,10 @@ import model.card.Cards.PokerCard
 import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
+import mvc.FinalScreenMVC
 
 import scala.annotation.tailrec
+import scala.collection.immutable.ListMap
 
 /** Logic of a game. */
 object Logics:
@@ -91,6 +93,9 @@ object Logics:
      */
     def humanPlayer: Player
 
+    /** Does the things to do after the game is over. */
+    def handleGameOver(): Unit
+
   /** Provider of a [[Game]]. */
   trait GameProvider:
     /** Instance of the game to play. */
@@ -152,6 +157,13 @@ object Logics:
       case CactusTurnPhase.CallCactus =>
         if isBot(currentPlayer) then botTurn()
         else currentPhase_=(BaseTurnPhase.End)
+      case CactusTurnPhase.GameOver =>
+        System.out.println("GAMEOVER")
+        /*val finalScreenMVC = FinalScreenMVC
+        finalScreenMVC.setup(
+          ListMap(calculateScore.asInstanceOf[Map[CactusPlayer, Integer]].toSeq.sortWith(_._2 < _._2): _*)
+        )
+        finalScreenMVC.run()*/
       case BaseTurnPhase.End =>
         currentPhase_=(CactusTurnPhase.DiscardEquals)
         iterateBots(botDiscardWithMalus)
@@ -244,6 +256,10 @@ object Logics:
       if currentPlayer.cards.count(!_.isCovered) < game.cardsSeenAtStart then currentPlayer.cards(cardIndex).uncover()
       if currentPlayer.cards.count(!_.isCovered) == game.cardsSeenAtStart then _currentPhase = CactusTurnPhase.Draw
 
+    override def handleGameOver(): Unit =
+      players.foreach(_.cards.foreach(_.uncover()))
+      currentPhase_=(CactusTurnPhase.GameOver)
+
     /**
      * Handles the player input according to the turn phase.
      *
@@ -279,7 +295,8 @@ object Logics:
      * @param index the card index that the effect is applied to.
      */
     private def resolveHumanPlayerJackEffect(index: Int): Unit = currentPlayer match
-      case currentPlayer: CactusBot => throw new UnsupportedOperationException("Can't resolve jack effect of a bot as a human player.")
+      case currentPlayer: CactusBot =>
+        throw new UnsupportedOperationException("Can't resolve jack effect of a bot as a human player.")
       case _ =>
         currentPlayer.cards(index).uncover()
         currentPhase_=(CactusTurnPhase.DiscardEquals)
