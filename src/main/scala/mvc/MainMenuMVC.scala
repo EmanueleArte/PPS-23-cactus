@@ -17,4 +17,4 @@ object MainMenuMVC
   override val controller: ControllerType = MainMenuControllerImpl()
   override val view: ViewType             = MainMenuScalaFxView()
 
-  @main def main(): Unit = view.show()
+  def run(): Unit = view.show()
