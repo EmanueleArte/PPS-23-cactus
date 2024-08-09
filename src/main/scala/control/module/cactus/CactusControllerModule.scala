@@ -4,7 +4,7 @@ import control.module.ControllerModule
 import model.module.cactus.CactusModelModule
 import model.card.Cards.{Coverable, PokerCard}
 import model.logic.Logics.Players
-import model.logic.TurnPhase
+import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.{CactusPlayer, Player}
 import mvc.TutorialMVC
 import mvc.PlayableGame.Cactus
@@ -79,21 +79,23 @@ object CactusControllerModule extends ControllerModule:
 
     /** Represents the controller for the Cactus game. */
     class CactusControllerImpl extends CactusController:
-      
+
       override def showTutorial(): Unit = TutorialMVC.run(Cactus)
 
       @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
-      override def continue(): Unit =
-        context.model.continue()
-        context.view.updateViewTurnPhase()
-        context.view.updateDiscardPile()
-        if context.model.isGameOver then
-          context.model.handleGameOver()
-//          players.foreach(_.cards.foreach(_.uncover()))
-//          val finalScreenMVC = FinalScreenMVC
-//          finalScreenMVC.setup(ListMap(context.model.calculateScore.asInstanceOf[Map[CactusPlayer, Integer]]
-//            .toSeq.sortWith(_._2 < _._2):_*))
-//          finalScreenMVC.run()
+      override def continue(): Unit = context.model.currentPhase match
+        case CactusTurnPhase.GameOver =>
+          val finalScreenMVC = FinalScreenMVC
+          finalScreenMVC.setup(
+            ListMap(
+              context.model.calculateScore.asInstanceOf[Map[CactusPlayer, Integer]].toSeq.sortWith(_._2 < _._2): _*
+            )
+          )
+          finalScreenMVC.run()
+        case _ =>
+          context.model.continue()
+          context.view.updateViewTurnPhase()
+          context.view.updateDiscardPile()
 
       override def draw(fromDeck: Boolean): Unit =
         context.model.draw(fromDeck)
