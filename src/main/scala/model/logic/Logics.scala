@@ -5,8 +5,10 @@ import model.card.Cards.PokerCard
 import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
+import mvc.FinalScreenMVC
 
 import scala.annotation.tailrec
+import scala.collection.immutable.ListMap
 
 /** Logic of a game. */
 object Logics:
@@ -91,6 +93,9 @@ object Logics:
      */
     def humanPlayer: PlayerType
 
+    /** Does the things to do after the game is over. */
+    def handleGameOver(): Unit
+
   /** Provider of a [[Game]]. */
   trait GameProvider:
     /** Instance of the game to play. */
@@ -146,7 +151,7 @@ object Logics:
         currentPhase_=(CactusTurnPhase.DiscardEquals)
       case CactusTurnPhase.DiscardEquals =>
         currentPlayer.cards.foreach(_.cover())
-        currentPhase_=(CactusTurnPhase.CallCactus)
+        if isCactusAlreadyCalled then currentPhase_=(BaseTurnPhase.End) else currentPhase_=(CactusTurnPhase.CallCactus)
         if isBot(currentPlayer) then continue()
       case CactusTurnPhase.JackEffect =>
         if isBot(currentPlayer) then botTurn()
@@ -154,14 +159,18 @@ object Logics:
         if isBot(currentPlayer) then botTurn()
         else currentPhase_=(BaseTurnPhase.End)
       case BaseTurnPhase.End =>
-        currentPhase_=(CactusTurnPhase.DiscardEquals)
-        iterateBots(botDiscardWithMalus)
-        nextPlayer
-        currentPhase_=(CactusTurnPhase.Draw)
-        if isBot(currentPlayer) then botTurn()
+        if isGameOver then handleGameOver()
+        else
+          currentPhase_=(CactusTurnPhase.DiscardEquals)
+          iterateBots(botDiscardWithMalus)
+          nextPlayer
+          currentPhase_=(CactusTurnPhase.Draw)
+          if isBot(currentPlayer) then botTurn()
       case _ => ()
 
-    override def isGameOver: Boolean = lastRound && currentPlayer.calledCactus && currentPhase == CactusTurnPhase.Draw
+    @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
+    override def isGameOver: Boolean =
+      lastRound && getNextPlayer.asInstanceOf[CactusPlayer].calledCactus && currentPhase == BaseTurnPhase.End
 
     override def calculateScore: Scores = game.calculateScores(players)
 
@@ -177,6 +186,14 @@ object Logics:
         else currentPlayer.draw(game.discardPile)
         currentPhase_=(CactusTurnPhase.Discard)
       case _ => ()
+
+    private def getNextPlayer: Player =
+      players
+        .sliding(2)
+        .find(_.headOption.get.isEqualTo(currentPlayer))
+        .flatMap(_.lift(1))
+        .orElse(if (players.lastOption.contains(currentPlayer)) players.headOption else None)
+        .get
 
     /**
      * Make the current player to discard a card and choose if the eventual effect should be activated.
@@ -242,6 +259,10 @@ object Logics:
       if currentPlayer.cards.count(!_.isCovered) < game.cardsSeenAtStart then currentPlayer.cards(cardIndex).uncover()
       if currentPlayer.cards.count(!_.isCovered) == game.cardsSeenAtStart then _currentPhase = CactusTurnPhase.Draw
 
+    override def handleGameOver(): Unit =
+      players.foreach(_.cards.foreach(_.uncover()))
+      currentPhase_=(CactusTurnPhase.GameOver)
+
     /**
      * Handles the player input according to the turn phase.
      *
@@ -286,7 +307,7 @@ object Logics:
 
     @tailrec
     private def botTurn(): Unit = currentPlayer match
-      case player if player.calledCactus && currentPhase == CactusTurnPhase.Draw => ()
+//      case player if player.calledCactus && currentPhase == CactusTurnPhase.Draw => ()
       case bot: CactusBot =>
         currentPhase match
           case CactusTurnPhase.Draw =>
@@ -308,12 +329,19 @@ object Logics:
             botTurn()
           case CactusTurnPhase.DiscardEquals => ()
           case CactusTurnPhase.CallCactus =>
-            if bot.shouldCallCactus() then callCactus()
+            if !isCactusAlreadyCalled && bot.shouldCallCactus() then callCactus()
             else
               currentPhase_=(BaseTurnPhase.End)
               continue()
           case _ => continue()
       case _ => ()
+
+    private def isCactusAlreadyCalled: Boolean =
+      players.exists(p =>
+        p match
+          case p: CactusPlayer => p.calledCactus
+          case _               => false
+      )
 
     private def iterateBots(f: CactusBot => Unit): Unit =
       (1 to players.length).foreach(_ =>
