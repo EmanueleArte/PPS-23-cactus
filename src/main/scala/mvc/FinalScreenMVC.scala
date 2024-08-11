@@ -2,6 +2,7 @@ package mvc
 
 import control.module.finalscreen.FinalScreenControllerModule
 import control.module.finalscreen.FinalScreenControllerModule.ControllerType
+import model.game.Scores
 import model.player.Players.CactusPlayer
 import view.module.finalscreen.FinalScreenViewModule
 import view.module.finalscreen.FinalScreenViewModule.ViewType
@@ -19,5 +20,5 @@ object FinalScreenMVC extends FinalScreenControllerModule.Interface with FinalSc
    * Sets up the players with their scores.
    * @param playersScores a [[Map]] with the players and their scores
    */
-  def setup(playersScores: Map[CactusPlayer, Integer]): Unit =
+  def setup(playersScores: Scores): Unit =
     controller.setupPlayersScores(playersScores)

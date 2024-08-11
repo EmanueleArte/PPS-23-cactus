@@ -13,10 +13,10 @@ import model.player.Players.{CactusPlayer, Player}
 import model.ModelUtils.isRedKing
 
 /**
- * An opaque type representing the scores of players in a game.
+ * A type representing the scores of players in a game.
  * Internally it is a [[ Map[Player, Int] ]].
  */
-opaque type Scores = Map[Player, Int]
+type Scores = Map[Player, Int]
 
 /**
  * Companion object of [[Scores]] opaque type.

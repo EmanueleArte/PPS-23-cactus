@@ -97,11 +97,11 @@ class CactusGameTest extends AnyFlatSpec:
       nonCactusPlayer,
       CactusPlayer("", List(10 OF Clubs, 10 OF Spades))
     )
-    val scores: Scores = CactusGame().calculateScores(players)
+    val scores = CactusGame().calculateScores(players)
     scores.size should be(2)
     scores.get(players(0)) should be(Some(Ace + 2))
     scores.get(players(2)) should be(Some(10 + 10))
-    scores.players should not contain nonCactusPlayer
+    scores.keys should not contain nonCactusPlayer
 
   "Red King" should "count 0 on score calculation" in:
     val players: Players = List(
