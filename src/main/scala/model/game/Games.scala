@@ -99,9 +99,9 @@ class CactusGame extends Game:
   val deck: Deck[PokerCard & Coverable] = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  var discardPile: PokerPile = PokerPile()
-  val initialPlayerCardsNumber: Int       = 4
-  val cardsSeenAtStart: Int = 2
+  var discardPile: PokerPile        = PokerPile()
+  val initialPlayerCardsNumber: Int = 4
+  val cardsSeenAtStart: Int         = 2
 
   export deck.{size => deckSize}
 
@@ -115,7 +115,8 @@ class CactusGame extends Game:
               .map(_ => deck.draw().get)
               .map(card =>
                 card.cover()
-                card),
+                card
+              ),
             DrawMethods.Deck,
             DiscardMethods.Random,
             Memory.Normal
@@ -163,9 +164,12 @@ class CactusGame extends Game:
         } == cards.size
       )
       .map((player, cards) =>
-        (player, cards.collect {
-          case card: PokerCard => PokerCard(card.value, card.suit)
-        })
+        (
+          player,
+          cards.collect { case card: PokerCard =>
+            PokerCard(card.value, card.suit)
+          }
+        )
       )
       .map((player, cards) =>
         (

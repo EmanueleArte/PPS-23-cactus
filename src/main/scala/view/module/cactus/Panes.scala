@@ -178,7 +178,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
       pane.whenHovered(currentPlayerProperty.value match
         case p if p.isEqualTo(player) => s"${player.name}'s turn"
-        case _                         => s"Not ${player.name}'s turn"
+        case _                        => s"Not ${player.name}'s turn"
       )
 
     private def playerHand: VBox = new VBox()

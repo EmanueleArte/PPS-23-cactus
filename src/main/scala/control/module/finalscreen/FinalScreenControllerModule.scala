@@ -8,7 +8,7 @@ import view.module.menu.MainMenuViewModule.MainMenuView
 
 object FinalScreenControllerModule extends ControllerModule:
   override type ControllerType = FinalScreenController
-  override type Requirements = FinalScreenViewModule.Provider
+  override type Requirements   = FinalScreenViewModule.Provider
 
   /** Represents the final screen controller. */
   trait FinalScreenController extends Controller:
@@ -42,8 +42,7 @@ object FinalScreenControllerModule extends ControllerModule:
 
       override def returnToMainMenu(): Unit = MainMenuMVC.view match
         case view: MainMenuView => view.showFromFinalScreen()
-        case _ => ()
-
+        case _                  => ()
 
   /** Interface of the controller module of the final screen. */
   trait Interface extends Provider with Component:

@@ -127,21 +127,26 @@ object ViewDSL:
       val start: ViewPosition = ViewPosition(0, 0)
       val end: ViewPosition = alignment match
         case Gradient.Horizontal => ViewPosition(1, 0)
-        case Gradient.Vertical => ViewPosition(0, 1)
+        case Gradient.Vertical   => ViewPosition(0, 1)
 
-      node.setBackground(new Background(Array(
-        new BackgroundFill(
-          new LinearGradient(
-            startX = start.x,
-            startY = start.y,
-            endX = end.x,
-            endY = end.y,
-            proportional = true,
-            stops = Stops(colors: _*)
-          ),
-          null, null
+      node.setBackground(
+        new Background(
+          Array(
+            new BackgroundFill(
+              new LinearGradient(
+                startX = start.x,
+                startY = start.y,
+                endX = end.x,
+                endY = end.y,
+                proportional = true,
+                stops = Stops(colors: _*)
+              ),
+              null,
+              null
+            )
+          )
         )
-      )))
+      )
       node
 
     /**
@@ -217,7 +222,7 @@ object ViewDSL:
       node.setOnMouseMoved(e => if !tooltip.isShowing then tooltip.show(node, e.getScreenX + 10, e.getScreenY + 10))
       node.onMouseExited = _ => if tooltip.isShowing then tooltip.hide()
       node
-  
+
   extension [T <: Pane](pane: T)
     /**
      * Sets a child for a [[Pane]].
@@ -481,7 +486,7 @@ object ViewDSL:
       text.setOnMouseMoved(e => if !tooltip.isShowing then tooltip.show(text, e.getScreenX + 10, e.getScreenY + 10))
       text.onMouseExited = _ => if tooltip.isShowing then tooltip.hide()
       text
-  
+
   extension [T <: Label](label: T)
     /**
      * Sets the text of a [[Label]].

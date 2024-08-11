@@ -32,7 +32,6 @@ class CactusLogicTest extends AnyFlatSpec:
     override lazy val game: CactusGame = new CactusGame():
       override val deck: Deck[PokerCard & Coverable] = PokerDeck()
 
-
   /** Custom implementation of the CactusGame to make tests with an unshuffled deck and bot config. */
   class TestCactusLogicBotsConfigured(botParamsType: BotParamsType)
       extends CactusLogic(Right(botParamsType): Either[Int, BotParamsType]):
@@ -125,7 +124,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.getPlayer(2).cards.size should be(logic.game.initialPlayerCardsNumber)
     logic.getPlayer(3).cards.size should be(logic.game.initialPlayerCardsNumber)
 
-  it should "not draw a card if targeted by an ace effect after calling cactus" in :
+  it should "not draw a card if targeted by an ace effect after calling cactus" in:
     val logic = TestCactusLogic(2)
     // Player 1
     logic.currentPhase_=(CactusTurnPhase.Draw)
@@ -221,7 +220,7 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.continue()
           logic.continue()
           logic.continue()
-    logic.currentPhase should be (CactusTurnPhase.GameOver)
+    logic.currentPhase should be(CactusTurnPhase.GameOver)
     logic.players.find(_.asInstanceOf[CactusPlayer].calledCactus).get.cards.size should be(nCardsOfCactusCaller)
 
   it should "see a card after discarding a Jack" in:

@@ -42,7 +42,7 @@ object MainMenuControllerModule extends ControllerModule:
 
     /** Implementation of [[MainMenuController]]. */
     class MainMenuControllerImpl extends MainMenuController:
-      
+
       def selectGame(game: PlayableGame): Unit = context.model.selectedGame = game
 
       def startGame(nPlayers: Int): Unit =

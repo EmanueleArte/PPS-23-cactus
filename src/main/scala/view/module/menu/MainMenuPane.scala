@@ -11,7 +11,24 @@ import scalafx.scene.layout.{HBox, Pane, StackPane, VBox}
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewPosition
 import view.ViewUtils.{CustomStackPane, value}
-import view.ViewDSL.{aligned, baseWidth, bold, colored, containing, doing, initialValue, prompt, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, ComboBox as ComboBoxElement, Label as LabelElement}
+import view.ViewDSL.{
+  aligned,
+  baseWidth,
+  bold,
+  colored,
+  containing,
+  doing,
+  initialValue,
+  prompt,
+  saying,
+  spaced,
+  telling,
+  veryBig,
+  withMargin,
+  Button as ButtonElement,
+  ComboBox as ComboBoxElement,
+  Label as LabelElement
+}
 
 import scala.language.postfixOps
 import scala.util.Random
@@ -159,8 +176,10 @@ class MainMenuPane(
         .containing(CactusBotsData.DiscardMethods.values)
         .prompt("Select a discard method")
         .baseWidth(200)
-        .initialValue(CactusBotsData.DiscardMethods
-          .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length)))
+        .initialValue(
+          CactusBotsData.DiscardMethods
+            .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length))
+        )
       discardMethods :+= discardMethod
       val memory = ComboBoxElement[Memory]
         .containing(CactusBotsData.Memory.values)

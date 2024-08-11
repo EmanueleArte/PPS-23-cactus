@@ -60,10 +60,8 @@ object Players:
       val drawnCard: Option[CardType] = drawable.draw()
       if drawnCard.isDefined then
         val card = drawnCard.get
-        if shouldStayCovered then
-          ()
-        else
-          card.uncover()
+        if shouldStayCovered then ()
+        else card.uncover()
         _cards = _cards ::: card :: Nil
 
     override def draw(drawable: Drawable[CardType]): Unit =
@@ -91,7 +89,5 @@ object Players:
      */
     def calledCactus: Boolean = _cactusCaller
 
-    /**
-     * Calls cactus, setting the player as the only caller.
-     */
+    /** Calls cactus, setting the player as the only caller. */
     def callCactus(): Unit = _cactusCaller = true

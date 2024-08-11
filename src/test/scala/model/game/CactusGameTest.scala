@@ -22,7 +22,8 @@ class CactusGameTest extends AnyFlatSpec:
 
     override val name: String = "Player"
 
-    var cards: List[CardType] = List(new GenericCard(1, Spades) with Coverable, new GenericCard(2, Spades) with Coverable)
+    var cards: List[CardType] =
+      List(new GenericCard(1, Spades) with Coverable, new GenericCard(2, Spades) with Coverable)
 
     override def draw(drawable: Drawable[CardType]): Unit = drawable.draw() match
       case Some(card) => cards = cards ::: card :: Nil
@@ -53,13 +54,13 @@ class CactusGameTest extends AnyFlatSpec:
     players1 should not be players2
 
   "Drawn cards from players" should "not be in the deck anymore" in:
-    val game: CactusGame       = CactusGame()
-    val players: Players       = game.setupGame(playersNumber)
+    val game: CactusGame                   = CactusGame()
+    val players: Players                   = game.setupGame(playersNumber)
     val drawnCards: List[Card & Coverable] = players.flatMap(player => player.cards)
     game.deck.cards should not contain drawnCards
 
   "The discard pile" should "be empty" in:
-    val game: CactusGame         = CactusGame()
+    val game: CactusGame                     = CactusGame()
     val cardOption: Option[Card & Coverable] = game.discardPile.draw() // game.drawFromDiscardPile()
     cardOption shouldBe empty
 

@@ -146,7 +146,7 @@ object Bots:
 
     override def shouldCallCactus(): Boolean =
       cards.lengthIs <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)
-    
+
     override def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer] =
       players
         .filter(p => p != this)
