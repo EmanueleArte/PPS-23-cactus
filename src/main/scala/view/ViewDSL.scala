@@ -6,18 +6,20 @@ import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.ScrollPane.ScrollBarPolicy
 import javafx.scene.input.MouseEvent
-import model.card.Cards.{Card, Coverable, PokerCard}
+import model.card.Cards.{Card, Coverable}
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{Background, BackgroundFill, BorderPane, HBox, Pane, Region, VBox}
-import scalafx.scene.paint.{Color, LinearGradient, Stop, Stops}
+import scalafx.scene.paint.{Color, LinearGradient, Stops}
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.{Font, FontWeight, Text}
-import view.module.cactus.{AppPane, Buttons, CardsPane, PlayersPane}
+import view.module.cactus.{AppPane, Buttons, CardsPane}
 import view.module.cactus.Text.*
+
+import scala.annotation.targetName
 
 /** DSL for creating view elements in a more agile way. */
 object ViewDSL:
@@ -358,27 +360,33 @@ object ViewDSL:
   extension [T <: BorderPane](pane: T)
     /**
      * Sets the element in the right position of the [[BorderPane]].
+     *
      * @param element to add in the pane.
      * @return pane with the child set.
      */
+    @targetName("right")
     def -->(element: Node): T =
       pane.right = element
       pane
 
     /**
      * Sets the element in the left position of the [[BorderPane]].
+     *
      * @param element to add in the pane.
      * @return pane with the child set.
      */
+    @targetName("left")
     def <--(element: Node): T =
       pane.left = element
       pane
 
     /**
      * Sets the element in the top position of the [[BorderPane]].
+     *
      * @param element to add in the pane.
      * @return pane with the child set.
      */
+    @targetName("top")
     def ^(element: Node): T =
       pane.top = element
       pane
