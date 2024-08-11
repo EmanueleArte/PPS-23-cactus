@@ -165,9 +165,8 @@ object Logics:
           if isBot(currentPlayer) then botTurn()
       case _ => ()
 
-    @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
     override def isGameOver: Boolean =
-      lastRound && getNextPlayer.asInstanceOf[CactusPlayer].calledCactus && currentPhase == BaseTurnPhase.End
+      lastRound && getNextPlayer.calledCactus && currentPhase == BaseTurnPhase.End
 
     override def calculateScore: Scores = game.calculateScores(players)
 
@@ -184,13 +183,14 @@ object Logics:
         currentPhase_=(CactusTurnPhase.Discard)
       case _ => ()
 
-    private def getNextPlayer: Player =
+    private def getNextPlayer: CactusPlayer =
       players
         .sliding(2)
         .find(_.headOption.get.isEqualTo(currentPlayer))
         .flatMap(_.lift(1))
         .orElse(if (players.lastOption.contains(currentPlayer)) players.headOption else None)
-        .get
+        .get match
+        case p: CactusPlayer => p
 
     /**
      * Make the current player to discard a card and choose if the eventual effect should be activated.
