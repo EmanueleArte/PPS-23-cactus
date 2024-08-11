@@ -1,7 +1,6 @@
 package view.module.finalscreen
 
 import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
-import mvc.MainMenuMVC
 import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
@@ -10,7 +9,6 @@ import view.ViewPosition
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewUtils.CustomStackPane
 import view.ViewDSL.{aligned, bold, colored, containing, doing, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, Label as LabelElement}
-import view.module.menu.MainMenuViewModule.MainMenuView
 
 import scala.language.postfixOps
 
@@ -53,7 +51,6 @@ class FinalScreenPane(
   private def returnToMainMenu(): Unit =
     controller.returnToMainMenu()
 
-  @SuppressWarnings(Array("org.wartremover.warts.ToString"))
   private def playersPane: VBox =
     val vbox = new VBox()
       .aligned(Pos.TopCenter)

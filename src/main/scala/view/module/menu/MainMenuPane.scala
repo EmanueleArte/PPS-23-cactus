@@ -40,9 +40,7 @@ class MainMenuPane(
     .initialValue(PlayableGame.Cactus)
     .doing(_ => playersPane = createPlayersPane(value(gameSelected)))
 
-  private def createPlayersPane(game: PlayableGame): PlayersPane = game match
-    case PlayableGame.Cactus => new CactusPlayersPane(position)
-    case _                   => new CactusPlayersPane(position)
+  private def createPlayersPane(game: PlayableGame): PlayersPane = new CactusPlayersPane(position)
 
   override def pane: Pane = new CustomStackPane(sceneWidth, sceneHeight)
     .colored(AppPane.mainPaneColor)
@@ -150,7 +148,6 @@ class MainMenuPane(
         case _ => _players ++ players
       _playersBox.children = _players
 
-    @SuppressWarnings(Array("org.wartremover.warts.All"))
     override def createBotBox(name: String): VBox =
       val drawMethod = ComboBoxElement[DrawMethods]
         .containing(CactusBotsData.DrawMethods.values)
