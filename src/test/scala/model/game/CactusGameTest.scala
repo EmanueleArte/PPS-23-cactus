@@ -4,8 +4,7 @@ import model.card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
 import model.card.CardBuilder.PokerDSL.OF
 import model.card.Cards.{Card, Coverable, GenericCard}
 import model.card.CardsData.PokerCardName.{Ace, King}
-import model.deck.{Decks, Drawable}
-import model.deck.Decks.Deck
+import model.deck.Drawable
 import model.deck.Piles.PokerPile
 import model.game.Scores
 import org.scalatest.flatspec.AnyFlatSpec
@@ -99,7 +98,7 @@ class CactusGameTest extends AnyFlatSpec:
     )
     val scores = CactusGame().calculateScores(players)
     scores.size should be(2)
-    scores.get(players(0)) should be(Some(Ace + 2))
+    scores.get(players.headOption.get) should be(Some(Ace + 2))
     scores.get(players(2)) should be(Some(10 + 10))
     scores.keys should not contain nonCactusPlayer
 
@@ -108,7 +107,7 @@ class CactusGameTest extends AnyFlatSpec:
       CactusPlayer("", List(King OF Spades, King OF Hearts, 9 OF Clubs))
     )
     val scores: Scores = CactusGame().calculateScores(players)
-    scores.get(players.headOption.get).get shouldBe 22
+    scores(players.headOption.get) shouldBe 22
 
   "Discarded card effect" should "be recognised if the discard pile is not empty" in:
     val game: CactusGame = CactusGame()

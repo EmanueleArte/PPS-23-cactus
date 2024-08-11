@@ -30,7 +30,7 @@ class PlayerTest extends AnyFlatSpec:
     val player: CactusPlayer = CactusPlayer("", List.empty[PokerCard & Coverable])
     val deck: Deck[PokerCard & Coverable] = PokerDeck()
     player.draw(deck)
-    player.cards(0) should be (Ace OF Spades)
+    player.cards.headOption.get should be (Ace OF Spades)
 
   "Player " should "have 0 cards after discard" in:
     val player: CactusPlayer = CactusPlayer("", List(5 OF Clubs))

@@ -7,7 +7,7 @@ import model.deck.Decks.{Deck, PokerDeck}
 import model.game.CactusGame
 import model.game.Scores.toMap
 import model.logic
-import model.logic.Logics.{CactusLogic, GameLogic, Players}
+import model.logic.Logics.CactusLogic
 import model.player.Players.{CactusPlayer, Player}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
@@ -222,7 +222,7 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.continue()
           logic.continue()
     logic.currentPhase should be (CactusTurnPhase.GameOver)
-    logic.players.filter(_.asInstanceOf[CactusPlayer].calledCactus)(0).cards.size should be(nCardsOfCactusCaller)
+    logic.players.find(_.asInstanceOf[CactusPlayer].calledCactus).get.cards.size should be(nCardsOfCactusCaller)
 
   it should "see a card after discarding a Jack" in:
     val drawings: Seq[DrawMethods]       = Seq.fill(playersNumber - 1)(DrawMethods.Deck)

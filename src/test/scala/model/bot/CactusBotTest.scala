@@ -8,7 +8,7 @@ import model.card.Cards.{Coverable, PokerCard}
 import model.card.CardsData.PokerCardName.Ace
 import model.card.CardsData.PokerSuit.Spades
 import model.deck.Decks.PokerDeck
-import model.deck.Piles.{DiscardPile, PokerPile}
+import model.deck.Piles.PokerPile
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
