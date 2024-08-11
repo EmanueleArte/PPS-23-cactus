@@ -1,6 +1,5 @@
 package mvc
 
-import mvc.PlayableGame.Cactus
 import view.module.tutorial.TutorialViewModule
 import view.module.tutorial.TutorialViewModule.ViewType
 

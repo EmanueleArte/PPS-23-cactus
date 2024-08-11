@@ -1,7 +1,6 @@
 package mvc
 
 import model.bot.Bots.BotParamsType
-import model.logic.Logics.Players
 
 /** Represents the main module for a game. */
 trait GameMVC:

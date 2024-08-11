@@ -59,9 +59,10 @@ object Decks:
   abstract class AbstractDeck[C <: Card & Coverable](shuffled: Boolean) extends Deck[C]:
     private val INITIAL_HEAD_VALUE: Int = -1
     private var head: Int               = INITIAL_HEAD_VALUE
-    private lazy val _cards: List[C] = shuffled match
-      case true => Random.shuffle(inputCards)
-      case _    => inputCards
+    private lazy val _cards: List[C] = if shuffled then
+      Random.shuffle(inputCards)
+    else
+      inputCards
     protected val inputCards: List[C] = List[C]()
 
     override def draw(): Option[C] =

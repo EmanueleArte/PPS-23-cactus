@@ -1,7 +1,5 @@
 package mvc
 
-import mvc.{CactusMVC, GameMVC}
-
 /** Represents the playable of games. */
 enum PlayableGame:
   case Cactus
