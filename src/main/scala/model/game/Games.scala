@@ -122,10 +122,12 @@ class CactusGame extends Game:
           )
         )
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def setupGameWithBots(botsParams: BotParamsType): List[Player] =
     val (drawings, discardings, memories) =
-      botsParams.asInstanceOf[(Seq[DrawMethods], Seq[DiscardMethods], Seq[Memory])]
+      botsParams match
+        case (drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]) =>
+          (drawings, discardings, memories)
+        case _ => throw new IllegalArgumentException("Invalid bot params type")
 
     val player: CactusPlayer = CactusPlayer("Player", List.empty)
     setupCards(player)
@@ -151,7 +153,6 @@ class CactusGame extends Game:
       player.cards(cardIndex).cover()
     )
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex
       .map((player, index) => (player, player.cards))
@@ -162,7 +163,9 @@ class CactusGame extends Game:
         } == cards.size
       )
       .map((player, cards) =>
-        (player, cards.collect(c => PokerCard(c.value.asInstanceOf[Int], c.suit.asInstanceOf[PokerSuit])))
+        (player, cards.collect {
+          case card: PokerCard => PokerCard(card.value, card.suit)
+        })
       )
       .map((player, cards) =>
         (
