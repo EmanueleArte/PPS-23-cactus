@@ -5,10 +5,7 @@ import model.card.Cards.PokerCard
 import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
-import mvc.FinalScreenMVC
-
 import scala.annotation.tailrec
-import scala.collection.immutable.ListMap
 
 /** Logic of a game. */
 object Logics:
@@ -140,7 +137,7 @@ object Logics:
     override def getPlayer(index: Int): PlayerType = players(index) match
       case p: PlayerType => p
 
-    override def humanPlayer: PlayerType = players(0) match
+    override def humanPlayer: PlayerType = players.headOption.get match
       case p: PlayerType => p
 
     @tailrec

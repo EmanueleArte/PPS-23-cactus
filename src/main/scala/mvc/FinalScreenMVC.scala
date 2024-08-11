@@ -3,7 +3,6 @@ package mvc
 import control.module.finalscreen.FinalScreenControllerModule
 import control.module.finalscreen.FinalScreenControllerModule.ControllerType
 import model.game.Scores
-import model.player.Players.CactusPlayer
 import view.module.finalscreen.FinalScreenViewModule
 import view.module.finalscreen.FinalScreenViewModule.ViewType
 

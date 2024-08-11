@@ -1,13 +1,13 @@
 package model.game
 
 import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
-import model.bot.Bots.{BotParamsType, CactusBot, CactusBotImpl}
+import model.bot.Bots.{BotParamsType, CactusBotImpl}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.{Card, Coverable, PokerCard}
 import model.card.CardsData.PokerCardName.Jack
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.deck.Decks.{Deck, PokerDeck}
-import model.deck.Piles.{DiscardPile, PokerPile}
+import model.deck.Piles.PokerPile
 import model.logic.Logics.Players
 import model.player.Players.{CactusPlayer, Player}
 import model.ModelUtils.isRedKing
@@ -94,7 +94,7 @@ trait Game:
   def calculateScores(players: List[Player]): Scores
 
 /** Cactus game implementation. */
-class CactusGame() extends Game:
+class CactusGame extends Game:
   /** Deck with the cards to draw. */
   val deck: Deck[PokerCard & Coverable] = PokerDeck(shuffled = true)
 

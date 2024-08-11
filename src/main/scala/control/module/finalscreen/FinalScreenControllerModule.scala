@@ -2,7 +2,6 @@ package control.module.finalscreen
 
 import control.module.ControllerModule
 import model.game.Scores
-import model.player.Players.CactusPlayer
 import mvc.MainMenuMVC
 import view.module.finalscreen.FinalScreenViewModule
 import view.module.menu.MainMenuViewModule.MainMenuView
