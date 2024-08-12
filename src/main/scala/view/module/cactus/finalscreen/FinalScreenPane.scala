@@ -1,6 +1,7 @@
-package view.module.finalscreen
+package view.module.cactus.finalscreen
 
-import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
+import control.module.cactus.finalscreen.FinalScreenControllerModule.FinalScreenController
+import mvc.MainMenuMVC
 import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}

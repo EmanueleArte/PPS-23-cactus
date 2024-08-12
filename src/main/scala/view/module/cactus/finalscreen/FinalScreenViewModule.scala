@@ -1,6 +1,7 @@
-package view.module.finalscreen
+package view.module.cactus.finalscreen
 
-import control.module.finalscreen.FinalScreenControllerModule
+import control.module.cactus.finalscreen.FinalScreenControllerModule
+import model.player.Players.CactusPlayer
 import scalafx.scene.Scene
 import view.ScalaFXStageManager
 import view.module.ViewModule

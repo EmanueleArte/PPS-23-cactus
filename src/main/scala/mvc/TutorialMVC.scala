@@ -1,7 +1,8 @@
 package mvc
 
-import view.module.tutorial.TutorialViewModule
-import view.module.tutorial.TutorialViewModule.ViewType
+import mvc.PlayableGame.Cactus
+import view.module.cactus.tutorial.TutorialViewModule
+import TutorialViewModule.ViewType
 
 /** Represents the main module for the tutorial. */
 object TutorialMVC extends TutorialViewModule.Interface:

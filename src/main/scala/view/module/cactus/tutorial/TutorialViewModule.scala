@@ -1,4 +1,4 @@
-package view.module.tutorial
+package view.module.cactus.tutorial
 
 import mvc.PlayableGame
 import mvc.PlayableGame.Cactus
