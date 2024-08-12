@@ -201,9 +201,9 @@ object Logics:
      * @param cardIndex index of the card in the player hand to discard.
      * @param withEffect if `true` the eventual effect of the card is activated, if `false` the effect is not activated.
      */
-    private def discard(cardIndex: Int, withEffect: Boolean): Unit = currentPhase match
+    private def discard(cardIndex: Int, withEffect: Boolean)(player: CactusPlayer): Unit = currentPhase match
       case CactusTurnPhase.Discard =>
-        val discardedCard = currentPlayer.discard(cardIndex)
+        val discardedCard = player.discard(cardIndex)
         discardedCard.uncover()
         game.discardPile = game.discardPile.put(discardedCard)
         if withEffect then
@@ -217,7 +217,7 @@ object Logics:
      *
      * @param cardIndex  index of the card in the player hand to discard.
      */
-    private def discard(cardIndex: Int): Unit = discard(cardIndex, true)
+    private def discard(cardIndex: Int): Unit = discard(cardIndex, true)(currentPlayer)
 
     /**
      * Make the current player to discard a card but with a malus if the card does not match the discard criteria.
@@ -239,7 +239,7 @@ object Logics:
             case Some(card) =>
               game.discardPile = game.discardPile.put(card)
               currentPhase_=(CactusTurnPhase.Discard)
-              discard(cardIndex, false)
+              discard(cardIndex, false)(player)
             case _ => player.draw(game.deck)
         case _ => ()
 
