@@ -11,6 +11,7 @@ import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.PokerPile
 import org.scalatest.matchers.must.Matchers
 
+/** Test for deck and discard pile. */
 class DeckAndDiscardPileTest extends AnyFlatSpec:
 
   "Deck" should "be resettable using a discard pile" in:

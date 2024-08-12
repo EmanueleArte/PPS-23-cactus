@@ -10,6 +10,7 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 import model.player.Players.{CactusPlayer, Player}
 
+/** Test for player. */
 class PlayerTest extends AnyFlatSpec:
 
   "Player " should "be a CactusPlayer" in:

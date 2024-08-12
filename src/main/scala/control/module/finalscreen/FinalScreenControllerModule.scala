@@ -6,6 +6,7 @@ import mvc.MainMenuMVC
 import view.module.finalscreen.FinalScreenViewModule
 import view.module.menu.MainMenuViewModule.MainMenuView
 
+/** Represents the controller module for the final screen. */
 object FinalScreenControllerModule extends ControllerModule:
   override type ControllerType = FinalScreenController
   override type Requirements   = FinalScreenViewModule.Provider

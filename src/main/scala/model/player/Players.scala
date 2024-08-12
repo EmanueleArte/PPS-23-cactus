@@ -22,21 +22,18 @@ object Players:
 
     /**
      * Draws a card from a deck.
-     *
      * @param drawable the drawable to draw from.
      */
     def draw(drawable: Drawable[CardType]): Unit
 
     /**
      * Draws a card that will remain covered from a deck.
-     *
      * @param drawable the drawable to draw from.
      */
     def drawCovered(drawable: Drawable[CardType]): Unit
 
     /**
      * Discards a card from the player's hand.
-     *
      * @param cardIndex the index of the card in the list to discard.
      * @return the discarded card.
      */
@@ -49,6 +46,10 @@ object Players:
      */
     def isEqualTo(anotherPlayer: Player): Boolean
 
+  /** Represents a Cactus player.
+   * @param name the name of the player.
+   * @param _cards the cards of the player.
+   */
   case class CactusPlayer(name: String, private var _cards: List[PokerCard & Coverable]) extends Player:
     override type CardType = PokerCard & Coverable
 
@@ -84,7 +85,6 @@ object Players:
 
     /**
      * Returns if the player has called cactus.
-     *
      * @return `true` if the player has called cactus, `false` otherwise.
      */
     def calledCactus: Boolean = _cactusCaller

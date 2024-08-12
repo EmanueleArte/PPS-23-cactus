@@ -18,6 +18,7 @@ object CactusControllerModule extends ControllerModule:
   override type ControllerType = CactusController
   override type Requirements   = CactusModelModule.Provider with CactusViewModule.Provider
 
+  /** Represents the Cactus controller. */
   trait CactusController extends Controller:
     /** Shows the tutorial. */
     def showTutorial(): Unit

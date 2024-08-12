@@ -8,4 +8,7 @@ object TutorialMVC extends TutorialViewModule.Interface:
 
   override val view: ViewType = TutorialScalaFxView()
 
+  /** Shows the tutorial.
+   * @param game the [[PlayableGame]] the tutorial refers to.
+   */
   def run(game: PlayableGame): Unit = view.show(game)

@@ -7,6 +7,7 @@ object Cards:
 
   /** Represents a card with a value and a suit. */
   trait Card:
+    /** The value of the card. */
     type Value
 
     /**

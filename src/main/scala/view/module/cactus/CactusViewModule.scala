@@ -11,14 +11,19 @@ object CactusViewModule extends ViewModule:
   override type ViewType     = CactusView
   override type Requirements = CactusControllerModule.Provider
 
+  /** Represents the Cactus view. */
   trait CactusView extends View:
+    /** Updates the turn phase in the view. */
     def updateViewTurnPhase(): Unit
+
+    /** Updates the graphic of the discard pile. */
     def updateDiscardPile(): Unit
 
   /** Represents the view component for the Cactus game. */
   trait Component:
     context: Requirements =>
 
+    /** Represents the ScalaFX view of Cactus. */
     class CactusScalaFXView extends CactusView:
       private lazy val asidePane = AsidePane(context.controller)
       private lazy val mainPane  = MainPane(context.controller)

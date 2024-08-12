@@ -13,6 +13,7 @@ object MainMenuViewModule extends ViewModule:
 
   override type Requirements = MainMenuControllerModule.Provider
 
+  /** Represents the main menu view. */
   trait MainMenuView extends View:
     /** Shows the main menu from the final screen. */
     def showFromFinalScreen(): Unit

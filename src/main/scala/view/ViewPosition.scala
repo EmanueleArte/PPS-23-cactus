@@ -30,8 +30,6 @@ object ViewPosition:
    */
   def apply(x: Int, y: Int): ViewPosition = ViewPositionImpl(x, y)
 
-//  def at(x: Int, y: Int): ViewPosition = ViewPosition(x, y)
-
   extension (position: ViewPosition)
     /**
      * `Division` operation for [[ViewPosition]].
