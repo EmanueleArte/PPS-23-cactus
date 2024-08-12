@@ -12,7 +12,7 @@ import model.deck.Piles.PokerPile
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
 
-@SuppressWarnings(Array("org.wartremover.warts.All"))
+/** Test for Cactus bots. */
 class CactusBotTest extends AnyFlatSpec:
   private val deck: PokerDeck = PokerDeck()
 
@@ -29,7 +29,7 @@ class CactusBotTest extends AnyFlatSpec:
     cactusBot.draw(deck)
     cactusBot.draw(deck)
     cactusBot.seeCard(0)
-    cactusBot.knownCards.head should be(Ace of Spades)
+    cactusBot.knownCards.headOption.get should be(Ace of Spades)
 
   "Bot " should "not have a card in the known cards list" in:
     val cactusBot: CactusBotImpl = CactusBotImpl(

@@ -11,7 +11,9 @@ import org.scalatest.matchers.must.Matchers.{be, defined, empty}
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import org.scalatest.matchers.must.Matchers
 
+/** Test for discard pile. */
 class DiscardPileTest extends AnyFlatSpec:
+  /** Type of the discard pile. */
   type DiscardPile = model.deck.Piles.DiscardPile[PokerCard & Coverable]
 
   "A discard pile" should "initially be empty" in:

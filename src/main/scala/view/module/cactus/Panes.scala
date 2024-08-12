@@ -139,9 +139,11 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
    * @param position of the pane.
    */
   private class PlayerPane(player: Player, override val position: ViewPosition)
-      extends ScalaFXPane: // with PlayersPane:
+      extends ScalaFXPane:
     override def paneWidth: Int  = PlayersPane.paneWidth
     override def paneHeight: Int = PlayersPane.paneHeight
+
+    playerCardsProperty.onChange((_, _, _) => updatePlayerCards())
 
     override def pane: Pane = new Pane()
       .at(position)
@@ -154,8 +156,6 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
             controller.handlePlayerInput(playerIndex)
           case _ => ()
       )
-
-    playerCardsProperty.onChange((_, _, _) => updatePlayerCards())
 
     /** Updates the turn indicator of the player. */
     def updateTurnIndicator(): Unit = header.left = turnIndicatorContainer(

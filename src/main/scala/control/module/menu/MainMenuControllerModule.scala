@@ -6,6 +6,7 @@ import model.module.menu.MainMenuModelModule
 import mvc.PlayableGame
 import view.module.menu.MainMenuViewModule
 
+/** Represents the controller module for the main menu. */
 object MainMenuControllerModule extends ControllerModule:
   override type ControllerType = MainMenuController
   override type Requirements   = MainMenuModelModule.Provider with MainMenuViewModule.Provider
@@ -43,12 +44,12 @@ object MainMenuControllerModule extends ControllerModule:
     /** Implementation of [[MainMenuController]]. */
     class MainMenuControllerImpl extends MainMenuController:
 
-      def selectGame(game: PlayableGame): Unit = context.model.selectedGame = game
+      override def selectGame(game: PlayableGame): Unit = context.model.selectedGame = game
 
-      def startGame(nPlayers: Int): Unit =
+      override def startGame(nPlayers: Int): Unit =
         context.model.selectedGame.gameMVC.setup(nPlayers).run()
 
-      def startCactusGameWithBots(
+      override def startCactusGameWithBots(
           drawings: Seq[DrawMethods],
           discardings: Seq[DiscardMethods],
           memories: Seq[Memory]

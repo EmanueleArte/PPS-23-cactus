@@ -13,8 +13,7 @@ object Bots:
   /** Type alias for the parameters to setup the bots. */
   type BotParamsType = Tuple
 
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
-  /** Represents a bot. */
+  /** Represents a bot of the Cactus game. */
   trait CactusBot:
     /**
      * Gets the known cards.
@@ -24,14 +23,14 @@ object Bots:
     def knownCards: List[PokerCard]
 
     /**
-     * Let the [[CactusBot]] see a [[Card]].
+     * Lets the [[CactusBot]] see a [[Card]].
      *
      * @param cardIndex the index of the [[Card]] in the list of the cards.
      */
     def seeCard(cardIndex: Int): Unit
 
     /**
-     * Choose the [[Card]] to discard.
+     * Chooses the [[Card]] to discard.
      * @return the index of the [[Card]] in the list to discard
      */
     def chooseDiscard(): Int
@@ -55,6 +54,11 @@ object Bots:
     /** Applies the jack card special effect. */
     def applyJackEffect(): Unit
 
+    /**
+     * Chooses a [[PokerCard]] to discard if its value is equal to the one in top of the [[PokerPile]].
+     * @param discardPile the discard pile of the game.
+     * @return an [[Option]] with the index of the card to discard, if it exists.
+     */
     def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int]
 
     /**
@@ -62,9 +66,22 @@ object Bots:
      * @return true if it calls cactus
      */
     def shouldCallCactus(): Boolean
-    
+
+    /**
+     * Chooses the [[CactusPlayer]] with the fewest cards.
+     * @param players the [[List]] of the players.
+     * @return an [[Option]] containing the chosen [[CactusPlayer]].
+     */
     def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer]
 
+  /**
+   * Implementation of a [[CactusBot]]
+   * @param name the name of the bot.
+   * @param c the cards of the bot.
+   * @param _drawMethod the [[DrawMethods]] of the bot.
+   * @param _discardMethod the [[DiscardMethods]] of the bot.
+   * @param _memory the [[Memory]] of the bot.
+   */
   class CactusBotImpl(
       name: String,
       c: List[PokerCard & Coverable],
@@ -74,9 +91,9 @@ object Bots:
   ) extends CactusPlayer(name, c)
       with CactusBot:
     private var _knownCards: List[PokerCard]  = List.empty
-    private val cardsListLengthForCactus: Int = 2
-    private val differenceForCactus: Int      = 1
-    private val maxPointsForCactus: Int       = 10
+    private val _cardsListLengthForCactus: Int = 2
+    private val _differenceForCactus: Int      = 1
+    private val _maxPointsForCactus: Int       = 10
 
     override def knownCards: List[PokerCard] = _knownCards
 
@@ -145,7 +162,7 @@ object Bots:
       }.sum
 
     override def shouldCallCactus(): Boolean =
-      cards.lengthIs <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)
+      cards.lengthIs <= _cardsListLengthForCactus || ((cards.length - _knownCards.length) <= _differenceForCactus && totKnownValue < _maxPointsForCactus)
 
     override def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer] =
       players

@@ -1,5 +1,8 @@
 package model.bot
 
+import model.bot.Bots.CactusBot
+
+/** The possible configurations of a [[CactusBot]] */
 object CactusBotsData:
 
   /** Represents the type of draw methods of a cactus bot. */

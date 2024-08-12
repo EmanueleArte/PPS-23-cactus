@@ -3,6 +3,7 @@ package model
 import model.card.Cards.PokerCard
 import model.card.CardsData.{PokerCardName, PokerSuit}
 
+/** Represents the common functions of the model part. */
 object ModelUtils:
   /**
    * Checks if the given [[PokerCard]] is a red king.

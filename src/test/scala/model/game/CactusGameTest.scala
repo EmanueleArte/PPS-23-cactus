@@ -13,7 +13,9 @@ import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import model.player.Players.Player
 import model.player.Players.CactusPlayer
 
+/** test for the Cactus game */
 class CactusGameTest extends AnyFlatSpec:
+  /** Type of all the players. */
   type Players = List[Player]
   val playersNumber: Int = 3
   val game: Game         = CactusGame()

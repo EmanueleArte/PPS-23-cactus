@@ -19,8 +19,12 @@ class CactusMVC
   override val controller: ControllerType = CactusControllerImpl()
   override val view: ViewType             = CactusScalaFXView()
 
+  /** Shows the Cactus game. */
   def run(): Unit = view.show()
 
 /** Companion object for Cactus game MVC. */
 object CactusMVC:
+  /** Creates a new [[CactusMVC]].
+   * @return a new [[CactusMVC]].
+   */
   def apply(): CactusMVC = new CactusMVC()

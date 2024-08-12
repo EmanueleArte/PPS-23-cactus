@@ -305,7 +305,6 @@ object Logics:
 
     @tailrec
     private def botTurn(): Unit = currentPlayer match
-//      case player if player.calledCactus && currentPhase == CactusTurnPhase.Draw => ()
       case bot: CactusBot =>
         currentPhase match
           case CactusTurnPhase.Draw =>

@@ -12,7 +12,9 @@ import org.scalatest.matchers.must.Matchers
 
 import scala.collection.immutable.List
 
+/** Test for deck. */
 class DecksTest extends AnyFlatSpec:
+  /** The type of the deck. */
   type Deck = model.deck.Decks.Deck[PokerCard & Coverable]
   val cardsList: List[PokerCard & Coverable] = List(
     Ace OF Spades,
