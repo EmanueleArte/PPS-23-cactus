@@ -200,6 +200,7 @@ object Logics:
      *
      * @param cardIndex index of the card in the player hand to discard.
      * @param withEffect if `true` the eventual effect of the card is activated, if `false` the effect is not activated.
+     * @param player to which make discard a card.
      */
     private def discard(cardIndex: Int, withEffect: Boolean)(player: CactusPlayer): Unit = currentPhase match
       case CactusTurnPhase.Discard =>
