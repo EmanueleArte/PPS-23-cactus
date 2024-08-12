@@ -4,8 +4,7 @@ import model.card.CardsData.PokerSuit.{Clubs, Hearts, Spades}
 import model.card.CardBuilder.PokerDSL.OF
 import model.card.Cards.{Card, Coverable, GenericCard}
 import model.card.CardsData.PokerCardName.{Ace, King}
-import model.deck.{Decks, Drawable}
-import model.deck.Decks.Deck
+import model.deck.Drawable
 import model.deck.Piles.PokerPile
 import model.game.Scores
 import org.scalatest.flatspec.AnyFlatSpec
@@ -23,7 +22,8 @@ class CactusGameTest extends AnyFlatSpec:
 
     override val name: String = "Player"
 
-    var cards: List[CardType] = List(new GenericCard(1, Spades) with Coverable, new GenericCard(2, Spades) with Coverable)
+    var cards: List[CardType] =
+      List(new GenericCard(1, Spades) with Coverable, new GenericCard(2, Spades) with Coverable)
 
     override def draw(drawable: Drawable[CardType]): Unit = drawable.draw() match
       case Some(card) => cards = cards ::: card :: Nil
@@ -54,13 +54,13 @@ class CactusGameTest extends AnyFlatSpec:
     players1 should not be players2
 
   "Drawn cards from players" should "not be in the deck anymore" in:
-    val game: CactusGame       = CactusGame()
-    val players: Players       = game.setupGame(playersNumber)
+    val game: CactusGame                   = CactusGame()
+    val players: Players                   = game.setupGame(playersNumber)
     val drawnCards: List[Card & Coverable] = players.flatMap(player => player.cards)
     game.deck.cards should not contain drawnCards
 
   "The discard pile" should "be empty" in:
-    val game: CactusGame         = CactusGame()
+    val game: CactusGame                     = CactusGame()
     val cardOption: Option[Card & Coverable] = game.discardPile.draw() // game.drawFromDiscardPile()
     cardOption shouldBe empty
 
@@ -97,18 +97,18 @@ class CactusGameTest extends AnyFlatSpec:
       nonCactusPlayer,
       CactusPlayer("", List(10 OF Clubs, 10 OF Spades))
     )
-    val scores: Scores = CactusGame().calculateScores(players)
+    val scores = CactusGame().calculateScores(players)
     scores.size should be(2)
-    scores.get(players(0)) should be(Some(Ace + 2))
+    scores.get(players.headOption.get) should be(Some(Ace + 2))
     scores.get(players(2)) should be(Some(10 + 10))
-    scores.players should not contain nonCactusPlayer
+    scores.keys should not contain nonCactusPlayer
 
   "Red King" should "count 0 on score calculation" in:
     val players: Players = List(
       CactusPlayer("", List(King OF Spades, King OF Hearts, 9 OF Clubs))
     )
     val scores: Scores = CactusGame().calculateScores(players)
-    scores.get(players.headOption.get).get shouldBe 22
+    scores(players.headOption.get) shouldBe 22
 
   "Discarded card effect" should "be recognised if the discard pile is not empty" in:
     val game: CactusGame = CactusGame()

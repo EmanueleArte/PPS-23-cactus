@@ -2,7 +2,6 @@ package model.deck
 
 import model.card.Cards.Card
 
-
 /**
  * Represents an object from which is possible to draw something.
  *

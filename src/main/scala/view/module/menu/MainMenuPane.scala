@@ -11,7 +11,24 @@ import scalafx.scene.layout.{HBox, Pane, StackPane, VBox}
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewPosition
 import view.ViewUtils.{CustomStackPane, value}
-import view.ViewDSL.{aligned, baseWidth, bold, colored, containing, doing, initialValue, prompt, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, ComboBox as ComboBoxElement, Label as LabelElement}
+import view.ViewDSL.{
+  aligned,
+  baseWidth,
+  bold,
+  colored,
+  containing,
+  doing,
+  initialValue,
+  prompt,
+  saying,
+  spaced,
+  telling,
+  veryBig,
+  withMargin,
+  Button as ButtonElement,
+  ComboBox as ComboBoxElement,
+  Label as LabelElement
+}
 
 import scala.language.postfixOps
 import scala.util.Random
@@ -40,9 +57,7 @@ class MainMenuPane(
     .initialValue(PlayableGame.Cactus)
     .doing(_ => playersPane = createPlayersPane(value(gameSelected)))
 
-  private def createPlayersPane(game: PlayableGame): PlayersPane = game match
-    case PlayableGame.Cactus => new CactusPlayersPane(position)
-    case _                   => new CactusPlayersPane(position)
+  private def createPlayersPane(game: PlayableGame): PlayersPane = new CactusPlayersPane(position)
 
   override def pane: Pane = new CustomStackPane(sceneWidth, sceneHeight)
     .colored(AppPane.mainPaneColor)
@@ -150,7 +165,6 @@ class MainMenuPane(
         case _ => _players ++ players
       _playersBox.children = _players
 
-    @SuppressWarnings(Array("org.wartremover.warts.All"))
     override def createBotBox(name: String): VBox =
       val drawMethod = ComboBoxElement[DrawMethods]
         .containing(CactusBotsData.DrawMethods.values)
@@ -162,8 +176,10 @@ class MainMenuPane(
         .containing(CactusBotsData.DiscardMethods.values)
         .prompt("Select a discard method")
         .baseWidth(200)
-        .initialValue(CactusBotsData.DiscardMethods
-          .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length)))
+        .initialValue(
+          CactusBotsData.DiscardMethods
+            .values(Random.nextInt(CactusBotsData.DiscardMethods.values.length))
+        )
       discardMethods :+= discardMethod
       val memory = ComboBoxElement[Memory]
         .containing(CactusBotsData.Memory.values)

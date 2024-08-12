@@ -19,7 +19,7 @@ class DiscardPileTest extends AnyFlatSpec:
 
   "A discarded card" should "be added on the pile" in:
     val discardPile: DiscardPile = PokerPile().put(Ace OF Spades)
-    discardPile.cards should be (List(Ace OF Spades))
+    discardPile.cards should be(List(Ace OF Spades))
 
   "Multiple discarded cards" should "be added on the pile" in:
     val discardPile: DiscardPile = PokerPile()
@@ -35,7 +35,7 @@ class DiscardPileTest extends AnyFlatSpec:
       .put(3 OF Spades)
     val cardOption: Option[Card & Coverable] = discardPile.draw()
     cardOption shouldBe defined
-    cardOption.fold(Nil)(card => card) should be (3 OF Spades)
+    cardOption.fold(Nil)(card => card) should be(3 OF Spades)
     discardPile.size shouldBe 2
 
   "Draw from an empty pile" should "return empty Option" in:
@@ -44,7 +44,7 @@ class DiscardPileTest extends AnyFlatSpec:
   "Draw" should "remove the card on top OF the pile" in:
     val discardPile: DiscardPile = PokerPile().put(Ace OF Spades).put(2 OF Spades)
     discardPile.draw()
-    discardPile.cards should be (List(Ace OF Spades))
+    discardPile.cards should be(List(Ace OF Spades))
 
   "Pile" should "be emptiable" in:
     val discardPile: DiscardPile = PokerPile()
@@ -64,4 +64,4 @@ class DiscardPileTest extends AnyFlatSpec:
       .empty()
       .put(2 OF Spades)
 
-    discardPile.cards should be (List(2 OF Spades))
+    discardPile.cards should be(List(2 OF Spades))

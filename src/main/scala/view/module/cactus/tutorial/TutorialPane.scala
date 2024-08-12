@@ -52,7 +52,10 @@ class TutorialPane(
         )
         .containing(
           (LabelElement telling TutorialDescriptions
-            .gamesDescriptions(game)(GameTutorialValue.Description)).dynamicLong(sceneWidth).aligned(Pos.TopLeft).textFlow
+            .gamesDescriptions(game)(GameTutorialValue.Description))
+            .dynamicLong(sceneWidth)
+            .aligned(Pos.TopLeft)
+            .textFlow
         )
         .containing(
           (LabelElement telling TutorialDescriptions

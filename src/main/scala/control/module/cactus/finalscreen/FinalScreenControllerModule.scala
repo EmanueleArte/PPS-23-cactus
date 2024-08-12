@@ -1,14 +1,14 @@
 package control.module.cactus.finalscreen
 
 import control.module.ControllerModule
-import model.player.Players.CactusPlayer
+import model.game.Scores
 import mvc.MainMenuMVC
 import view.module.cactus.finalscreen.FinalScreenViewModule
 import view.module.menu.MainMenuViewModule.MainMenuView
 
 object FinalScreenControllerModule extends ControllerModule:
   override type ControllerType = FinalScreenController
-  override type Requirements = FinalScreenViewModule.Provider
+  override type Requirements   = FinalScreenViewModule.Provider
 
   /** Represents the final screen controller. */
   trait FinalScreenController extends Controller:
@@ -16,13 +16,13 @@ object FinalScreenControllerModule extends ControllerModule:
      * The players with their scores.
      * @return a [[Map]] with the players and their scores
      */
-    def playersScores: Map[CactusPlayer, Integer]
+    def playersScores: Scores
 
     /**
      * Sets up the players with their scores.
      * @param playersScores a [[Map]] with the players and their scores
      */
-    def setupPlayersScores(playersScores: Map[CactusPlayer, Integer]): Unit
+    def setupPlayersScores(playersScores: Scores): Unit
 
     /** Makes the application return to main menu. */
     def returnToMainMenu(): Unit
@@ -33,17 +33,16 @@ object FinalScreenControllerModule extends ControllerModule:
 
     /** Implementation of [[FinalScreenController]]. */
     class FinalScreenControllerImpl extends FinalScreenController:
-      private var _playersScores: Map[CactusPlayer, Integer] = Map.empty
+      private var _playersScores: Scores = Map.empty
 
-      override def playersScores: Map[CactusPlayer, Integer] = _playersScores
+      override def playersScores: Scores = _playersScores
 
-      override def setupPlayersScores(playersScores: Map[CactusPlayer, Integer]): Unit =
+      override def setupPlayersScores(playersScores: Scores): Unit =
         _playersScores = playersScores
 
       override def returnToMainMenu(): Unit = MainMenuMVC.view match
         case view: MainMenuView => view.showFromFinalScreen()
-        case _ => ()
-
+        case _                  => ()
 
   /** Interface of the controller module of the final screen. */
   trait Interface extends Provider with Component:

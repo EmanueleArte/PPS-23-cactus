@@ -3,10 +3,8 @@ package view.module.cactus
 import control.module.cactus.CactusControllerModule.CactusController
 import control.module.cactus.CactusControllerModule
 import model.card.Cards.{Card, Coverable, PokerCard}
-import model.game.CactusCardEffect.{AceEffect, JackEffect}
 import model.logic.{CactusTurnPhase, TurnPhase}
 import model.player.Players.{CactusPlayer, Player}
-import mvc.TutorialMVC
 import scalafx.beans.property.ObjectProperty
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
@@ -180,7 +178,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
 
       pane.whenHovered(currentPlayerProperty.value match
         case p if p.isEqualTo(player) => s"${player.name}'s turn"
-        case _                         => s"Not ${player.name}'s turn"
+        case _                        => s"Not ${player.name}'s turn"
       )
 
     private def playerHand: VBox = new VBox()

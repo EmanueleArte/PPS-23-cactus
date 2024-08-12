@@ -1,22 +1,22 @@
 package model.game
 
 import model.bot.BotBuilder.CactusBotDSL.{discarding, drawing, withMemory}
-import model.bot.Bots.{BotParamsType, CactusBot, CactusBotImpl}
+import model.bot.Bots.{BotParamsType, CactusBotImpl}
 import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.{Card, Coverable, PokerCard}
 import model.card.CardsData.PokerCardName.Jack
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.deck.Decks.{Deck, PokerDeck}
-import model.deck.Piles.{DiscardPile, PokerPile}
+import model.deck.Piles.PokerPile
 import model.logic.Logics.Players
 import model.player.Players.{CactusPlayer, Player}
 import model.ModelUtils.isRedKing
 
 /**
- * An opaque type representing the scores of players in a game.
+ * A type representing the scores of players in a game.
  * Internally it is a [[ Map[Player, Int] ]].
  */
-opaque type Scores = Map[Player, Int]
+type Scores = Map[Player, Int]
 
 /**
  * Companion object of [[Scores]] opaque type.
@@ -94,14 +94,14 @@ trait Game:
   def calculateScores(players: List[Player]): Scores
 
 /** Cactus game implementation. */
-class CactusGame() extends Game:
+class CactusGame extends Game:
   /** Deck with the cards to draw. */
   val deck: Deck[PokerCard & Coverable] = PokerDeck(shuffled = true)
 
   /** Pile with the discarded cards. */
-  var discardPile: PokerPile = PokerPile()
-  val initialPlayerCardsNumber: Int       = 4
-  val cardsSeenAtStart: Int = 2
+  var discardPile: PokerPile        = PokerPile()
+  val initialPlayerCardsNumber: Int = 4
+  val cardsSeenAtStart: Int         = 2
 
   export deck.{size => deckSize}
 
@@ -115,17 +115,20 @@ class CactusGame() extends Game:
               .map(_ => deck.draw().get)
               .map(card =>
                 card.cover()
-                card),
+                card
+              ),
             DrawMethods.Deck,
             DiscardMethods.Random,
             Memory.Normal
           )
         )
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def setupGameWithBots(botsParams: BotParamsType): List[Player] =
     val (drawings, discardings, memories) =
-      botsParams.asInstanceOf[(Seq[DrawMethods], Seq[DiscardMethods], Seq[Memory])]
+      botsParams match
+        case (drawings: Seq[DrawMethods], discardings: Seq[DiscardMethods], memories: Seq[Memory]) =>
+          (drawings, discardings, memories)
+        case _ => throw new IllegalArgumentException("Invalid bot params type")
 
     val player: CactusPlayer = CactusPlayer("Player", List.empty)
     setupCards(player)
@@ -151,7 +154,6 @@ class CactusGame() extends Game:
       player.cards(cardIndex).cover()
     )
 
-  @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
   override def calculateScores(players: List[Player]): Scores = Scores(
     players.zipWithIndex
       .map((player, index) => (player, player.cards))
@@ -162,7 +164,12 @@ class CactusGame() extends Game:
         } == cards.size
       )
       .map((player, cards) =>
-        (player, cards.collect(c => PokerCard(c.value.asInstanceOf[Int], c.suit.asInstanceOf[PokerSuit])))
+        (
+          player,
+          cards.collect { case card: PokerCard =>
+            PokerCard(card.value, card.suit)
+          }
+        )
       )
       .map((player, cards) =>
         (

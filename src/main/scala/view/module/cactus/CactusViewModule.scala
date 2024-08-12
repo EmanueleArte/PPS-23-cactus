@@ -1,13 +1,10 @@
 package view.module.cactus
 
 import control.module.cactus.CactusControllerModule
-import model.logic.CactusTurnPhase
 import scalafx.scene.Scene
-import scalafx.scene.layout.{Background, BackgroundFill, HBox, Priority}
 import view.module.cactus.AppPane.*
 import view.ScalaFXStageManager
 import view.module.ViewModule
-import view.ViewDSL.{containing, tall}
 
 /** Represents the view component. */
 object CactusViewModule extends ViewModule:

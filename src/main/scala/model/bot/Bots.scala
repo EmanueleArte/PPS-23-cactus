@@ -4,7 +4,7 @@ import model.bot.CactusBotsData.{DiscardMethods, DrawMethods, Memory}
 import model.card.Cards.{Coverable, PokerCard}
 import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.card.CardsData.PokerSuit.Clubs
-import model.deck.Piles.{DiscardPile, PokerPile}
+import model.deck.Piles.PokerPile
 import model.player.Players.CactusPlayer
 import model.ModelUtils.isRedKing
 
@@ -28,7 +28,7 @@ object Bots:
      *
      * @param cardIndex the index of the [[Card]] in the list of the cards.
      */
-    def seeCard(cardIndex: Int): Unit;
+    def seeCard(cardIndex: Int): Unit
 
     /**
      * Choose the [[Card]] to discard.
@@ -62,14 +62,9 @@ object Bots:
      * @return true if it calls cactus
      */
     def shouldCallCactus(): Boolean
-
-    def chooseOwnCard(cardIndex: Int): PokerCard
-
-    // def chooseTwoCards((Player, card: int), (Player, card: int))
-
+    
     def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer]
 
-  @SuppressWarnings(Array("org.wartremover.warts.All"))
   class CactusBotImpl(
       name: String,
       c: List[PokerCard & Coverable],
@@ -108,7 +103,7 @@ object Bots:
     private def higherKnownCardIndex: Int =
       var higherValueCard: PokerCard = PokerCard(PokerCardName.Ace, Clubs)
       _knownCards.zipWithIndex.foreach((c, i) =>
-        if (isHigherValue(c, higherValueCard) || i == 0) then higherValueCard = _knownCards(i)
+        if isHigherValue(c, higherValueCard) || i == 0 then higherValueCard = _knownCards(i)
       )
       cards.zipWithIndex.filter((c, _) => c.equals(higherValueCard)).map((_, i) => i).headOption.getOrElse(unknownCard)
 
@@ -138,8 +133,9 @@ object Bots:
     override def chooseDiscardWithMalus(discardPile: PokerPile): Option[Int] =
       if knownCards.nonEmpty then
         knownCards.zipWithIndex.find((c, _) => c.value == discardPile.copy(discardPile.cards).draw().get.value) match
-          case Some((card, i)) => Some(cards.zipWithIndex.filter((c, _) => c.equals(card)).map((_, i) => i).head)
-          case _               => None
+          case Some((card, i)) =>
+            Some(cards.zipWithIndex.filter((c, _) => c.equals(card)).map((_, i) => i).headOption.get)
+          case _ => None
       else None
 
     private def totKnownValue: Int =
@@ -149,13 +145,10 @@ object Bots:
       }.sum
 
     override def shouldCallCactus(): Boolean =
-      cards.length <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)
-
-    override def chooseOwnCard(cardIndex: Int): PokerCard = ???
+      cards.lengthIs <= cardsListLengthForCactus || ((cards.length - _knownCards.length) <= differenceForCactus && totKnownValue < maxPointsForCactus)
 
     override def choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer] =
       players
         .filter(p => p != this)
         .filter(p => !p.calledCactus)
-        .sorted((p1, p2) => p1.cards.length - p2.cards.length)
-        .headOption
+        .minOption((p1, p2) => p1.cards.length - p2.cards.length)

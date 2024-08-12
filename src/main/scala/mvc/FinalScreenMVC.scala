@@ -5,6 +5,7 @@ import model.player.Players.CactusPlayer
 import view.module.cactus.finalscreen.FinalScreenViewModule
 import FinalScreenViewModule.ViewType
 import control.module.cactus.finalscreen.FinalScreenControllerModule
+import model.game.Scores
 
 /** Represents the main module for the final screen. */
 object FinalScreenMVC extends FinalScreenControllerModule.Interface with FinalScreenViewModule.Interface:
@@ -19,5 +20,5 @@ object FinalScreenMVC extends FinalScreenControllerModule.Interface with FinalSc
    * Sets up the players with their scores.
    * @param playersScores a [[Map]] with the players and their scores
    */
-  def setup(playersScores: Map[CactusPlayer, Integer]): Unit =
+  def setup(playersScores: Scores): Unit =
     controller.setupPlayersScores(playersScores)

@@ -7,7 +7,7 @@ import model.deck.Decks.{Deck, PokerDeck}
 import model.game.CactusGame
 import model.game.Scores.toMap
 import model.logic
-import model.logic.Logics.{CactusLogic, GameLogic, Players}
+import model.logic.Logics.CactusLogic
 import model.player.Players.{CactusPlayer, Player}
 import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.flatspec.AnyFlatSpec
@@ -31,7 +31,6 @@ class CactusLogicTest extends AnyFlatSpec:
   class TestCactusLogicBots(nPlayers: Int) extends CactusLogic(Left(nPlayers): Either[Int, BotParamsType]):
     override lazy val game: CactusGame = new CactusGame():
       override val deck: Deck[PokerCard & Coverable] = PokerDeck()
-
 
   /** Custom implementation of the CactusGame to make tests with an unshuffled deck and bot config. */
   class TestCactusLogicBotsConfigured(botParamsType: BotParamsType)
@@ -125,7 +124,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.getPlayer(2).cards.size should be(logic.game.initialPlayerCardsNumber)
     logic.getPlayer(3).cards.size should be(logic.game.initialPlayerCardsNumber)
 
-  it should "not draw a card if targeted by an ace effect after calling cactus" in :
+  it should "not draw a card if targeted by an ace effect after calling cactus" in:
     val logic = TestCactusLogic(2)
     // Player 1
     logic.currentPhase_=(CactusTurnPhase.Draw)
@@ -152,7 +151,7 @@ class CactusLogicTest extends AnyFlatSpec:
     logic.getPlayer(1).cards.size should be(logic.game.initialPlayerCardsNumber)
 
   "Players" should "make a complete match using basic moves" in:
-    val logic = CactusLogic(playersNumber)
+    val logic = TestCactusLogic(playersNumber)
     logic.currentPhase_=(CactusTurnPhase.Draw)
     while logic.currentPhase != CactusTurnPhase.GameOver do
       logic.draw(true)
@@ -221,8 +220,8 @@ class CactusLogicTest extends AnyFlatSpec:
           logic.continue()
           logic.continue()
           logic.continue()
-    logic.currentPhase should be (CactusTurnPhase.GameOver)
-    logic.players.filter(_.asInstanceOf[CactusPlayer].calledCactus)(0).cards.size should be(nCardsOfCactusCaller)
+    logic.currentPhase should be(CactusTurnPhase.GameOver)
+    logic.players.find(_.asInstanceOf[CactusPlayer].calledCactus).get.cards.size should be(nCardsOfCactusCaller)
 
   it should "see a card after discarding a Jack" in:
     val drawings: Seq[DrawMethods]       = Seq.fill(playersNumber - 1)(DrawMethods.Deck)

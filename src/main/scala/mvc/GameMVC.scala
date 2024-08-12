@@ -1,7 +1,6 @@
 package mvc
 
 import model.bot.Bots.BotParamsType
-import model.logic.Logics.Players
 
 /** Represents the main module for a game. */
 trait GameMVC:
@@ -43,7 +42,7 @@ trait GameMVC:
     _nPlayers = nPlayers match
       case _ if nPlayers < _minPlayers => _minPlayers
       case _ if nPlayers > _maxPlayers => _maxPlayers
-      case _ => nPlayers
+      case _                           => nPlayers
     this
 
   /**

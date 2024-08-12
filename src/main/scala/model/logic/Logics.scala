@@ -5,10 +5,7 @@ import model.card.Cards.PokerCard
 import model.game.{CactusCardEffect, CactusGame, Game, Scores}
 import model.player.Players.{CactusPlayer, Player}
 import model.utils.Iterators.PeekableIterator
-import mvc.FinalScreenMVC
-
 import scala.annotation.tailrec
-import scala.collection.immutable.ListMap
 
 /** Logic of a game. */
 object Logics:
@@ -140,7 +137,7 @@ object Logics:
     override def getPlayer(index: Int): PlayerType = players(index) match
       case p: PlayerType => p
 
-    override def humanPlayer: PlayerType = players(0) match
+    override def humanPlayer: PlayerType = players.headOption.get match
       case p: PlayerType => p
 
     @tailrec
@@ -168,9 +165,8 @@ object Logics:
           if isBot(currentPlayer) then botTurn()
       case _ => ()
 
-    @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
     override def isGameOver: Boolean =
-      lastRound && getNextPlayer.asInstanceOf[CactusPlayer].calledCactus && currentPhase == BaseTurnPhase.End
+      lastRound && getNextPlayer.calledCactus && currentPhase == BaseTurnPhase.End
 
     override def calculateScore: Scores = game.calculateScores(players)
 
@@ -187,13 +183,14 @@ object Logics:
         currentPhase_=(CactusTurnPhase.Discard)
       case _ => ()
 
-    private def getNextPlayer: Player =
+    private def getNextPlayer: CactusPlayer =
       players
         .sliding(2)
         .find(_.headOption.get.isEqualTo(currentPlayer))
         .flatMap(_.lift(1))
         .orElse(if (players.lastOption.contains(currentPlayer)) players.headOption else None)
-        .get
+        .get match
+        case p: CactusPlayer => p
 
     /**
      * Make the current player to discard a card and choose if the eventual effect should be activated.

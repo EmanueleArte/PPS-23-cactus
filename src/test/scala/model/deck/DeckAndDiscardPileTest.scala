@@ -13,9 +13,9 @@ import org.scalatest.matchers.must.Matchers
 
 class DeckAndDiscardPileTest extends AnyFlatSpec:
 
-  "Deck" should "be resettable using a discard pile" in :
+  "Deck" should "be resettable using a discard pile" in:
     import model.deck.Piles.DiscardPile
-    val cardsNumber: Int = 3
+    val cardsNumber: Int             = 3
     val deck: Deck[Card & Coverable] = Deck(1 to cardsNumber, List(Spades), shuffled = false)
     val pile: DiscardPile[Card & Coverable] = DiscardPile()
       .put(deck.draw().get)
@@ -23,9 +23,9 @@ class DeckAndDiscardPileTest extends AnyFlatSpec:
       .put(deck.draw().get)
     deck.resetWithPile(pile).cards should be(List(Card(1, Spades), Card(2, Spades), Card(3, Spades)))
 
-  "Resetting a deck using a partial discard pile" should "create a deck with only the cards of the discard pile" in :
+  "Resetting a deck using a partial discard pile" should "create a deck with only the cards of the discard pile" in:
     import model.deck.Piles.DiscardPile
-    val cardsNumber: Int = 4
+    val cardsNumber: Int             = 4
     val deck: Deck[Card & Coverable] = Deck(1 to cardsNumber, List(Spades), shuffled = false)
     // Drawn cards are not put on the pile...
     deck.draw()
@@ -39,5 +39,5 @@ class DeckAndDiscardPileTest extends AnyFlatSpec:
   "Player" should "draw from both deck and discard pile" in:
     val drawableDeck: Drawable[PokerCard & Coverable] = PokerDeck()
     val drawablePile: Drawable[PokerCard & Coverable] = PokerPile().put(King OF Hearts)
-    drawableDeck.draw() should be (Some(Ace of Spades))
-    drawablePile.draw() should be (Some(King of Hearts))
+    drawableDeck.draw() should be(Some(Ace of Spades))
+    drawablePile.draw() should be(Some(King of Hearts))
