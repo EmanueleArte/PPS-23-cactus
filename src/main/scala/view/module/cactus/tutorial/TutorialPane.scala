@@ -1,10 +1,10 @@
-package view.module.tutorial
+package view.module.cactus.tutorial
 
 import mvc.PlayableGame
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.layout.{Pane, VBox}
-import view.TutorialDescriptions.GameTutorialValue
+import TutorialDescriptions.GameTutorialValue
 import view.ViewUtils.CustomStackPane
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewDSL.{
@@ -20,7 +20,7 @@ import view.ViewDSL.{
   dynamicLong,
   Label as LabelElement
 }
-import view.{TutorialDescriptions, ViewPosition}
+import view.ViewPosition
 
 import scala.language.postfixOps
 

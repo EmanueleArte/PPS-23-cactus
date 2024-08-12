@@ -1,10 +1,10 @@
 package mvc
 
-import control.module.finalscreen.FinalScreenControllerModule
-import control.module.finalscreen.FinalScreenControllerModule.ControllerType
+import control.module.cactus.finalscreen.FinalScreenControllerModule.ControllerType
 import model.player.Players.CactusPlayer
-import view.module.finalscreen.FinalScreenViewModule
-import view.module.finalscreen.FinalScreenViewModule.ViewType
+import view.module.cactus.finalscreen.FinalScreenViewModule
+import FinalScreenViewModule.ViewType
+import control.module.cactus.finalscreen.FinalScreenControllerModule
 
 /** Represents the main module for the final screen. */
 object FinalScreenMVC extends FinalScreenControllerModule.Interface with FinalScreenViewModule.Interface:
