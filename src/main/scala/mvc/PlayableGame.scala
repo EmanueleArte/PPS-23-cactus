@@ -1,11 +1,9 @@
 package mvc
 
-import mvc.{CactusMVC, GameMVC}
-
 /** Represents the playable of games. */
 enum PlayableGame:
   case Cactus
-  
+
   def name: String = this match
     case Cactus => "Cactus"
 

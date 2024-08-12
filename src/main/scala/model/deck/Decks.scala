@@ -59,9 +59,9 @@ object Decks:
   abstract class AbstractDeck[C <: Card & Coverable](shuffled: Boolean) extends Deck[C]:
     private val INITIAL_HEAD_VALUE: Int = -1
     private var head: Int               = INITIAL_HEAD_VALUE
-    private lazy val _cards: List[C] = shuffled match
-      case true => Random.shuffle(inputCards)
-      case _    => inputCards
+    private lazy val _cards: List[C] =
+      if shuffled then Random.shuffle(inputCards)
+      else inputCards
     protected val inputCards: List[C] = List[C]()
 
     override def draw(): Option[C] =
@@ -116,11 +116,12 @@ object Decks:
    * @param shuffled
    *   if `true` the deck is initially shuffled, if `false` it is not.
    */
-  case class GenericDeck(override val inputCards: List[Card & Coverable], shuffled: Boolean) extends AbstractDeck[Card & Coverable](shuffled):
+  case class GenericDeck(override val inputCards: List[Card & Coverable], shuffled: Boolean)
+      extends AbstractDeck[Card & Coverable](shuffled):
 
-    override def shuffle(): Deck[Card & Coverable]                               = GenericDeck(inputCards, true)
+    override def shuffle(): Deck[Card & Coverable] = GenericDeck(inputCards, true)
     override protected def createDeck(cards: List[Card & Coverable]): Deck[Card & Coverable] = Deck(cards)
-    override protected def pile: DiscardPile[Card & Coverable]                   = DiscardPile()
+    override protected def pile: DiscardPile[Card & Coverable]                               = DiscardPile()
 
   /**
    * Specific deck with french-suited cards, without the jokers, using [[PokerCard]] type cards.
@@ -194,7 +195,8 @@ object Decks:
      * @return
      *   a generic deck.
      */
-    def apply(cards: List[Card & Coverable], shuffled: Boolean): Deck[Card & Coverable] = new GenericDeck(cards, shuffled)
+    def apply(cards: List[Card & Coverable], shuffled: Boolean): Deck[Card & Coverable] =
+      new GenericDeck(cards, shuffled)
 
     /**
      * Creates a generic deck.

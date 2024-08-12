@@ -52,7 +52,7 @@ object AppPane:
   val asidePaneHeight: Int = mainPaneHeight
 
   /** Background color of the side pane. */
-  val asidePaneColor: Color = mainPaneColor //Color.rgb(12, 85, 28)
+  val asidePaneColor: Color = mainPaneColor // Color.rgb(12, 85, 28)
 
   /** Color used for gradients. */
   val asidePaneColor2: Color = Color.DarkGreen
@@ -95,12 +95,12 @@ object PlayersPane:
   val turnIndicatorRadius: Int = 6
 
   /** Color of the turn indicator. */
-  val turnIndicatorFillColorEnabled: Color = Color.Lime
+  val turnIndicatorFillColorEnabled: Color   = Color.Lime
   val turnIndicatorStrokeColorEnabled: Color = Color.GhostWhite
 
-  val turnIndicatorFillColorDisabled: Color = Color.Red
+  val turnIndicatorFillColorDisabled: Color   = Color.Red
   val turnIndicatorStrokeColorDisabled: Color = Color.Black
-  
+
   val padding: Int = 10
 
 /** Contains the basic parameters for the card's panes. */

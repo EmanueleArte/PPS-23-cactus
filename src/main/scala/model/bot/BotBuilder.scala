@@ -10,11 +10,13 @@ object BotBuilder:
   class CactusBotImplWithDiscardMethod(val c: CactusBotImplWithDrawMethod, val discardMethod: DiscardMethods)
 
   object CactusBotDSL:
-    extension(name: String)
+    extension (name: String)
       def drawing(drawMethod: DrawMethods): CactusBotImplWithDrawMethod = CactusBotImplWithDrawMethod(name, drawMethod)
 
-    extension(c: CactusBotImplWithDrawMethod)
-      def discarding(discardMethod: DiscardMethods): CactusBotImplWithDiscardMethod = CactusBotImplWithDiscardMethod(c, discardMethod)
+    extension (c: CactusBotImplWithDrawMethod)
+      def discarding(discardMethod: DiscardMethods): CactusBotImplWithDiscardMethod =
+        CactusBotImplWithDiscardMethod(c, discardMethod)
 
-    extension(c: CactusBotImplWithDiscardMethod)
-      def withMemory(memory: Memory): CactusBotImpl = CactusBotImpl(c.c.name, List.empty[PokerCard & Coverable], c.c.drawMethod, c.discardMethod, memory)
+    extension (c: CactusBotImplWithDiscardMethod)
+      def withMemory(memory: Memory): CactusBotImpl =
+        CactusBotImpl(c.c.name, List.empty[PokerCard & Coverable], c.c.drawMethod, c.discardMethod, memory)

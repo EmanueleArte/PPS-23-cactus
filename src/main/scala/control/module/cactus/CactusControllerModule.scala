@@ -9,7 +9,6 @@ import model.player.Players.{CactusPlayer, Player}
 import mvc.TutorialMVC
 import mvc.PlayableGame.Cactus
 import mvc.FinalScreenMVC
-import scalafx.application.Platform
 import view.module.cactus.CactusViewModule
 
 import scala.collection.immutable.ListMap
@@ -82,13 +81,12 @@ object CactusControllerModule extends ControllerModule:
 
       override def showTutorial(): Unit = TutorialMVC.run(Cactus)
 
-      @SuppressWarnings(Array("org.wartremover.warts.AsInstanceOf"))
       override def continue(): Unit = context.model.currentPhase match
         case CactusTurnPhase.GameOver =>
           val finalScreenMVC = FinalScreenMVC
           finalScreenMVC.setup(
             ListMap(
-              context.model.calculateScore.asInstanceOf[Map[CactusPlayer, Integer]].toSeq.sortWith(_._2 < _._2): _*
+              context.model.calculateScore.toSeq.sortWith(_._2 < _._2): _*
             )
           )
           finalScreenMVC.run()

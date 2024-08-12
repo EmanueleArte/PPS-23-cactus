@@ -34,20 +34,20 @@ class LogicTest extends AnyFlatSpec:
 
   /** Simple game logic implementation for testing. */
   class TestLogic(nPlayers: Int) extends Logic:
-    type Score = Int
+    type Score      = Int
     type PlayerType = PlayerImpl
 
     override val _players: Players = (1 to nPlayers).toList.map(i => PlayerImpl(s"Player $i"))
     private var _counter           = 0
 
     override def getPlayer(index: Int): PlayerType = PlayerImpl(s"Player $index")
-    override def humanPlayer: PlayerType = PlayerImpl(s"Player 0")
-    override def continue(): Unit       = _counter += 1
-    override def isGameOver: Boolean    = _counter == N
-    override def calculateScore: Scores = Scores(players.map(player => player -> _counter).toMap)
-    override def seeCard(cardIndex: Int): Unit = ()
-    override def handleGameOver(): Unit = ()
-  
+    override def humanPlayer: PlayerType           = PlayerImpl(s"Player 0")
+    override def continue(): Unit                  = _counter += 1
+    override def isGameOver: Boolean               = _counter == N
+    override def calculateScore: Scores            = Scores(players.map(player => player -> _counter).toMap)
+    override def seeCard(cardIndex: Int): Unit     = ()
+    override def handleGameOver(): Unit            = ()
+
   "The players" should "play turns cyclically" in:
     val logic = TestLogic(nPlayers)
     logic.currentPlayer should be(PlayerImpl("Player 1"))

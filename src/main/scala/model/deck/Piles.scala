@@ -44,7 +44,7 @@ object Piles:
     def empty(): DiscardPile[C]
 
   /** Abstract class providing implementations of common methods for a [[DiscardPile]] class. */
-  abstract class AbstractPile[C <: Card & Coverable]() extends DiscardPile[C]:
+  abstract class AbstractPile[C <: Card & Coverable] extends DiscardPile[C]:
     override def size: Int = cards.size
 
   /**

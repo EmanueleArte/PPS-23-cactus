@@ -12,7 +12,7 @@ object ViewUtils:
   val topPosition: Int            = 0
   val leftPosition: Int           = 0
   val topLeftCorner: ViewPosition = ViewPosition(topPosition, leftPosition)
-  val tutorialHPadding: Double       = 400
+  val tutorialHPadding: Double    = 400
 
   /** Class for a turn phase, with a name and a description. */
   case class Phase(name: String, description: String)
@@ -39,7 +39,7 @@ object ViewUtils:
     CactusTurnPhase.AceEffect  -> Phase("Ace discarded", "Choose a player and have them draw a card from the deck."),
     CactusTurnPhase.JackEffect -> Phase("Jack discarded", "Choose a card to see it."),
     CactusTurnPhase.CallCactus -> Phase("Cactus", "Call \"Cactus\" and end the game."),
-    CactusTurnPhase.GameOver -> Phase("Game over", "The game is over. Click continue to show the final scores."),
+    CactusTurnPhase.GameOver   -> Phase("Game over", "The game is over. Click continue to show the final scores."),
     BaseTurnPhase.End          -> Phase("End", "End of the turn. Click \"Continue\" and proceed with the game.")
   )
 

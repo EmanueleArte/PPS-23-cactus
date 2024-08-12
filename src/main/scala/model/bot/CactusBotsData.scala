@@ -15,8 +15,8 @@ object CactusBotsData:
     require(lossPercentage <= 1)
     require(lossPercentage >= 0)
 
-    case Bad extends Memory(0.8)
-    case Normal extends Memory(0.5)
-    case Good extends Memory(0.25)
+    case Bad      extends Memory(0.8)
+    case Normal   extends Memory(0.5)
+    case Good     extends Memory(0.25)
     case VeryGood extends Memory(0.1)
-    case Optimal extends Memory(0)
+    case Optimal  extends Memory(0)

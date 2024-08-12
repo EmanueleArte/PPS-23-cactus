@@ -1,7 +1,6 @@
 package view.module.finalscreen
 
 import control.module.finalscreen.FinalScreenControllerModule.FinalScreenController
-import mvc.MainMenuMVC
 import scalafx.application.Platform
 import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.geometry.{Insets, Pos}
@@ -9,8 +8,20 @@ import scalafx.scene.layout.{HBox, Pane, VBox}
 import view.ViewPosition
 import view.module.cactus.{AppPane, ScalaFXPane}
 import view.ViewUtils.CustomStackPane
-import view.ViewDSL.{aligned, bold, colored, containing, doing, saying, spaced, telling, veryBig, withMargin, Button as ButtonElement, Label as LabelElement}
-import view.module.menu.MainMenuViewModule.MainMenuView
+import view.ViewDSL.{
+  aligned,
+  bold,
+  colored,
+  containing,
+  doing,
+  saying,
+  spaced,
+  telling,
+  veryBig,
+  withMargin,
+  Button as ButtonElement,
+  Label as LabelElement
+}
 
 import scala.language.postfixOps
 
@@ -53,18 +64,19 @@ class FinalScreenPane(
   private def returnToMainMenu(): Unit =
     controller.returnToMainMenu()
 
-  @SuppressWarnings(Array("org.wartremover.warts.ToString"))
   private def playersPane: VBox =
     val vbox = new VBox()
       .aligned(Pos.TopCenter)
       .spaced(10)
     var hboxes: Seq[HBox] = Seq.empty
     controller.playersScores.foreach((p, s) => {
-      val hbox = Seq.fill(1)(new HBox()
-        .aligned(Pos.Center)
-        .spaced(50)
-        .containing(LabelElement telling p.name bold)
-        .containing(LabelElement telling s.toString))
+      val hbox = Seq.fill(1)(
+        new HBox()
+          .aligned(Pos.Center)
+          .spaced(50)
+          .containing(LabelElement telling p.name bold)
+          .containing(LabelElement telling s.toString)
+      )
       hboxes = hboxes ++ hbox
     })
     vbox.children = hboxes

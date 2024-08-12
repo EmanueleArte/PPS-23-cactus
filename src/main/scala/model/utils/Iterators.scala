@@ -13,8 +13,9 @@ object Iterators:
   class PeekableIterator[A](iterator: Iterator[A]) extends Iterator[A]:
     private var lookahead: Option[A] = None
 
-    /** Returns the next element without advancing the iterator.
-     * 
+    /**
+     * Returns the next element without advancing the iterator.
+     *
      * @return the current element.
      */
     def peek: Option[A] =

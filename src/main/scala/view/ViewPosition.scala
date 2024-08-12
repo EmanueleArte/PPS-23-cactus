@@ -1,5 +1,7 @@
 package view
 
+import scala.annotation.targetName
+
 /**
  * Position of an element of the view.
  * Is similar to an algebraic vector, with the only difference that the y axe is reverted.
@@ -34,9 +36,11 @@ object ViewPosition:
     /**
      * `Division` operation for [[ViewPosition]].
      * Returns a new [[ViewPosition]] with the coordinates divided by `divisor`.
+     *
      * @param divisor the divisor of the division.
      * @return new [[ViewPosition]] with the coordinates divided by `divisor`.
      */
+    @targetName("divide")
     def /(divisor: Int): ViewPosition =
       require(divisor > 0)
       ViewPosition(Math.floorDiv(position.x, divisor), Math.floorDiv(position.y, divisor))
@@ -47,4 +51,5 @@ object ViewPosition:
      * @param position2 from which subtract.
      * @return new [[ViewPosition]].
      */
+    @targetName("subtract")
     def -(position2: ViewPosition): ViewPosition = ViewPosition(position.x - position2.x, position.y - position2.y)
