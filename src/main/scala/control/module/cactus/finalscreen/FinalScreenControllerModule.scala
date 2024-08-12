@@ -1,9 +1,9 @@
-package control.module.finalscreen
+package control.module.cactus.finalscreen
 
 import control.module.ControllerModule
 import model.game.Scores
 import mvc.MainMenuMVC
-import view.module.finalscreen.FinalScreenViewModule
+import view.module.cactus.finalscreen.FinalScreenViewModule
 import view.module.menu.MainMenuViewModule.MainMenuView
 
 object FinalScreenControllerModule extends ControllerModule:
