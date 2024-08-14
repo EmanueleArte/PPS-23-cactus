@@ -12,7 +12,7 @@ Nella [figura](#card-deck-pile-uml) è possibile vedere il diagramma UML relativ
 Uno degli elementi alla base dell'applicazione sono le carte, dato che i giochi che potranno essere implementati si basano proprio su queste.
 Card è un'interfaccia generica che rappresenta una carta con un valore (V) e un seme (S).
 
-È un tratto che definisce le caratteristiche essenziali che ogni carta deve possedere:
+È un trait che definisce le caratteristiche essenziali che ogni carta deve possedere:
 - **value**: il valore della carta, il cui tipo è determinato dal generico V.
 - **suit**: il seme della carta, il cui tipo è determinato dal generico S.
 Questa interfaccia consente la creazione di carte con diverse combinazioni di valori e semi, mantenendo la flessibilità del sistema.
@@ -57,4 +57,56 @@ Le classi astratte `AbstractDeck` e `AbstractDiscardPile` forniscono alcune impl
 Queste classi sono usate per la creazione di oggetti _mazzo_ e _pila degli scarti_ specifici.
 
 Per quanto riguarda le classi concrete, `PokerDeck` e `PokerPile` rappresentano rispettivamente un mazzo e una pila di scarto, in cui vengono usate delle `PokerCard`.
+
+
+## MVC scalabile per vari giochi
+
+Nella [figura](#mvc-uml) è possibile vedere il diagramma UML relativo alle relazioni tra i componenti del pattern MVC, utilizzati per la realizzazione dell'applicazione.
+
+<span id="mvc-uml"></span>
+![mvc-uml.svg](mvc-uml.svg)
+
+### MVC
+
+Il pattern architetturale MVC è stato raggiunto con l'aiusilio di un design pattern chiamato **Cake Pattern** (basato su **Component programming**).
+
+Quest'ultimo permette di creare un'architettura modulare e scalabile, in cui i componenti sono facilmente sostituibili e configurabili.
+Nel Cake Pattern, i **"component providers"** sono definiti come trait con un valore astratto (simile a un singleton). 
+Altri componenti verranno mescolati con i provider, ricevendo automaticamente le dipendenze. 
+I provider, l'interfaccia, l'implementazione, i requisiti, ecc., possono quindi essere incollati insieme con facilità.
+
+### Model
+
+`ModelModule` è un'interfaccia generica che rappresenta il modulo di un model.
+
+Il modulo in questione deve possedere un **Provider**, che fornisce un'istanza del model. Inoltre, per essere il più generico possibile, 
+quest'ultimo contiene il type alias `ModelType`, che rappresenta il tipo del modello, il quale viene definito dall'implementazione dell'interfaccia.
+
+Inoltre, le classi che implementano `ModelModule` possono possedere un trait `Component`, che contiene le classi, le quali sono quindi sottotipo di `ModelType`, che possono essere 
+istanziate e successivamente fornite dal provider. 
+
+### Controller
+
+`ControllerModule` è un'interfaccia generica che rappresenta il modulo di un controller.
+
+Analogamente a `ModelModule`, sono presenti un **Provider**, che fornisce un'istanza del controller e un type alias `ControllerType`, che rappresenta il tipo del controller.
+Le classi che implementano `ControllerModule` possono possedere un tratto `Component` con un funzionamento identico a quello presente nelle implementazioni di `ModelModule`.
+
+In più, nel modulo del controller il type `Requirements` rappresenta le dipendenze che il controller richiede per poter funzionare, senza necessariamente averle già istanziate al prima dell'uso.
+Dentro `Component`, l'oggetto **context** fornisce accesso alle dipendenze definite in `Requirements`.
+
+### View
+
+`ViewModule` è un'interfaccia generica che rappresenta il modulo di una view.
+
+La sua struttura è completamente analoga a quella di `ControllerModule`, con la differenza che il type alias `ViewType` rappresenta il tipo della view.
+
+### Composizione dei moduli
+
+L'implementazione di ognuno dei moduli precedentemente descritti contiene un trait `Interface`, il quale è essenziale per utilizzare il Cake Pattern al meglio e
+che estende `Provider` e `Component`, i quali rispettivamente forniscono un'istanza del componente e le classi che possono essere istanziate e fornite dal provider.
+
+La classe che ha il compito di unire i moduli estende `Interface` del model, `Interface` del controller e `Interface` della view, inoltre 
+istanzia i componenti forniti dai vari provider e definisce eventuali metodi. In questo modo i componenti vengono mescolati 
+e le dipendenze vengono ricevute automaticamente.
 
