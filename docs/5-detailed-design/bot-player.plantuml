@@ -1,0 +1,37 @@
+@startuml
+
+interface Player <<trait>> {
+  type CardType
+  name: String
+  cards(): List[CardType]
+  draw(drawable: Drawable[CardType]): Unit
+  drawCovered(drawable: Drawable[CardType]): Unit
+  discard(cardIndex: Int): CardType
+  isEqualTo(anotherPlayer: Player): Boolean
+}
+
+class CactusPlayer {
+  calledCactus(): Boolean
+  callCactus(): Unit
+}
+
+interface CactusBot <<trait>> {
+  knownCards: List[PokerCard]
+  chooseDiscard(): Int
+  chooseDraw(discardPile: PokerPile): Boolean
+  discard(cardIndex: Int): PokerCard
+  applyJackEffect(): Unit
+  chooseDiscardWithMalus(discardPile: PokerPile): Option[Int]
+  shouldCallCactus(): Boolean
+  choosePlayer(players: List[CactusPlayer]): Option[CactusPlayer]
+}
+
+class CactusBotImpl {
+  
+}
+
+CactusBot <|-- CactusBotImpl
+CactusPlayer <|-- CactusBotImpl
+Player <|-- CactusPlayer
+
+@enduml
