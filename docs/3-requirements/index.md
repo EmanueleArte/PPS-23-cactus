@@ -55,7 +55,7 @@ All’inizio della partita, ad ogni giocatore devono venire assegnate 4 carte ca
 
 ## Implementazione
 - Utilizzo di Scala 3.x
-- Utilizzo di JDK 21+
+- Utilizzo di JDK 17+
 
 ## Opzionali
 - Impostazioni aggiuntive relative alla GUI.
