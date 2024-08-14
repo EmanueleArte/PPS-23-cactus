@@ -2,8 +2,9 @@
 
 ## Bot e giocatori
 
-Per far sì che il gioco sia giocabile, sono necessari i giocatori. Alla base di tutto ci sta l'interfaccia `Player`, un trait che rappresenta un giocatore base di qualsiasi gioco di carte.
-Al suo interno troviamo:
+### Giocatori
+
+Per far sì che il gioco sia giocabile, sono necessari i giocatori. Alla base di tutto ci sta l'interfaccia `Player`, un trait che rappresenta un giocatore base di qualsiasi gioco di carte. Al suo interno troviamo:
 - il type CardType, che rappresenta il tipo di carte con il quale il giocatore avrà a che fare durante il gioco.
 - val name, il nome del giocatore.
 - i metodi generici per un qualsiasi giocatore di un qualsiasi gioco di carte:
@@ -16,13 +17,18 @@ Al suo interno troviamo:
 Un'implementazione dell'interfaccia Player specifica per il gioco Cactus è la case class `CactusPlayer`. Il CardType è definito come PokerCard & Coverable e sono implementati i metodi dell'interfaccia `Player` con un'aggiunta di altri due metodi:
 - calledCactus: Boolean: restituisce se il giocatore ha chiamato cactus.
 - callCactus(): Unit: permette al giocatore di chiamare cactus.
+
 Questi metodi sono specifici per il gioco Cactus, per questo sono stati inseriti solamente nell'implementazione dell'interfaccia relativa a tale gioco.
 
+### Bot
+
 Per rendere completa l'applicazione erano necessari anche i giocatori avversari al giocatore umano. Per questo è stata creata l'interfaccia `CactusBot`, la quale definisce tutti i metodi necessari ad un bot di Cactus per giocare. La classe `CactusBotImpl` implementa l'interfaccia CactusBot ed estende CactusPlayer, in quanto il bot è nell'effettivo un giocatore di Cactus e i metodi implementati in CactusPlayer sono necessari anche per i CactusBot.
+
 I CactusBot sono pensati per essere più o meno intelligenti a seconda delle impostazioni che l'utente può definire prima della partita. Per questo nell'oggetto `CactusBotData` sono presennti tre enum:
 - enum DrawMethods: definisce i metodi di pesca delle carte (dal mazzo principale, dalla pila degli scarti, casuale o intelligente in base alla carta in cima alla pila degli scarti).
 - enum DiscardMethods: definisce i metodi di scarto delle carte in mano (una carta conosciuta, una sconosciuta o casuale).
 - enum Memory(val lossPercentage: Double): definisce la memoria (non buona, normale, buona, molto buona o ottima).
+
 Un valore per ciascuno di questi enum viene passato al CactusBot in fase di creazione.
 
 ## Carte da gioco e mazzi
