@@ -2,6 +2,11 @@
 
 ## Bot e giocatori
 
+Nella [figura](#bot-player-uml) è possibile visionare il diagramma UML relativo alle relazioni tra le classi e le interfacce di player e bot.
+
+<span id="bot-player-uml"></span>
+![bot-player-uml.svg](bot-player-uml.svg)
+
 ### Giocatori
 
 Per far sì che il gioco sia giocabile, sono necessari i giocatori. Alla base di tutto ci sta l'interfaccia `Player`, un trait che rappresenta un giocatore base di qualsiasi gioco di carte. Al suo interno troviamo:
