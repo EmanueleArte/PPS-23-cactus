@@ -6,7 +6,7 @@ import model.card.CardsData.{PokerCardName, PokerSuit}
 import model.card.CardsData.PokerSuit.Clubs
 import model.deck.Piles.PokerPile
 import model.player.Players.CactusPlayer
-import model.ModelUtils.isRedKing
+import model.utils.ModelUtils.isRedKing
 
 /** The bots of the game */
 object Bots:
@@ -90,7 +90,7 @@ object Bots:
       private val _memory: Memory
   ) extends CactusPlayer(name, c)
       with CactusBot:
-    private var _knownCards: List[PokerCard]  = List.empty
+    private var _knownCards: List[PokerCard]   = List.empty
     private val _cardsListLengthForCactus: Int = 2
     private val _differenceForCactus: Int      = 1
     private val _maxPointsForCactus: Int       = 10

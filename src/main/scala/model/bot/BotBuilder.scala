@@ -24,26 +24,26 @@ object BotBuilder:
   object CactusBotDSL:
     extension (name: String)
       /**
-      * Creates a not complete [[CactusBot]]. This function has to be used with discarding and withMemory functions.
-      * @param drawMethod the draw method of the bot.
-      * @return a not complete [[CactusBot]].
-      */
+       * Creates a not complete [[CactusBot]]. This function has to be used with discarding and withMemory functions.
+       * @param drawMethod the draw method of the bot.
+       * @return a not complete [[CactusBot]].
+       */
       def drawing(drawMethod: DrawMethods): CactusBotImplWithDrawMethod = CactusBotImplWithDrawMethod(name, drawMethod)
 
     extension (c: CactusBotImplWithDrawMethod)
       /**
-      * Creates a not complete [[CactusBot]]. This function has to be used with the withMemory function.
-      * @param discardMethod the discard method of the bot.
-      * @return a not complete [[CactusBot]].
-      */
+       * Creates a not complete [[CactusBot]]. This function has to be used with the withMemory function.
+       * @param discardMethod the discard method of the bot.
+       * @return a not complete [[CactusBot]].
+       */
       def discarding(discardMethod: DiscardMethods): CactusBotImplWithDiscardMethod =
         CactusBotImplWithDiscardMethod(c, discardMethod)
 
     extension (c: CactusBotImplWithDiscardMethod)
       /**
-      * Creates a [[CactusBot]].
-      * @param memory the [[Memory]] of the bot.
-      * @return a [[CactusBot]].
-      */
+       * Creates a [[CactusBot]].
+       * @param memory the [[Memory]] of the bot.
+       * @return a [[CactusBot]].
+       */
       def withMemory(memory: Memory): CactusBotImpl =
         CactusBotImpl(c.c.name, List.empty[PokerCard & Coverable], c.c.drawMethod, c.discardMethod, memory)

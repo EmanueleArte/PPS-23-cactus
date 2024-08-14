@@ -24,7 +24,8 @@ class CactusMVC
 
 /** Companion object for Cactus game MVC. */
 object CactusMVC:
-  /** Creates a new [[CactusMVC]].
+  /**
+   * Creates a new [[CactusMVC]].
    * @return a new [[CactusMVC]].
    */
   def apply(): CactusMVC = new CactusMVC()

@@ -46,7 +46,8 @@ object Players:
      */
     def isEqualTo(anotherPlayer: Player): Boolean
 
-  /** Represents a Cactus player.
+  /**
+   * Represents a Cactus player.
    * @param name the name of the player.
    * @param _cards the cards of the player.
    */

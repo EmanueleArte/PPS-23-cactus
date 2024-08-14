@@ -10,7 +10,7 @@ import model.deck.Decks.{Deck, PokerDeck}
 import model.deck.Piles.PokerPile
 import model.logic.Logics.Players
 import model.player.Players.{CactusPlayer, Player}
-import model.ModelUtils.isRedKing
+import model.utils.ModelUtils.isRedKing
 
 /**
  * A type representing the scores of players in a game.

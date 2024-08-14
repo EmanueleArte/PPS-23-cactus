@@ -4,7 +4,8 @@ package mvc
 enum PlayableGame:
   case Cactus
 
-  /** Returns the name of the game.
+  /**
+   * Returns the name of the game.
    * @return the name of the game.
    */
   def name: String = this match

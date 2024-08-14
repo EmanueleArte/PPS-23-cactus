@@ -1,4 +1,4 @@
-package model
+package model.utils
 
 import model.card.Cards.PokerCard
 import model.card.CardsData.{PokerCardName, PokerSuit}

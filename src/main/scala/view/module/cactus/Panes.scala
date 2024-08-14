@@ -138,8 +138,7 @@ class MainPane(controller: CactusController) extends ScalaFXPane:
    * @param player represented by the pane.
    * @param position of the pane.
    */
-  private class PlayerPane(player: Player, override val position: ViewPosition)
-      extends ScalaFXPane:
+  private class PlayerPane(player: Player, override val position: ViewPosition) extends ScalaFXPane:
     override def paneWidth: Int  = PlayersPane.paneWidth
     override def paneHeight: Int = PlayersPane.paneHeight
 
