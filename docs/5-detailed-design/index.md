@@ -167,3 +167,7 @@ La classe che ha il compito di unire i moduli estende `Interface` del model, `In
 istanzia i componenti forniti dai vari provider e definisce eventuali metodi. In questo modo i componenti vengono mescolati 
 e le dipendenze vengono ricevute automaticamente.
 
+
+[Back to index](../index.md) |
+[Previous Chapter](../4-architectural-design/index.md) |
+[Next Chapter](../6-implementation/index.md)

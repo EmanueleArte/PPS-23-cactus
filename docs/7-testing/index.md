@@ -16,3 +16,8 @@ Grazie ai test automatici, è stato possibile effettuare refactoring e miglioram
 
 L'unica parte del progetto che non è stata coperta da test è quella relativa all'interfaccia grafica.
 Nonostante il mancato utilizzo di strumenti dedicati, il testing è risultato possibile date le poche interazioni che l'utente è necessario che esegua col sistema.
+
+
+[Back to index](../index.md) |
+[Previous Chapter](../6-implementation/index.md) |
+[Next Chapter](../8-conclusion/index.md)
