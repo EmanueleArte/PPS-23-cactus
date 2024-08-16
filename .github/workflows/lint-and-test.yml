@@ -56,4 +56,4 @@ jobs:
       - name: Run scalatest (Windows)
         if: runner.os == 'Windows'
         shell: bash
-        run: sbt  test
+        run: sbt test
