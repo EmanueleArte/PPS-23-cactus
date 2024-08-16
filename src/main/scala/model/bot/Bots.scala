@@ -102,7 +102,7 @@ object Bots:
       case _ =>
         scala.util.Random.nextDouble() match
           case r if r >= _memory.lossPercentage => _knownCards = _knownCards ++ List(cards(cardIndex))
-          case _                                =>
+          case _                                => ()
 
     private def removeFromKnownCards(card: PokerCard): Unit =
       _knownCards = _knownCards.filterNot(c => c.equals(card))
