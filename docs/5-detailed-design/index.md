@@ -10,18 +10,18 @@ Nella [figura](#bot-player-uml) è possibile visionare il diagramma UML relativo
 ### Giocatori
 
 Per far sì che il gioco sia giocabile, sono necessari i giocatori. Alla base di tutto ci sta l'interfaccia `Player`, un trait che rappresenta un giocatore base di qualsiasi gioco di carte. Al suo interno troviamo:
-- il type CardType, che rappresenta il tipo di carte con il quale il giocatore avrà a che fare durante il gioco.
-- val name, il nome del giocatore.
+- il _type CardType_, che rappresenta il tipo di carte con il quale il giocatore avrà a che fare durante il gioco.
+- _val name_, il nome del giocatore.
 - i metodi generici per un qualsiasi giocatore di un qualsiasi gioco di carte:
-  - cards: List[CardType]: restituisce le carte nella mano del giocatore.
-  - draw(drawable: Drawable[CardType]): Unit: pesca una carta dal mazzo passato come parametro.
-  - drawCovered(drawable: Drawable[CardType]): Unit: pesca una carta dal mazzo passato come parametro, ma la carta rimane coperta.
-  - discard(cardIndex: Int): CardType: scarta una carta dalla mano e la restituisce.
-  - isEqualTo(anotherPlayer: Player): Boolean: confronta due giocatori e restituisce se sono uguali.
+  - _cards: List[CardType]_: restituisce le carte nella mano del giocatore.
+  - _draw(drawable: Drawable[CardType]): Unit_: pesca una carta dal mazzo passato come parametro.
+  - _drawCovered(drawable: Drawable[CardType]): Unit_: pesca una carta dal mazzo passato come parametro, ma la carta rimane coperta.
+  - _discard(cardIndex: Int): CardType_: scarta una carta dalla mano e la restituisce.
+  - _isEqualTo(anotherPlayer: Player): Boolean_: confronta due giocatori e restituisce se sono uguali.
 
 Un'implementazione dell'interfaccia Player specifica per il gioco Cactus è la case class `CactusPlayer`. Il CardType è definito come PokerCard & Coverable e sono implementati i metodi dell'interfaccia `Player` con un'aggiunta di altri due metodi:
-- calledCactus: Boolean: restituisce se il giocatore ha chiamato cactus.
-- callCactus(): Unit: permette al giocatore di chiamare cactus.
+- _calledCactus: Boolean_: restituisce se il giocatore ha chiamato cactus.
+- _callCactus(): Unit_: permette al giocatore di chiamare cactus.
 
 Questi metodi sono specifici per il gioco Cactus, per questo sono stati inseriti solamente nell'implementazione dell'interfaccia relativa a tale gioco.
 
@@ -30,9 +30,9 @@ Questi metodi sono specifici per il gioco Cactus, per questo sono stati inseriti
 Per rendere completa l'applicazione erano necessari anche i giocatori avversari al giocatore umano. Per questo è stata creata l'interfaccia `CactusBot`, la quale definisce tutti i metodi necessari ad un bot di Cactus per giocare. La classe `CactusBotImpl` implementa l'interfaccia CactusBot ed estende CactusPlayer, in quanto il bot è nell'effettivo un giocatore di Cactus e i metodi implementati in CactusPlayer sono necessari anche per i CactusBot.
 
 I CactusBot sono pensati per essere più o meno intelligenti a seconda delle impostazioni che l'utente può definire prima della partita. Per questo nell'oggetto `CactusBotData` sono presennti tre enum:
-- enum DrawMethods: definisce i metodi di pesca delle carte (dal mazzo principale, dalla pila degli scarti, casuale o intelligente in base alla carta in cima alla pila degli scarti).
-- enum DiscardMethods: definisce i metodi di scarto delle carte in mano (una carta conosciuta, una sconosciuta o casuale).
-- enum Memory(val lossPercentage: Double): definisce la memoria (non buona, normale, buona, molto buona o ottima).
+- _enum DrawMethods_: definisce i metodi di pesca delle carte (dal mazzo principale, dalla pila degli scarti, casuale o intelligente in base alla carta in cima alla pila degli scarti).
+- _enum DiscardMethods_: definisce i metodi di scarto delle carte in mano (una carta conosciuta, una sconosciuta o casuale).
+- _enum Memory(val lossPercentage: Double)_: definisce la memoria (non buona, normale, buona, molto buona o ottima).
 
 Un valore per ciascuno di questi enum viene passato al CactusBot in fase di creazione.
 
@@ -76,18 +76,18 @@ Nello specifico restituisce un valore opzionale, in quanto l'oggetto potrebbe es
 
 L'interfaccia `Deck` estende da `Drawable` e rappresenta un mazzo generico.
 È composta infatti dai metodi:
-- cards(): List[C]: restituisce la lista di tutte le carte nel mazzo. 
-- size(): Int: restituisce il numero di carte presenti nel mazzo. 
-- shuffle(): Deck[C]: mescola le carte nel mazzo, restituendo un nuovo mazzo mescolato. 
-- reset(): Deck[C]: resetta il mazzo allo stato iniziale. 
-- resetWithPile(pile: DiscardPile[C]): Deck[C]: resetta il mazzo usando una pila degli scarti.
+- _cards(): List[C]_: restituisce la lista di tutte le carte nel mazzo. 
+- _size(): Int_: restituisce il numero di carte presenti nel mazzo. 
+- _shuffle(): Deck[C]_: mescola le carte nel mazzo, restituendo un nuovo mazzo mescolato. 
+- _reset(): Deck[C]_: resetta il mazzo allo stato iniziale. 
+- _resetWithPile(pile: DiscardPile[C]): Deck[C]_: resetta il mazzo usando una pila degli scarti.
 
 L'interfaccia `DiscardPile` estende da `Drawable` e rappresenta una pila degli scarti generica.
 È composta infatti dai metodi:
-- cards(): List[C]: restituisce la lista di tutte le carte nella pila di scarto. 
-- size(): Int: restituisce il numero di carte presenti nella pila di scarto. 
-- put(card: C): DiscardPile[C]: aggiunge una carta alla pila di scarto, restituendo la pila aggiornata. 
-- empty(): DiscardPile[C]: svuota la pila di scarto, restituendo una pila vuota.
+- _cards(): List[C]_: restituisce la lista di tutte le carte nella pila di scarto. 
+- _size(): Int_: restituisce il numero di carte presenti nella pila di scarto. 
+- _put(card: C): DiscardPile[C]_: aggiunge una carta alla pila di scarto, restituendo la pila aggiornata. 
+- _empty(): DiscardPile[C]_: svuota la pila di scarto, restituendo una pila vuota.
 
 Le classi astratte `AbstractDeck` e `AbstractDiscardPile` forniscono alcune implementazioni di base e definiscono dei metodi protetti per la gestione interna.
 Queste classi sono usate per la creazione di oggetti _mazzo_ e _pila degli scarti_ specifici.
@@ -167,6 +167,57 @@ La classe che ha il compito di unire i moduli estende `Interface` del model, `In
 istanzia i componenti forniti dai vari provider e definisce eventuali metodi. In questo modo i componenti vengono mescolati 
 e le dipendenze vengono ricevute automaticamente.
 
+## Logiche dei giochi
+
+Nella [figura](#game-logic-uml) è possibile vedere il diagramma UML relativo alle relazioni tra le classi e le interfacce che rappresentano le logiche dei giochi.
+
+<span id="game-logic-uml"></span>
+![game-logic-uml.svg](game-logic-uml.svg)
+
+### Interfacce
+
+Le seguenti interfacce sono state create per definire le logiche dei giochi nel modo più generico e scalabile possibile.
+
+Ogni classe che rappresenterà la logica di un gioco potrà estendere queste interfacce, in base alle proprie esigenze e aggiungere metodi 
+specifici per il gioco che deve modellare.
+
+#### GameProvider
+
+`GameProvider` è un'interfaccia che rappresenta un provider di un gioco e fornisce un'istanza di quest'ultimo di tipo `Game`.
+
+#### GameLogic
+
+`GameLogic` estende `GameProvider` e mette a disposizione due metodi per il setup del gioco:
+- _setup(nPlayers: Int): Players_: restituisce i giocatori in base al gioco scelto e al numero di giocatori richiesti passato come parametro.
+- _setupWithBots(botsParams: BotParamsType): Players_: restituisce i giocatori in base al gioco scelto e alla tupla di parametri dei bot passati come parametro.
+
+#### GameWithTurnPhases
+
+`GameWithTurnPhases` mette a disposizione i metodi per gestire le fasi del turno di un giocatore:
+- _currentPhase: TurnPhase_: restituisce la fase corrente del turno.
+- _currentPhase\_=(phase: TurnPhase): Unit_: imposta la fase corrente del turno.
+
+`GameWithTurnPhases` sfrutta gli enum che estendono `TurnPhase` per definire le fasi del turno di un giocatore.
+
+#### Logic
+
+`Logic` è un'interfaccia che rappresenta la logica di un gioco e mette a disposizione i metodi per gestire il flusso di gioco.
+Al suo interno troviamo:
+- il _type Score_, che rappresenta i punteggi ottenuti al termine del gioco.
+- il _type PlayerType_, che rappresenta il tipo dei giocatori del gioco.
+
+I metodi per gestire i giocatori e il susseguirsi dei turni di questi ultimi sono:
+- _players: Players_: restituisce i giocatori del gioco.
+- _getPlayer(index: Int): PlayerType_: restituisce il giocatore in base all'indice passato come parametro.
+- _currentPlayer: PlayerType_: restituisce il giocatore che sta eseguendo il turno corrente.
+- _nextPlayer: Player_: passa al giocatore successivo e lo restituisce.
+
+I metodi per gestire il flusso di gioco sono:
+- _continue(): Unit_: fa andare avanti il gioco eseguendo azioni differenti in base alla fase del turno nel quale viene chiamato.
+- _isGameOver: Boolean_: restituisce se il gioco è finito.
+- _calculateScore: Scores_: calcola i punteggi finali dei giocatori e li restituisce.
+- _seeCard(cardIndex: Int): Unit_: permette al giocatore di vedere una carta della propria mano.
+- _handleGameOver(): Unit_: gestisce il termine del gioco.
 
 [Back to index](../index.md) |
 [Previous Chapter](../4-architectural-design/index.md) |

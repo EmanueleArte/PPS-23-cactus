@@ -1,0 +1,40 @@
+@startuml
+
+interface GameProvider <<trait>> {
+  game: Game
+}
+
+interface GameLogic <<trait>> {
+  setup(nPlayers: Int): Players
+  setupWithBots(botsParams: BotParamsType): Players
+}
+
+GameLogic --|> GameProvider
+
+interface Logic <<trait>> {
+  players: Players
+  getPlayer(index: Int): PlayerType
+  currentPlayer: PlayerType
+  nextPlayer: Player
+  continue(): Unit
+  isGameOver: Boolean
+  calculateScore: Scores
+  seeCard(cardIndex: Int): Unit
+  handleGameOver(): Unit
+}
+
+interface GameWithTurnPhases <<trait>> {
+  currentPhase: TurnPhase
+  currentPhase_(phase: TurnPhase): Unit
+}
+
+interface TurnPhase <<trait>>
+
+GameWithTurnPhases --> TurnPhase
+
+class AppLogic extends Logic
+
+AppLogic --|> GameLogic
+AppLogic --|> GameWithTurnPhases
+
+@enduml
