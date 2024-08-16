@@ -16,7 +16,7 @@ class CactusPlayer {
 }
 
 interface CactusBot <<trait>> {
-  knownCards: List[PokerCard]
+  knownCards(): List[PokerCard]
   chooseDiscard(): Int
   chooseDraw(discardPile: PokerPile): Boolean
   discard(cardIndex: Int): PokerCard
