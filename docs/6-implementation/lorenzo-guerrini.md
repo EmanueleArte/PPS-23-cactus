@@ -108,7 +108,7 @@ Il metodo restituisce un `VBox` che sarà contenuto in un `VBox` più grande, ch
 
 ### Prima della schermata finale
 
-Prima che venga mostrata la schermata finale (e che quindi venga chiuso il tavolo di gioco) tutte le carte di tutti i giocatori vengono scoperte. A questo punto, solo alla pressione del pulsante Continue verrà aperta la pagina con i punteggi. Il tutto viene gestito da questo metodo:
+Prima che venga mostrata la schermata finale (e che quindi venga chiuso il tavolo di gioco) tutte le carte di tutti i giocatori vengono scoperte. Dopodiché, solo alla pressione del pulsante Continue verrà aperta la pagina con i punteggi. Il tutto viene gestito da questo metodo:
 ```
   override def handleGameOver(): Unit =
     players.foreach(_.cards.foreach(_.uncover()))
