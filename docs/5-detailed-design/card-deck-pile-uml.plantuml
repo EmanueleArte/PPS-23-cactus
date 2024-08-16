@@ -1,0 +1,68 @@
+@startuml
+
+interface Card<V, S> <<trait>> {
+value: V
+suit: S
+}
+
+class PokerCard extends Card {}
+
+note bottom of PokerCard
+PokerCard implements
+Card with Int and
+PokerSuit
+endnote
+
+enum PokerSuit {
+Spades
+Diamonds
+Hearts
+Clubs
+}
+
+interface Drawable<C> <<trait>> {
+draw(): Option[C]
+}
+
+interface Deck<C> <<trait>> extends Drawable {
+cards(): List[C]
+size(): Int
+shuffle(): Deck[C]
+reset(): Deck[C]
+resetWithPile(pile: DiscardPile[C]): Deck[C]
+}
+
+interface DiscardPile<C> <<trait>> extends Drawable {
+cards: List[C]
+size(): Int
+put(card: C): DiscardPile[C]
+empty(): DiscardPile[C]
+}
+
+abstract class AbstractDeck<C> extends Deck {
+# createDeck(): Deck[C]
+# discardPile(): DiscardPile[C]
+}
+
+abstract class AbstractDiscardPile<C> extends DiscardPile {}
+
+class PokerDeck extends AbstractDeck {}
+
+note bottom of PokerDeck
+PokerDeck implements
+Deck with PokerCard
+end note
+
+class PokerPile extends AbstractDiscardPile {}
+
+note bottom of PokerPile
+PokerPile implements
+DiscardPile with PokerCard
+end note
+
+
+PokerCard -left-* PokerDeck
+PokerCard -left-* PokerPile
+Card --> PokerSuit
+
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+
+
+interface View {}
+
+interface Controller {
+  start()
+}
+
+interface Logic {
+  initGame()
+  nextMove()
+}
+
+interface Game{
+  setupGame()
+  endGame()
+}
+
+interface Player {
+  move()
+}
+
+Logic o-- Game
+Logic "2..*" o-- Player
+Controller o-- Logic
+Controller o-up- View
+
+@enduml
