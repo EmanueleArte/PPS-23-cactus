@@ -40,6 +40,7 @@ In questo modo il bot si ricorderà della carta appena vista solo se il numero c
 Per la creazione di un bot è possibile utilizzare, ad esempio, questa riga di codice:
 
 `"Bot" drawing DrawMethods.Deck discarding DiscardMethods.Known withMemory model.bot.CactusBotsData.Memory.Good`
+
 È infatti stato definito un DSL per facilitare la generazione di bot, cosi strutturato:
 ```
 object BotBuilder:
