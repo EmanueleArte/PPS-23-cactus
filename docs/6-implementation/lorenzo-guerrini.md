@@ -106,7 +106,7 @@ private def playersPane: VBox =
 
 Il metodo restituisce un `VBox` che sarà contenuto in un `VBox` più grande, che richiama il metodo semplicemente con `.containing(playersPane)`.
 
-## Prima della schermata finale
+### Prima della schermata finale
 
 Prima che venga mostrata la schermata finale (e che quindi venga chiuso il tavolo di gioco) tutte le carte di tutti i giocatori vengono scoperte. A questo punto, solo alla pressione del pulsante Continue verrà aperta la pagina con i punteggi. Il tutto viene gestito da questo metodo:
 ```
