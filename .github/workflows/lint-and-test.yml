@@ -25,7 +25,7 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SCALAFMT_CONFIG_FILE: .scalafmt.config
+          SCALAFMT_CONFIG_FILE: .scalafmt.conf
           VALIDATE_SCALA: true
           VALIDATE_MARKDOWN: true
           VALIDATE_JAVA: true
