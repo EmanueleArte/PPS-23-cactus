@@ -58,3 +58,24 @@ Queste classi sono usate per la creazione di oggetti _mazzo_ e _pila degli scart
 
 Per quanto riguarda le classi concrete, `PokerDeck` e `PokerPile` rappresentano rispettivamente un mazzo e una pila di scarto, in cui vengono usate delle `PokerCard`.
 
+## Flusso di gioco (Cactus)
+
+Il flusso di gioco è si articola in fasi sequenziali, nelle quali il giocatore può effettuare solo determinate azioni.
+Il corretto avanzamento attraverso queste fasi è essenziale per mantenere l'integrità e il ritmo del gioco, garantendo che ogni giocatore segua le regole stabilite e compia le azioni nel momento giusto.
+
+Le fasi principali del gioco sono:
+- **Inizio gioco**: prima fase da risolvere, ci si entra solo all'inizio del gioco; dopodiché non viene più acceduta.
+In questa fase il giocatore deve scegliere due carte da vedere.
+- **Pescare**: il giocatore pesca una carta dal mazzo o dalla pila degli scarti.
+- **Scartare una carta**: il giocatore scarta una carta dalla sua mano di gioco.
+- **Scartare carte uguali**: i giocatori possono scartare delle carte con lo stesso valore dell'ultima scartata.
+- **Chiamare cactus**: il giocatore può chiamare _Cactus_, ponendo fine alla partita.
+
+All'interno del gioco verrà mantenuto un riferimento alla fase corrente.
+Questo verrà aggiornato ogni volta che l'azione effettuata in una fase terminerà.
+Per esempio, dopo la fase _Pescare_ viene sempre quella di scartare una carta, quindi dopo che il giocatore ne ha pescato una, il riferimento verrà aggiornato direttamente dal metodo associato alla fase _Pescare_.
+
+L'oggetto `Logic`, che gestirà il gioco nella sua componenete più dinamica, metterà a disposizione dei metodi per gestire le interazioni base che il giocatore può effettuare (come per esempio, cliccare il mazzo, la pila degli scarti, una carta della propria mano o un altro giocatore).
+Ognuno di questi metodi, dovrà controllare se può essere chiamato nella fase corrente, dato che ognuno di essi sarà associato a un'azione dell'utente.
+Quindi se il giocatore clicca sul mazzo, per pescare una carta, verrà chiamato un metodo `draw()`.
+All'interno di questo, verrà eseguito l'handler associato all'azione _Pesca_, solo se la fase è _Pescare_; altrimenti la fase non viene aggiornata e si attende che l'utente compia l'azione giusta.
