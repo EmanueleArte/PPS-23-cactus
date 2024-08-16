@@ -1,12 +1,9 @@
 @startuml
 
 class AppMVC
-'AppMVC <|-- "Interface (Model)"
-'AppMVC <|-- "Interface (View)"
-'AppMVC <|-- "Interface (Controller)"
-"Interface (Model)" --|> AppMVC
-"Interface (View)" --|> AppMVC
-"Interface (Controller)" --|> AppMVC
+"Interface (Model)" <|-- AppMVC
+"Interface (View)" <|-- AppMVC
+"Interface (Controller)" <|-- AppMVC
 
 ' Model '
 interface ModelModule <<trait>>
@@ -25,8 +22,8 @@ interface "Component (Model)" <<trait>>
 "Component (Model)" --* AppModelModule
 
 interface "Interface (Model)" <<trait>>
-"Provider (Model)" --|> "Interface (Model)"
-"Component (Model)" --|> "Interface (Model)"
+"Provider (Model)" <|-- "Interface (Model)"
+"Component (Model)" <|-- "Interface (Model)"
 
 AppModelModule *-- "Interface (Model)"
 
@@ -47,8 +44,8 @@ interface "Component (View)" <<trait>>
 "Component (View)" --* AppViewModule
 
 interface "Interface (View)" <<trait>>
-"Provider (View)" --|> "Interface (View)"
-"Component (View)" --|> "Interface (View)"
+"Provider (View)" <|-- "Interface (View)"
+"Component (View)" <|-- "Interface (View)"
 
 AppViewModule *-- "Interface (View)"
 
@@ -69,8 +66,8 @@ interface "Component (Controller)" <<trait>>
 "Component (Controller)" --* AppControllerModule
 
 interface "Interface (Controller)" <<trait>>
-"Provider (Controller)" --|> "Interface (Controller)"
-"Component (Controller)" --|> "Interface (Controller)"
+"Provider (Controller)" <|-- "Interface (Controller)"
+"Component (Controller)" <|-- "Interface (Controller)"
 
 AppControllerModule *-- "Interface (Controller)"
 
