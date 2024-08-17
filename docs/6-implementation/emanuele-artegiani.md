@@ -11,6 +11,13 @@ Per quanto riguarda l’implementazione del sistema, io mi sono occupato princip
 Inoltre ho contribuito alla creazione di un DSL per la gestione della view in ScalaFX e all'implementazione di alcuni 
 metodi dei bot e del gioco vero e proprio; oltre ad altre varie piccole aggiunte e modifiche nel resto del codice del progetto.
 
+I pattern che ho utilizzato sono (tra parentesi dove sono stati utilizzati):
+- _Singleton_ (`ScalaFXStageManager`) 
+- _Cake_ (nei vari `MVC`) 
+- _Delegation_ (in `CactusLogic` e `GameLogic` usando `Game` e `Player`/`CactusPlayer`)
+- _Type classes_ (`PeekableIterator`, `GenericCard`)
+- _State_ (`CactusLogic`)
+
 Di seguito riporto le parti più interessanti del codice da me realizzato.
 
 ## Carte da gioco
