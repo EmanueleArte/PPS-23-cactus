@@ -9,5 +9,6 @@
 - [Implementazione](6-implementation/index.md)
 - [Testing](7-testing/index.md)
 - [Conclusioni](8-conclusion/index.md)
+- [Guida utente](9-user-guide/index.md)
 
 La documentazione relativa alla metodologia di sviluppo è disponibile [qui](process/index.md).
