@@ -71,7 +71,7 @@ Ogni `PokerCard` ha un valore intero da 1 (Asso) a 13 (Re). Per fare in modo che
     case _                  => false
 ```
 Questa funzione è richiamata ad esempio in questo metodo nella classe CactusBotImpl, utile per calcolare il punteggio totale delle carte conosciute nella mano del bot, ma non è l'unico caso in cui viene utilizzata:
-```
+```scala
   private def totKnownValue: Int =
     _knownCards.map {
       case c if isRedKing(c) => 0
