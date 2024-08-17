@@ -30,26 +30,26 @@
 
 #### Specifici per Cactus
 - Il campo da gioco deve essere rappresentato dal mazzo di pesca, dalla pila degli scarti e dalle mani dei giocatori. Il mazzo di pesca e le mani dei giocatori sono composti da carte coperte, mentre la pila degli scarti no.
-- In caso si termini il mazzo delle carte da pescare, verrà lasciata nella pila degli scarti solo l’ultima carta scartata, mentre il resto della pila verrà mescolato e usata come mazzo.
-All’inizio della partita, ad ogni giocatore devono venire assegnate 4 carte casuali coperte che comporranno la mano.
+- Ogni giocatore deve essere rappresentato da un nome, un indicatore che specifica se è di turno e un valore che indichi il numero di carte nella mano.
+- La visualizzazione della mano di gioco deve gestire la possibilità che l'utente abbia un numero elevato di carte.
+- Deve essere presente un'area dell'interfaccia che mostri la fase corrente, corredata di una breve descrizione delle azioni possibili.
+- All’inizio della partita, a ogni giocatore devono venire assegnate 4 carte casuali coperte che comporranno la mano.
 - La mano di ogni giocatore deve preservare la posizione delle carte
 - Mosse possibili:
   - **inizio partita**: cliccare su due carte che verranno mostrate all’utente fino a che non decide di continuare
   - **inizio turno**: cliccare sul mazzo o sulla pila degli scarti per scegliere da dove pescare. La carta pescata dal mazzo potrà essere vista.
   - **fine turno**: cliccare la carta da scartare che verrà scoperta e messa in cima alla pila degli scarti, se la carta ha un effetto speciale dare la possibilità di utilizzarlo oppure passare il turno normalmente
-  - **qualsiasi turno**: se un bot scarta una carta e l’utente pensa di averne una dello stesso valore, può cliccare una delle sue carte, che viene scoperta. Se la carta cliccata ha lo stesso valore, viene aggiunta alla pila; altrimenti viene mostrato un avviso per informare l’utente che la carta è sbagliata. Una volta chiuso l’avviso, la carta viene coperta e viene aggiunta una carta alla mano dell’utente.
-  - Quando viene cliccato il pulsante di fine turno, verrà mostrato un banner con due opzioni: “finisci il turno” oppure “chiama cactus”.
-  - Nel caso in cui venga provata a fare un’azione non concessa, l’utente verrà notificato.
+  - **qualsiasi turno**: se un bot scarta una carta e l’utente pensa di averne una dello stesso valore, può cliccare una delle sue carte, che viene scoperta. Se la carta cliccata ha lo stesso valore, viene aggiunta alla pila; altrimenti la carta viene coperta e viene aggiunta una carta alla mano dell’utente.
+  - Dopo aver scartato eventuali carte uguali, l'utente potrà chiamare _Cactus_.
 - Effetti speciali:
-  - **Jack scartato**: si potrà continuare oppure cliccare su una delle proprie carte per mostrarla, prima di andare avanti
-  - **Donna scartata**: si potrà continuare oppure cliccare su una coppia di carte in campo per scambiarle, prima di andare avanti (opzionale)
-  - **Asso scartato**: si potrà continuare oppure cliccare un giocatore a cui far pescare una carta dal mazzo.
-  - Quando viene chiamato “cactus”, il giocatore che l’ha chiamato mostra le carte ed è immune agli effetti. Viene effettuato un ultimo giro, fino al giocatore precedente a colui che ha chiamato la fine della partita (quando il giocatore prima finisce il turno, termina anche il gioco).
+  - **Jack scartato**: si dovrà cliccare su una delle proprie carte per mostrarla, prima di andare avanti
+  - **Asso scartato**: si dovrà cliccare un giocatore a cui far pescare una carta dal mazzo.
+- Quando viene chiamato “cactus”, il giocatore che l’ha chiamato mostra le carte ed è immune agli effetti. Viene effettuato un ultimo giro, fino al giocatore precedente a colui che ha chiamato la fine della partita (quando il giocatore prima finisce il turno, termina anche il gioco).
 - Alla fine del gioco verranno mostrate tutte le carte e verrà calcolato in automatico il punteggio di ogni giocatore, mostrando il vincitore (o i vincitori in caso di parimerito).
 - Alla fine della partita verranno mostrati i tasti per iniziare un’altra partita o uscire dal gioco.
 
 ## Non funzionali
-- Realizzazione di un’interfaccia grafica che aiuti l’utente a realizzare le mosse in maniera intuitiva e rapida, ad esempio avvisando il giocatore se sta effettuando una mossa non permessa e suggerendo quella corretta.
+- Realizzazione di un’interfaccia grafica che aiuti l’utente a realizzare le mosse in maniera intuitiva e rapida.
 - Sviluppo di una notazione standard per le carte.
 - Il sistema deve essere progettato in maniera tale che sia facile implementare altri giochi (con i relativi bot).
 
@@ -61,7 +61,8 @@ All’inizio della partita, ad ogni giocatore devono venire assegnate 4 carte ca
 - Impostazioni aggiuntive relative alla GUI.
 - Sviluppo di altri giochi (esempio: blackjack, poker).
 - Sviluppo di un sistema di leaderboard con il numero di vittorie dei giocatori.
-- Possibilità di fare partite lunghe sommando i punteggi parziali fino ad un valore scelto.
+- Possibilità di fare partite lunghe sommando i punteggi parziali fino a un valore scelto.
+- Implementare l'effetto speciale relativo alla carta _Donna_.
 
 [Back to index](../index.md) | 
 [Previous Chapter](../2-development-process/index.md) | 

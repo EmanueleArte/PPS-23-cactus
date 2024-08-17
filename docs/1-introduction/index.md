@@ -1,5 +1,5 @@
 # Introduzione
-In questo progetto si vuole realizzare un sistema che permetta ad un utente di giocare a **_Cactus_** contro dei bot. **_Cactus_** è un gioco di strategia, memoria e fortuna a turni (che si susseguono in senso anti-orario), dove vengono utilizzate le carte da poker.
+In questo progetto si vuole realizzare un sistema che permetta ad un utente di giocare a diversi giochi di carte contro dei bot. Tra i giochi a cui è possibile giocare, inizialmente l'unico implementato è **_Cactus_**, ovvero un gioco di strategia, memoria e fortuna a turni (che si susseguono in senso anti-orario), dove vengono utilizzate le carte da poker.
 
 L’obiettivo è fare meno punti degli altri giocatori (ogni carta vale un quantitativo di punti pari al numero scritto su di essa, esempio: 7 di cuori → 7 punti, mentre i Jack, Donna e Re → rispettivamente 11, 12 e 13 punti). 
 
