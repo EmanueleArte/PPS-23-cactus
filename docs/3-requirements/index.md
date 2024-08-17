@@ -51,7 +51,7 @@
 ## Non funzionali
 - Realizzazione di un’interfaccia grafica che aiuti l’utente a realizzare le mosse in maniera intuitiva e rapida.
 - Sviluppo di una notazione standard per le carte.
-- Il sistema deve essere progettato in maniera tale che sia facile implementare altri giochi (con i relativi bot).
+- Il sistema deve essere progettato in maniera tale da predisporre l'implementazione di altri giochi di carte.
 
 ## Implementazione
 - Utilizzo di Scala 3.x
