@@ -45,7 +45,7 @@ case class PokerCard(value: Int, suit: PokerSuit) extends Card:
 ```
 
 Visto che nei giochi di carte è spesso necessario coprire o scoprire queste ultime, è stato creato un `trait Coverable` 
-che permette di fare ciò utilizzando la tecnica del _mixin_:
+che permette di applicare questa proprietà utilizzando la tecnica del _mixin_:
 ```scala
 trait Coverable:
   private var _covered = true
@@ -110,7 +110,7 @@ class CactusLogic(playersInput: Either[Int, BotParamsType]) extends Logic with G
       case Right(players) => setupWithBots(players)
 ```
 
-Per semplificarne l'instanziazione è stato creato un _Companion Object_ che permette di creare una nuova istanza di `CactusLogic`:
+Per semplificarne l'istanziazione è stato creato un _Companion Object_ che permette di creare una nuova istanza di `CactusLogic`:
 ```scala
 object CactusLogic:
   def apply(nPlayers: Int): CactusLogic = new CactusLogic(Left(nPlayers): Either[Int, BotParamsType])
@@ -127,7 +127,8 @@ In certi momenti risulta necessario che tutti i bot effuttuino una mossa, ad ese
 scartato una carta, nella relativa fase, e quindi gli altri giocatori hanno la possibilità di scartare carte dello stesso 
 valore tutti contemporaneamente. 
 
-Per fare ciò è stato implementato il seguente metodo generico:
+Per fare ciò è stato implementato il seguente metodo generico che permette di iterare su tutti i bot presenti nel gioco 
+e di eseguire una determinata azione su di essi:
 ```scala
 def iterateBots(f: CactusBot => Unit): Unit =
   (1 to players.length).foreach(_ =>

@@ -140,7 +140,7 @@ I provider, l'interfaccia, l'implementazione, i requisiti, ecc., possono quindi 
 Il modulo in questione deve possedere un **Provider**, che fornisce un'istanza del model. Inoltre, per essere il più generico possibile, 
 quest'ultimo contiene il type alias `ModelType`, che rappresenta il tipo del modello, il quale viene definito dall'implementazione dell'interfaccia.
 
-Inoltre, le classi che implementano `ModelModule` possono possedere un trait `Component`, che contiene le classi, le quali sono quindi sottotipo di `ModelType`, che possono essere 
+Inoltre, le classi che implementano `ModelModule` possono possedere un trait `Component`, che contiene le classi, sottotipo di `ModelType`, che possono essere 
 istanziate e successivamente fornite dal provider. 
 
 ### Controller
@@ -190,11 +190,11 @@ specifici per il gioco che deve modellare.
 
 `GameLogic` estende `GameProvider` e mette a disposizione due metodi per il setup del gioco:
 - _setup(nPlayers: Int): Players_: restituisce i giocatori in base al gioco scelto e al numero di giocatori richiesti passato come parametro.
-- _setupWithBots(botsParams: BotParamsType): Players_: restituisce i giocatori in base al gioco scelto e alla tupla di parametri dei bot passati come parametro.
+- _setupWithBots(botsParams: BotParamsType): Players_: restituisce i giocatori in base al gioco scelto e alla tupla di parametri dei bot passata come parametro.
 
 #### GameWithTurnPhases
 
-`GameWithTurnPhases` mette a disposizione i metodi per gestire le fasi del turno di un giocatore:
+`GameWithTurnPhases` deve venir utilizzato solo se il gioco che si vuole creare è a turni e mette a disposizione i metodi per gestire le fasi del turno di un giocatore:
 - _currentPhase: TurnPhase_: restituisce la fase corrente del turno.
 - _currentPhase\_=(phase: TurnPhase): Unit_: imposta la fase corrente del turno.
 

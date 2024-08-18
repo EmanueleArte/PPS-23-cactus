@@ -52,9 +52,10 @@
 - Alla fine della partita verranno mostrati i tasti per iniziare un’altra partita o uscire dal gioco.
 
 ## Non funzionali
-- Realizzazione di un’interfaccia grafica che aiuti l’utente a realizzare le mosse in maniera intuitiva e rapida.
-- Sviluppo di una notazione standard per le carte.
-- Il sistema deve essere progettato in maniera tale che sia facile implementare altri giochi (con i relativi bot).
+- Realizzazione di un’interfaccia grafica che aiuti l’utente a realizzare le mosse in maniera intuitiva e rapida, ad esempio 
+- mostrando all'utente quali mosse può effettuare.
+- Sviluppo di metodi per gestire le carte in maniera più user friendly (tramite l'uso di frasi simili al linguaggio naturale).
+- Il sistema deve essere progettato in maniera tale da predisporre l'implementazione di altri giochi di carte.
 
 ## Implementazione
 - Utilizzo di Scala 3.x
