@@ -32,7 +32,13 @@ Per rendere completa l'applicazione erano necessari anche i giocatori avversari 
 I CactusBot sono pensati per essere più o meno intelligenti a seconda delle impostazioni che l'utente può definire prima della partita. Per questo nell'oggetto `CactusBotData` sono presennti tre enum:
 - _enum DrawMethods_: definisce i metodi di pesca delle carte (dal mazzo principale, dalla pila degli scarti, casuale o intelligente in base alla carta in cima alla pila degli scarti).
 - _enum DiscardMethods_: definisce i metodi di scarto delle carte in mano (una carta conosciuta, una sconosciuta o casuale).
-- _enum Memory(val lossPercentage: Double)_: definisce la memoria (non buona, normale, buona, molto buona o ottima).
+- _enum Memory(val lossPercentage: Double)_: definisce la memoria. I tipi di memoria sono:
+  
+  - Non buona: il bot ha una probabilità di ricordarsi la carta del 20%.
+  - Normale: il bot ha una probabilità di ricordarsi la carta del 50%.
+  - Buona: il bot ha una probabilità di ricordarsi la carta del 75%.
+  - Molto buona: il bot ha una probabilità di ricordarsi la carta del 90%.
+  - Ottima: il bot ha una probabilità di ricordarsi la carta del 100%.
 
 Un valore per ciascuno di questi enum viene passato al CactusBot in fase di creazione.
 
