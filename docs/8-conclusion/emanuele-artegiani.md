@@ -9,7 +9,7 @@ di questi ultimi.
 
 All'inizio l'organizzazione del lavoro non è stata molto efficiente, in quanto era la prima volta che il Team si cimentava 
 in un progetto utilizzando questa metodologia di sviluppo. Tuttavia, sprint dopo sprint, la gestione del lavoro è migliorata
-notevolmente, permettendo di rispettare le scadenze e di avere una visione chiara dei progressi fatti. 
+notevolmente, permettendo di rispettare le scadenze abbastanza agevolmente. 
 
 Il risultato più tangibile di questo continuo miglioramento nell'organizzazione, secondo me può essere rappresentato dal fatto che il Team
 è riuscito a rispettare tutte le scadenze nonostante periodi durante il quale alcuni membri non sono stati disponibili.
