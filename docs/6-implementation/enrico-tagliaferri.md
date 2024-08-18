@@ -5,6 +5,8 @@ Il lavoro da me svolto all'interno del progetto comprende principalmente:
 - Sviluppo dell'interfaccia principale del gioco.
 - DSL per agevolare l'utilizzo di ScalaFx.
 
+Inoltre ho contribuito alle parti riguardanti la gestione delle fasi di gioco e delle fasi iniziali e finali del gioco _Cactus_.
+
 ## Gestione mazzo
 
 ### Inizializzazione del mazzo
@@ -17,7 +19,7 @@ A differenza del valore `_cards`, che viene creato nella classe astratta `Abstra
 Questo viene fatto perché alla classe astratta viene lasciato solo il compito di creare un mazzo mescolato o no, mentre il compito di quali carte inserire nel mazzo è delegato alle classi concrete, più specifiche.
 Di seguito un estratto del codice, in cui viene mostrato proprio questo aspetto.
 
-```scala 3
+```scala
 abstract class AbstractDeck[C <: Card](shuffled: Boolean) extends Deck[C]:
   protected val inputCards: List[C] = List[C]()
   private val _cards: List[C] = 
@@ -49,7 +51,7 @@ I metodi lasciati da implementare alle sottoclassi sono:
 - `createDeck()`: crea il nuovo mazzo resettato.
 - `pile`: restituisce una pila degli scarti specifica, con cui inizializzare il nuovo mazzo resettato.
 
-```scala 3
+```scala
 abstract class AbstractDeck[C]:
   protected def pile: DiscardPile[C]
   protected def createDeck: Deck[C]
@@ -93,22 +95,21 @@ Ognuno di questi extension methods prende come primo parametro un elemento Scala
 L'elemento preso in input deve essere il più generico possibile, così che un metodo copra più elementi possibile.
 Se si considera il caso del metodo `at`, usato per impostare la posizione di un elemento, questo ha come _signature_:
 
-```scala 3
+```scala
 extension [T <: Region](node: T) def at(position: (Int, Int)): T
 ```
 
 così è possibile usare il metodo `at` per tutti gli elementi che estendono `scalafx.scene.layout.Region`.
 
-
 In questo modo, per impostare la posizione di un pulsante alle coordinate `(0, 0)`, basta eseguire:
 
-```scala 3
+```scala
 val button: Button = new Button() at (0, 0)
 ```
 
 Alternativamente, se bisogna impostare più parametri, dato che la sintassi precedente potrebbe diventare confusionaria, può essere eseguito il seguente codice:
 
-```scala 3
+```scala
 val button: Button = new Button()
 	.at((0, 0))
 	.saying("Click me!")

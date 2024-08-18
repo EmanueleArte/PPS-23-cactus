@@ -4,13 +4,13 @@
 
 A differenza di altri progetti di gruppo a cui ho lavorato, questo è stato quello in cui mi sono trovato meglio.
 Trovo che la programmazione Agile sia molto comoda, soprattutto per quanto riguarda il carico di lavoro.
-Infatti questo viene distribuito bene durante la durata dello sviluppo del progetto, e questo porta:
+Infatti questo viene distribuito bene durante la durata dello sviluppo del progetto, e questo porta a:
 
 - Una maggiore organizzazione delle sottoparti di progetto da sviluppare.
 - Un senso di soddisfazione nel vedere settimana per settimana un progetto che cresce.
 - Un minore stress, in quanto ogni settimana bisogna raggiungere degli obiettivi ristretti e definiti.
 
-Una nota negativa riscontrata durante le sprint review, è stata quella di dover definire un tempo stimato, sia per i macro task (nel product backlog) sia per i sotto compiti (nei singoli sprint backlog).
+Una nota negativa riscontrata durante le sprint planning, è stata quella di dover definire un tempo stimato, sia per i macro task (nel product backlog) sia per i sotto compiti (nei singoli sprint backlog).
 Infatti con gli altri membri del gruppo c'è stata un po' di confusione nel dare una stima del tempo per ogni task.
 Sono consapevole che questo problema è risolvibile con l'esperienza, dato che per tutti i membri del gruppo è stata la prima esperienza con _Scrum_.
 

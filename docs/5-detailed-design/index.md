@@ -60,6 +60,7 @@ Per fornire maggiore flessibilità, è stata creata un'interfaccia `Coverable`, 
 - Diamonds (Quadri)
 - Hearts (Cuori)
 - Clubs (Fiori)
+
 Questa enumerazione fornisce una rappresentazione standard dei semi nel contesto di un mazzo di carte da poker.
 
 La classe `PokerCard` rappresenta una carta a semi francesi, il cui valore quindi è di tipo intero, mentre il seme è uno tra quelli specificati nell'enumerazione `PokerSuit`.
@@ -96,7 +97,7 @@ Per quanto riguarda le classi concrete, `PokerDeck` e `PokerPile` rappresentano 
 
 ## Flusso di gioco (Cactus)
 
-Il flusso di gioco è si articola in fasi sequenziali, nelle quali il giocatore può effettuare solo determinate azioni.
+Il flusso di gioco si articola in fasi sequenziali, nelle quali il giocatore può effettuare solo determinate azioni.
 Il corretto avanzamento attraverso queste fasi è essenziale per mantenere l'integrità e il ritmo del gioco, garantendo che ogni giocatore segua le regole stabilite e compia le azioni nel momento giusto.
 
 Le fasi principali del gioco sono:
@@ -147,9 +148,9 @@ istanziate e successivamente fornite dal provider.
 `ControllerModule` è un'interfaccia generica che rappresenta il modulo di un controller.
 
 Analogamente a `ModelModule`, sono presenti un **Provider**, che fornisce un'istanza del controller e un type alias `ControllerType`, che rappresenta il tipo del controller.
-Le classi che implementano `ControllerModule` possono possedere un tratto `Component` con un funzionamento identico a quello presente nelle implementazioni di `ModelModule`.
+Le classi che implementano `ControllerModule` possono possedere un trait `Component` con un funzionamento identico a quello presente nelle implementazioni di `ModelModule`.
 
-In più, nel modulo del controller il type `Requirements` rappresenta le dipendenze che il controller richiede per poter funzionare, senza necessariamente averle già istanziate al prima dell'uso.
+In più, nel modulo del controller il type `Requirements` rappresenta le dipendenze che il controller richiede per poter funzionare, senza necessariamente averle già istanziate prima dell'uso.
 Dentro `Component`, l'oggetto **context** fornisce accesso alle dipendenze definite in `Requirements`.
 
 ### View

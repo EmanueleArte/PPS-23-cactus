@@ -15,8 +15,8 @@ Le iterazioni del processo, chiamate _sprint_, saranno svolte settimanalmente. O
 prevede le seguenti attività:
 - **Sprint Planning**: riunione iniziale in cui si selezionano gli item da implementare
   durante lo sprint e si scompongono in sotto-funzionalità, di cui il team di sviluppo
-  fornisce stime sulla loro complessità e alcuni design di dettaglio. Al termine dello
-  Sprint Planning si produce uno _Sprint Backlog_ che assegna a ogni membro del team
+  fornisce stime sulla loro complessità e alcuni design di dettaglio.
+- Al termine dello Sprint Planning si produce uno _Sprint Backlog_ che assegna a ogni membro del team
   dei _task_ da eseguire.
 
 Nel caso in cui gli item da implementare vengono completati prima del previsto, verrà fatto un ulteriore _sprint planning_ semplificato, tramite il quale verranno aggiunte ulteriori funzionalità da sviluppare nello sprint corrente.
@@ -51,7 +51,7 @@ iterazione le seguenti fasi:
 2. **Green**: scrivere il codice di produzione che soddisfi il test definito precedentemente
 3. **Refactor**: ristrutturare sia il codice di testing che quello di produzione
 
-A supporto di questo processo, è stato adottato il seguente strumento: _ScalaTest_: framework per la definizione di unit test per scala.
+A supporto di questo processo, è stato adottato lo strumento _ScalaTest_, un framework per la definizione di unit test per scala.
 
 ## Quality Assurance
 Per il controllo della qualità del sistema sono stati adottati i seguenti strumenti:

@@ -4,7 +4,7 @@
 
 Nel corso dello sviluppo la metodologia _Scrum_ si è rivelata molto utile per la gestione del progetto, soprattutto 
 perché permette di avere una visione chiara dei compiti da svolgere e di come questi si collocano all’interno del programma.
-Inoltre, la questa metodologia permette di avere una visione chiara dei progressi fatti e di come agire in conseguenza
+Inoltre, questa metodologia permette di avere una visione chiara dei progressi fatti e di come agire in conseguenza
 di questi ultimi.
 
 All'inizio l'organizzazione del lavoro non è stata molto efficiente, in quanto era la prima volta che il Team si cimentava 

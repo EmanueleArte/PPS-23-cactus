@@ -7,9 +7,12 @@
 ### Utente
 - Gli utenti dovranno interagire con il sistema tramite un’interfaccia grafica (GUI).
 - Gli utenti possono visualizzare i diversi fattori che rappresentano lo stato attuale della partita:
-  - la disposizione delle carte
+  - la propria mano di gioco
+  - il numero di carte in mano
   - la pila degli scarti
+  - il mazzo da cui pescare
   - il giocatore di turno
+  - le mani di gioco degli altri giocatori
   - lo stato finale della partita (punteggi, vincitore)
 - Gli utenti possono interagire per effettuare le seguenti azioni:
   - selezionare il gioco
@@ -24,7 +27,7 @@
 #### Generali
 - La partita deve essere avviata con una certa configurazione che comprende:
   - il gioco da avviare
-  - i bot con il relativo comportamento
+  - i bot con i relativi comportamenti
   - la visualizzazione facoltativa di un tutorial
 - Il passaggio del turno (sia dell’utente, sia dei bot) è lasciato all’utente tramite un pulsante visualizzato nella GUI, indipendentemente dal gioco.
 
